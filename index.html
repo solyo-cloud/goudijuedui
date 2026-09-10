@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.2（安全版）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.3（更新版）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -605,7 +605,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub">宝石构筑版 v13.2 · 9大项×4组×8孔 · BUG修复 + 数值优化 · 本地房间对战 · 主菜单/好友/聊天书信 · AI熊猫宠物 · 25 种提示音效 · L0 安全防线</div>
+    <div class="sub">宝石构筑版 v13.3 · 9大项×4组×8孔 · BUG修复 + 数值优化 · 本地房间对战 · 主菜单/好友/聊天书信 · AI熊猫宠物 · 25 种提示音效 · L0 安全防线 · 在线检查更新</div>
   </div>
   <div class="kpis">
     <span>2500血 / 30回合</span><span>能量+3/回合(前8回合)</span><span>每5回合上限+2</span>
@@ -640,6 +640,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
         <button class="menu-btn" data-go="social" onclick="goSocial('chat')"><b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i></button>
         <button class="menu-btn" data-go="help" onclick="goSocial('help')"><b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i></button>
         <button class="menu-btn" data-go="set" onclick="goSocial('set')"><b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i></button>
+        <button class="menu-btn" onclick="UPD.check(false)"><b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i></button>
         <button class="menu-btn gold" onclick="startAiMatch()"><b>快速 AI 对战</b><i>当前构筑 vs 镜像 AI · 直接开战</i></button>
       </div>
       <div class="menu-foot" id="menu-foot">本地存储进度 · 单文件 Demo · 房间对战同浏览器多标签页真实连通（跨设备联机待 WebRTC 信令）</div>
@@ -2390,6 +2391,51 @@ function rollAnimation(){
     }, 110);
   });
 }
+/* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
+const UPD = {
+  ver: '13.3.0',
+  base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
+  setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
+  checking: false
+};
+UPD.check = function(silent){
+  if (UPD.checking) return;
+  UPD.checking = true;
+  fetch(UPD.base + 'version.json', {cache: 'no-store'})
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => {
+      UPD.checking = false;
+      if (!j || !j.version) throw new Error('bad manifest');
+      if (j.version === UPD.ver){ if (!silent) toast('已是最新版本 v' + UPD.ver); return; }
+      const note = (j.note || '包含新内容与修复').replace(/\n/g, '<br>');
+      if (window.__upd){
+        showModal2('发现新版本 v' + j.version, '<div class="upd-note">' + note + '</div><div class="upd-hint">点击「立即更新」将下载新版游戏并自动替换，重启后生效。</div>',
+          [{label:'立即更新', cls:'btn-primary', fn: () => UPD.hot(j)},
+           {label:'下载完整安装包', cls:'btn-primary', fn: () => { window.open(UPD.setup + (j.setupFile || '')); }},
+           {label:'暂不', cls:'btn-ghost', fn: null}]);
+      } else {
+        showModal2('发现新版本 v' + j.version, '<div class="upd-note">' + note + '</div><div class="upd-hint">网页版无法自动更新：请下载新版 HTML 覆盖原文件，或安装完整安装包（存档自动保留）。</div>',
+          [{label:'下载新版 HTML', cls:'btn-primary', fn: () => { window.open(UPD.base + 'index.html'); }},
+           {label:'下载完整安装包', cls:'btn-primary', fn: () => { window.open(UPD.setup + (j.setupFile || '')); }},
+           {label:'关闭', cls:'btn-ghost', fn: null}]);
+      }
+    })
+    .catch(() => { UPD.checking = false; if (!silent) toast('检查更新失败：网络不可用'); });
+};
+UPD.hot = async function(j){
+  if (!window.__upd){ toast('桌面版才支持一键热更新'); return; }
+  const r = await window.__upd.hot(j.html || (UPD.base + 'index.html'));
+  if (r && r.ok){
+    showModal2('更新完成', '新版 v' + j.version + ' 已下载（' + Math.round(r.size/1024) + ' KB），重启游戏后生效。',
+      [{label:'立即重启', cls:'btn-primary', fn: () => { if (window.__upd.relaunch) window.__upd.relaunch(); }},
+       {label:'稍后重启', cls:'btn-ghost', fn: null}]);
+  } else {
+    showModal2('更新失败', '自动更新未成功（' + ((r && r.reason) || '未知原因') + '），可改用手动安装。',
+      [{label:'下载完整安装包', cls:'btn-primary', fn: () => { window.open(UPD.setup + (j.setupFile || '')); }},
+       {label:'关闭', cls:'btn-ghost', fn: null}]);
+  }
+};
+
 /* ---------- v13.1 多音效系统（Web Audio 程序化合成，无外部文件，体积零增长） ---------- */
 /* ===== 安全防线 L0：右键/F12 拦截 + 存档校验和（防手改作弊） ===== */
 const SEC = { salt: 'goudi:v13.1.0' };
@@ -3413,6 +3459,7 @@ function initV13(){
   if (STATE.sfx === undefined) STATE.sfx = true;
   SFX.on = STATE.sfx;
   renderNick();
+  setTimeout(() => UPD.check(true), 1800);
   /* 心跳广播 */
   bcPost({t:'hb', nick: myNick(), id: roomId(), at: Date.now()});
   setInterval(() => bcPost({t:'hb', nick: myNick(), id: roomId(), at: Date.now()}), 6000);

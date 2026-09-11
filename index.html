@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.4.1（修复版）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.4.2（安装升级修复版）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -625,7 +625,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.4.1 · 9大项×4组×8孔 · 中/英/日多语言 · BUG修复 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.4.2 · 9大项×4组×8孔 · 中/英/日多语言 · BUG修复 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -2417,7 +2417,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.4.1',
+  ver: '13.4.2',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -4194,7 +4194,7 @@ const I18N_DICT = {
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.4.1 · 9大项×4组×8孔 · 中/英/日多语言 · BUG修复 · 在线更新', en: 'Gem Build v13.4.1 · 9×4×8 sockets · ZH/EN/JA · bugfixes · online updates', ja: 'ジェムビルド版 v13.4.1 · 9×4×8ソケット · 中/英/日 · 修正 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v13.4.2 · 9大项×4组×8孔 · 中/英/日多语言 · BUG修复 · 在线更新', en: 'Gem Build v13.4.2 · 9×4×8 sockets · ZH/EN/JA · bugfixes · online updates', ja: 'ジェムビルド版 v13.4.2 · 9×4×8ソケット · 中/英/日 · 修正 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.5（多技能连招 · 战斗动画 · 多乐器配乐）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.6（P0 修复 · 耗能统一 · 房间同步）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -749,7 +749,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.5 · 9大项×4组×8孔 · 多技能连招 · 战斗动画 · 多乐器配乐 · 中/英/日多语言 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.6 · 9大项×4组×8孔 · P0 修复：耗能统一 · 房间双端同步 · 中/英/日多语言 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -1674,7 +1674,10 @@ function rollAttack(attacker, system, foe, rng, critChance, dmgMult, bonus){
   }
   return {dmg: Math.floor(dmg), hit:true, crit, red, key, combo};
 }
-function battle(aAlloc, bAlloc, aLevel, bLevel, seed){
+function battle(aAlloc, bAlloc, aLevel, bLevel, seed, aCosts, bCosts){
+  /* v13.6 E5：模拟引擎成本口径与真实战斗对齐（攻击耗能 = 1 + ceil(辅助数 × 0.6)），
+     未建模部分（预测 / 连招 / 辅助行为）在结算页标注为简化估算 */
+  aCosts = aCosts || {}; bCosts = bCosts || {};
   const rng = rngFactory(seed);
   const A = makeFighter(aAlloc), B = makeFighter(bAlloc);
   const hpA = [RULES.baseHp], hpB = [RULES.baseHp];
@@ -1694,7 +1697,7 @@ function battle(aAlloc, bAlloc, aLevel, bLevel, seed){
     if (aAct === 'focus'){ A.energy -= RULES.costFocus; const h = focusHealValue(A.eff); A.hp = Math.min(RULES.baseHp, A.hp + h); stats.focuses++; stats.aHeal += h; }
     if (bAct === 'focus'){ B.energy -= RULES.costFocus; const h = focusHealValue(B.eff); B.hp = Math.min(RULES.baseHp, B.hp + h); stats.focuses++; stats.bHeal += h; }
     if (aAct in RULES.systemAttr){
-      A.energy -= RULES.costAtk;
+      A.energy -= (aCosts[aAct] || RULES.costAtk);
       const r = rollAttack(A, aAct, B, rng);
       if (r.hit){
         B.hp = Math.max(0, B.hp - r.dmg);
@@ -1706,7 +1709,7 @@ function battle(aAlloc, bAlloc, aLevel, bLevel, seed){
       } else log.push(`T${t} A·${aAct} 被闪避`);
     }
     if (bAct in RULES.systemAttr){
-      B.energy -= RULES.costAtk;
+      B.energy -= (bCosts[bAct] || RULES.costAtk);
       const r = rollAttack(B, bAct, A, rng);
       if (r.hit){
         A.hp = Math.max(0, A.hp - r.dmg);
@@ -1767,12 +1770,31 @@ function computeDecidedTurn(res){
   }
   return RULES.maxTurns;
 }
-function simulateBatch(aAlloc, n){
+/* v13.6 E5：从玩家宝石组结构派生每系统攻击耗能（AI 单动作取该系统可用组的最低成本） */
+function attackCostsFromSlots(slots){
+  const out = {};
+  for (const sys of Object.keys(RULES.systemAttr)){
+    const i = GEM_CATS.indexOf(RULES.systemAttr[sys]);
+    let best = null;
+    for (const grp of (slots[i] || [])){
+      const g = grp && grp[0];
+      if (g && g.kind === 'active' && g.subkind !== 'passive'){
+        const c = supCostOf(grp);
+        if (best === null || c < best) best = c;
+      }
+    }
+    out[sys] = best === null ? RULES.costAtk : best;
+  }
+  return out;
+}
+function simulateBatch(slots, n){
   const out = {decided: [], winners:{A:0,B:0,draw:0}, turns:[]};
   const env = Object.values(ARCHETYPES);
+  const aAlloc = allocFromSlots(slots);
+  const aCosts = attackCostsFromSlots(slots);
   for (let s = 0; s < n; s++){
     const bAlloc = env[s % env.length];
-    const res = battle(aAlloc, bAlloc, 'veteran', 'veteran', s);
+    const res = battle(aAlloc, bAlloc, 'veteran', 'veteran', s, aCosts, aCosts);
     res.effA = effective(aAlloc); res.effB = effective(bAlloc);
     res.allocA = aAlloc; res.allocB = bAlloc;
     out.decided.push(computeDecidedTurn(res));
@@ -1863,7 +1885,7 @@ const ACTION_META = {
   '法术': {kind:'atk-spell', name:'法术攻击', cost:1, desc:'法术伤害，受对手抗性减免'},
   '宠物': {kind:'atk-pet',  name:'宠物攻击', cost:1, desc:'宠物伤害，受对手抗性减免'},
   'focus':{kind:'focus',    name:'专注恢复', cost:RULES.costFocus, desc:'恢复生命，受恢复加成'},
-  'guard':{kind:'guard',    name:'防御架势', cost:RULES.costGuard, desc:'减伤 50%，被击中则反击 ×1.5'},
+  'guard':{kind:'guard',    name:'防御架势', cost:RULES.costGuard, desc:'减伤 50%，受击后下一次攻击 ×1.5（反击蓄势）'},
   'charge':{kind:'charge',  name:'蓄力',     cost:0, desc:'+2 能量（至上限）'},
 };
 /* 悬浮扩展信息：全局委托，鼠标悬浮任意元素显示 */
@@ -2103,8 +2125,9 @@ function renderCats(){
       const grp = grps[s];
       const active = grp[0];
       const filled = grp.filter(Boolean).length;
-      const list = grp.filter(Boolean).map(g => `${gemName(g)} Lv${g.lv}（${gemKindName(g)}${g.kind==='active'&&g.subkind==='passive'?'被动':g.kind==='active'?'·耗'+(RULES.costAtk+grp.filter(x=>x&&x.kind==='support').length):''}）`).join(' · ') || '空组';
-      const tCost = active && active.subkind !== 'passive' ? '（耗 ' + (RULES.costAtk + grp.filter(x=>x&&x.kind==='support').length) + ' 能量）' : '';
+      const gCost = supCostOf(grp);
+      const list = grp.filter(Boolean).map(g => `${gemName(g)} Lv${g.lv}（${gemKindName(g)}${g.kind==='active'&&g.subkind==='passive'?'被动':g.kind==='active'?'·耗'+gCost:''}）`).join(' · ') || '空组';
+      const tCost = active && active.subkind !== 'passive' ? '（耗 ' + gCost + ' 能量）' : '';
       const tTip = `<span class="tip-t">组 ${s+1} · ${cat}</span><br>` +
         (active ? '主动：' + gemName(active) + ' · ' + gemKindName(active) + (active.subkind==='passive' ? '（被动·不占动作）' : tCost) : '主动技能：空') + '<br>' +
         (filled ? '已装 ' + filled + ' / 8 颗：' + list : '空组 · 8 孔全部可镶') +
@@ -2113,7 +2136,7 @@ function renderCats(){
         ${starGroupHTML(grp)}
         <div class="cinfo">
           <span class="clabel">${active ? gemName(active) : '组 ' + (s+1)}</span>
-          <span class="csub">${active ? gemKindName(active) + (active.subkind==='passive' ? '被动' : '·耗' + (RULES.costAtk + grp.filter(x=>x&&x.kind==='support').length)) : (filled ? '已装 ' + filled + ' 颗' : '空组')}</span>
+          <span class="csub">${active ? gemKindName(active) + (active.subkind==='passive' ? '被动' : '·耗' + gCost) : (filled ? '已装 ' + filled + ' 颗' : '空组')}</span>
         </div>
       </div>`;
     }
@@ -2209,6 +2232,24 @@ function startBattle(opts){
   let eAlloc, eGems = null, eCost = {}, eActName = {}, eName, eTag;
   if (opts.room){          /* v13：本地房间对战（发起玩家主机 = 房间） */
     eAlloc = (opts.room.eAlloc) ? JSON.parse(JSON.stringify(opts.room.eAlloc)) : JSON.parse(JSON.stringify(playerAlloc));
+    /* v13.6 E4：从对手 slots 结构派生对手技能信息（成本 / 动画类别 / 技能名），双端口径一致 */
+    if (opts.room.eSlots){
+      eGems = []; eCost = {}; eActName = {};
+      for (let i = 0; i < GEM_CATS.length; i++){
+        const cat = GEM_CATS[i];
+        for (const grp of (opts.room.eSlots[i] || [])){
+          const g = grp && grp[0];
+          if (!g) continue;
+          if (g.subkind === 'passive') eGems.push({g, kind: 'passive', cat});
+          else {
+            const sys = Object.keys(RULES.systemAttr).find(k => RULES.systemAttr[k] === cat);
+            const c = supCostOf(grp);
+            if (sys){ eCost[sys] = c; eActName[sys] = g.name; }
+            eGems.push({g, kind: 'active', cat, cost: c});
+          }
+        }
+      }
+    }
     eName = opts.room.peerNick || '房间对手';
     eTag = '本地房间对战 · 主机即房间';
   } else if (opts.pvp){
@@ -2221,12 +2262,15 @@ function startBattle(opts){
     eName = '镜像 AI（同构筑）';
     eTag = DIFFS[STATE.diff].name;
   }
-  const roomRng = opts.room ? rngFactory(hashCode(opts.room.code)) : null;
+  /* v13.6 E2：房间模式战斗随机流改用房间码种子（双端一致），先手流与之分离 */
+  const roomSeed = opts.room ? hashCode(opts.room.code) : 0;
+  const rng = opts.room ? rngFactory(roomSeed) : rngFactory(STATE.seed);
+  const roomRng = opts.room ? rngFactory((roomSeed ^ 0x5bd1e995) >>> 0) : null;
   STATE.battle = {
     pAlloc: playerAlloc, eAlloc,
     p: makeFighter(playerAlloc), e: makeFighter(eAlloc),
     pCrit, pLifesteal, turn: 1, over: false,
-    rng: rngFactory(STATE.seed),
+    rng,
     predSel: null, predReward: false, pSelActs: [], pDef: null, resolving: false,
     pTrail: [RULES.baseHp], eTrail: [RULES.baseHp],
     stats: {pDmg:0, eDmg:0, pHeal:0, eHeal:0, crits:0, guards:0, stands:0, counters:0, preds:0, predHits:0},
@@ -2235,10 +2279,6 @@ function startBattle(opts){
     first: roomRng ? (roomRng() < 0.5 ? 'P' : 'E') : (Math.random() < 0.5 ? 'P' : 'E'),
     rollDone: !opts.room, turnReady: false,
   };
-  if (opts.room){
-    STATE.battle.first = roomRng() < 0.5 ? 'P' : 'E';
-    STATE.battle.rollDone = false;
-  }
   STATE.actLog = {P:{}, E:{}};
   STATE.logs = [];
   STATE.pred = {hit:0, att:0};
@@ -2368,7 +2408,7 @@ function renderSkills(side){
       const g = grp[0];
       if (g){
         if (g.subkind === 'passive') passives.push({g, cat: GEM_CATS[i]});
-        else attacks.push({g, cat: GEM_CATS[i], cost: RULES.costAtk + grp.filter(x => x && x.kind === 'support').length});
+        else attacks.push({g, cat: GEM_CATS[i], cost: supCostOf(grp)});
       }
     }
   }
@@ -2381,7 +2421,7 @@ function renderSkills(side){
     card.innerHTML = `<span class="sk">${gemIcon(a.g, 34)}</span>
       <span class="sm"><span class="n">${gemName(a.g)}</span><span class="d">${gemKindName(a.g)} · ${a.cat}</span></span>
       <span class="sc">${isSel ? '第' + (selIdx + 1) + '击' : '耗' + a.cost}</span>`;
-    card.setAttribute('data-tip', `<span class="tip-t">${gemName(a.g)} Lv${a.g.lv}</span><br>主动技能宝石 · ${gemKindName(a.g)} · ${a.cat}<br>${gemDesc(a.g)}<br>战斗耗能：${a.cost}（1 + 组内辅助宝石数）<br><span class="tip-k">点击加入 / 移出本回合连招（可多选，总耗能 ≤ 当前能量即可全部执行），再点下方「行动」统一判定能量</span>`);
+    card.setAttribute('data-tip', `<span class="tip-t">${gemName(a.g)} Lv${a.g.lv}</span><br>主动技能宝石 · ${gemKindName(a.g)} · ${a.cat}<br>${gemDesc(a.g)}<br>战斗耗能：${a.cost}（1 + ⌈组内辅助宝石数 × 0.6⌉）<br><span class="tip-k">点击加入 / 移出本回合连招（可多选，总耗能 ≤ 当前能量即可全部执行），再点下方「行动」统一判定能量</span>`);
     if (side === 'p' && !STATE.battle.over){
       card.onclick = () => {
         const b = STATE.battle;
@@ -2410,7 +2450,7 @@ function renderSkills(side){
 function renderPred(){
   const b = STATE.battle;
   $('pred-state').textContent = b.predSel
-    ? `已预测对手：${ACTION_META[b.predSel].name}（本回合伤害 ×1.3 待触发）`
+    ? `已预测对手：${ACTION_META[b.predSel].name}（本回合首击伤害 ×1.3 待触发）`
     : '点击下方按钮选择要预测的动作（耗 1 能量）';
   const box = $('pred-actions'); box.innerHTML = '';
   for (const a of ['近战','法术','宠物','focus','guard','charge']){
@@ -2504,7 +2544,9 @@ function aiActObj(level, b){
   if (!list.length) return {k: 'charge'};
   return {k: 'skills', list};
 }
-/* 房间对战：收到对方动作 → 双方动作齐 → 统一结算（本地规则一致，seed 一致） */
+/* 房间对战：发起方主机为权威结算方（v13.6 E2 深化）。
+   host 收到双方动作 → 本地完整结算 → 广播 res；
+   guest 只交换动作并等待 host 结果，双端状态天然一致（避免 p/e 视角随机序列不同导致伤害不一致）。 */
 function applyRoomAct(msg){
   const b = STATE.battle;
   if (!b || !b.room || b.over) return;
@@ -2512,7 +2554,22 @@ function applyRoomAct(msg){
   if (!ROOM.sentAct){ renderBattle(); return; }   /* 本方尚未行动，先记录对方动作 */
   const pActObj = ROOM.sentAct.act, eActObj = msg.act;
   ROOM.sentAct = null; ROOM.pendingAct = null;
-  rollAnimation().then(() => executeTurn(pActObj, eActObj)).catch(e => console.error(e));  /* 先手由房间种子决定，双端一致 */
+  if (ROOM.role === 'host'){
+    rollAnimation().then(() => executeTurn(pActObj, eActObj)).catch(e => console.error(e));
+  } else {
+    const ti = $('turn-info');
+    if (ti) ti.textContent = '回合 ' + b.turn + ' · 等待对方结算…';
+    renderBattle();
+  }
+}
+/* host 权威结算结果广播（房间模式专用） */
+function broadcastRoomRes(b){
+  if (!b || !b.room || ROOM.role !== 'host') return;
+  bcPost({t:'res', code: ROOM.code, res: {
+    turn: b.turn, first: b.first, pHp: b.p.hp, eHp: b.e.hp, pE: b.p.energy, eE: b.e.energy,
+    over: !!b.over, winner: b.winner || null, logs: STATE.logs.slice(-40),
+    pTrail: b.pTrail ? b.pTrail.slice() : null, eTrail: b.eTrail ? b.eTrail.slice() : null
+  }});
 }
 /* D1 修复：回合初能量（+每回合恢复 + 先手补偿）在判定前统一入账，
    判定与扣费使用同一能量基准；失败弹窗后能量已入账（符合回合初恢复规则），
@@ -2596,7 +2653,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.5',
+  ver: '13.6',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -2798,6 +2855,7 @@ function playerAttackCost(system){
 function autoAct(){
   const b = STATE.battle;
   if (b.over || b.resolving) return;
+  if (b.room) return;   /* v13.6 E3：房间对战不走本地自动结算（须经 sendAct 交换） */
   if (!b.rollDone) rollFirst();          /* 先定先手，再做回合初能量入账（D7 补偿正确） */
   if (!b.turnReady) beginTurn();
   const systems = ['近战','法术','宠物'].filter(s => activeGemFor(STATE.slots, s));
@@ -2964,7 +3022,7 @@ async function executeTurn(pActObj, eActObj){
             st.pDmg += r.dmg;
             if (b.pLifesteal > 0){ const ls = Math.floor(r.dmg * b.pLifesteal); P.hp = Math.min(RULES.baseHp, P.hp + ls); st.pHeal += ls; }
           } else st.eDmg += r.dmg;
-          if (foe.guarding){ foe.counter = true; st.counters++; }
+          if (foe.guarding){ foe.counter = true; st.counters++; lg((side === 'p' ? '对手' : '你') + ' 架势受击 → 反击蓄势（下一次攻击 ×1.5）', 'lg-dim'); }
           if (r.crit){ st.crits++; }
           if (inLastStand(foe.hp)) st.stands++;
           floatText(side === 'p' ? 'right' : 'left', '-' + Math.round(r.dmg), r.crit ? 'crit' : 'dmg');
@@ -2985,6 +3043,7 @@ async function executeTurn(pActObj, eActObj){
     b.winner = (P.hp <= 0 && E.hp <= 0) ? 'draw' : (P.hp <= 0 ? 'E' : 'P');
     b.over = true;
     b.pTrail.push(P.hp); b.eTrail.push(E.hp);
+    broadcastRoomRes(b);
     finishBattle();
     return;
   }
@@ -2998,13 +3057,20 @@ async function executeTurn(pActObj, eActObj){
     const pa = P.hp / RULES.baseHp, pe = E.hp / RULES.baseHp;
     b.winner = (pa > pe) ? 'P' : ((pe > pa) ? 'E' : 'draw');
     b.over = true;
+    broadcastRoomRes(b);
     finishBattle();
     return;
   }
   b.turn++;
+  broadcastRoomRes(b);
   renderBattle();
 }
 function setSpeed(sp){
+  /* v13.6 E3：房间对局双方必须手动交换动作，禁用自动档避免双端失步 */
+  if (STATE.battle && STATE.battle.room && sp !== 'manual'){
+    toast('房间对战需手动操作，无法切换自动');
+    return;
+  }
   STATE.speed = sp;
   clearTimeout(STATE._t);
   document.querySelectorAll('.spd').forEach(x => x.classList.toggle('on', x.dataset.sp === sp));
@@ -3063,7 +3129,7 @@ function finishBattle(){
   }
   const early = decided < 12, late = decided > 24;
   $('heat-mark').textContent = `本场第 ${decided} 回合胜负已定 → ${early ? '过早（<12，垃圾时间风险）' : (late ? '过晚（>24，接近封顶僵持）' : '落在 12–24 健康区间')}，验收线：≥70% 对局应落在 12–24`;
-  const sim = simulateBatch(b.pAlloc, 60);
+  const sim = simulateBatch(STATE.slots, 60);
   const segs = [0,0,0,0,0,0];
   sim.decided.forEach(d => { const i = Math.min(5, Math.floor((d - 1) / 5)); segs[i]++; });
   const maxN = Math.max(1, ...segs);
@@ -3072,7 +3138,7 @@ function finishBattle(){
     `<div class="brow"><span class="bl">${labels[i]}</span><div class="bt"><div class="bf" style="width:${(n/maxN*100).toFixed(0)}%"></div></div><span class="bv">${n}</span></div>`).join('');
   const inZone = sim.decided.filter(d => d >= 12 && d <= 24).length;
   const avgT = (sim.turns.reduce((a,b)=>a+b,0) / sim.turns.length).toFixed(1);
-  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）`;
+  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· 简化估算：已含辅助耗能系数，未含预测/连招/辅助行为`;
   $('r-log').innerHTML = STATE.logs.map(s => `<div>${s}</div>`).join('');
   STATE.battle = null;
 }
@@ -3266,8 +3332,8 @@ function init(){
     ['每5回合', '每经过 <b>5</b> 回合，双方能量上限 <b>+2</b>（第 5 回合 6 / 第 10 回合 8 / 第 15 回合 10…）'],
     ['暴击', '攻击有 <b>10%</b> 概率暴击，伤害 <b>×1.5</b>；稀有 / 史诗攻击宝石可提升暴击率'],
     ['背水', '血量 ≤30% 时伤害 <b>×1.25</b>，鼓励残血反打'],
-    ['架势', '防御架势减伤 <b>50%</b>，被击中时反击 <b>×1.5</b>'],
-    ['预测', '消耗 <b>1</b> 能量预测对手动作，命中则本回合己方伤害 <b>×1.3</b>'],
+    ['架势', '防御架势减伤 <b>50%</b>，受击后下一次攻击 <b>×1.5</b>（反击蓄势）'],
+    ['预测', '消耗 <b>1</b> 能量预测对手动作，命中则本回合己方<b>首击</b>伤害 <b>×1.3</b>'],
   ];
   document.querySelectorAll('.topbar .kpis span').forEach(sp => {
     const hit = kpiDefs.find(([k]) => sp.textContent.indexOf(k) === 0);
@@ -3399,7 +3465,7 @@ function renderNick(){
 }
 /* ================= 本地对战房间（发起玩家主机 = 房间；BroadcastChannel 直连，无需服务器） ================= */
 const ROOM = {
-  role: null, code: null, ch: null, peerNick: null, peerAlloc: null,
+  role: null, code: null, ch: null, peerNick: null, peerAlloc: null, peerSlots: null,
   myNick: '', id: '', sentAct: null, pendingAct: null, inBattle: false,
   myAlloc: null, hostReady: false,
   /* 发出本方回合动作（房间模式）；预测在本地各自结算，无需交换 */
@@ -3438,7 +3504,7 @@ function openRoom(mode){
       <div class="room-code" id="room-code">${ROOM.code}</div>
       <div id="room-status">⏳ 等待对手加入…（同一浏览器新开标签页 → 主菜单「加入对战房间」输入房间码）</div>
       <div class="rbtn"><button id="room-btn-start" style="display:none" class="gold">开始对局</button><button class="ghost" id="room-btn-cancel">取消</button></div>`;
-    ROOM.peerAlloc = null;
+    ROOM.peerAlloc = null; ROOM.peerSlots = null;
     bcPost({t:'host', code: ROOM.code, nick: ROOM.myNick, id: roomId(), at: Date.now()});
   } else {
     ROOM.code = null;
@@ -3453,7 +3519,7 @@ function openRoom(mode){
       if (code.length < 4){ toast('请输入有效房间码'); return; }
       ROOM.code = code;
       $('room-status').textContent = '⏳ 正在连接创建者主机…';
-      bcPost({t:'join', code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), at: Date.now()});
+      bcPost({t:'join', code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots, at: Date.now()});
       setTimeout(() => { if (ROOM.role === 'join' && !ROOM.peerNick) $('room-status').textContent = '未收到回应：请确认房间码正确、且创建者在同一浏览器打开了本文件。'; }, 6000);
     };
   }
@@ -3481,11 +3547,12 @@ function bindRoomStart(){
 }
 function startRoomBattle(){
   const oppAlloc = ROOM.peerAlloc || allocFromSlots(STATE.slots);
+  const oppSlots = ROOM.peerSlots || null;
   ROOM.inBattle = true;
   ROOM.sentAct = null; ROOM.pendingAct = null;
   closeRoomModal(false);
   goView('battle');
-  startBattle({room: {code: ROOM.code, peerNick: ROOM.peerNick, eAlloc: oppAlloc}});
+  startBattle({room: {code: ROOM.code, peerNick: ROOM.peerNick, eAlloc: oppAlloc, eSlots: oppSlots}});
   const b = STATE.battle;
   b.room = true;
   b.roomRng = rngFactory(hashCode(ROOM.code));
@@ -3497,7 +3564,7 @@ function startRoomBattle(){
 function closeRoom(resetRole){
   closeRoomModal();
   if (resetRole){
-    ROOM.role = null; ROOM.code = null; ROOM.peerNick = null; ROOM.peerAlloc = null;
+    ROOM.role = null; ROOM.code = null; ROOM.peerNick = null; ROOM.peerAlloc = null; ROOM.peerSlots = null;
     ROOM.sentAct = null; ROOM.pendingAct = null;
   }
 }
@@ -3518,12 +3585,13 @@ function roomOnMessage(ev){
   if (ROOM.role === 'host' && ROOM.code && m.t === 'join' && m.code === ROOM.code){
     ROOM.peerNick = m.nick;
     ROOM.peerAlloc = m.alloc || null;
+    ROOM.peerSlots = m.slots || null;
     touchOnline(m.nick, m.id, true);
     const st = $('room-status');
     if (st) st.innerHTML = `✅ 对手已加入：<b>${m.nick}</b> · 构筑 ${m.alloc ? Math.round(Object.values(m.alloc).reduce((a,b)=>a+b,0)) : '?'} 点`;
     const s = $('room-btn-start');
     if (s) s.style.display = 'inline-block';
-    bcPost({t:'ack', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots)});
+    bcPost({t:'ack', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots});
     sfx('roomJoin');
     toast('对手已加入：' + m.nick);
     return;
@@ -3531,21 +3599,23 @@ function roomOnMessage(ev){
   if (ROOM.role === 'join' && ROOM.code && m.t === 'ack' && m.code === ROOM.code){
     ROOM.peerNick = m.nick;
     ROOM.peerAlloc = m.alloc || null;
+    ROOM.peerSlots = m.slots || null;
     touchOnline(m.nick, m.id, true);
     const st = $('room-status');
     if (st) st.innerHTML = `✅ 已连接创建者主机：<b>${m.nick}</b><br>等待创建者点击「开始对局」…`;
-    bcPost({t:'build', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots)});
+    bcPost({t:'build', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots});
     return;
   }
   if (ROOM.code && m.code === ROOM.code && m.t === 'build' && m.id !== roomId()){
     if (ROOM.role === 'host'){
       ROOM.peerAlloc = m.alloc || null;
+      ROOM.peerSlots = m.slots || null;
       toast('已收到 ' + m.nick + ' 的构筑，可以开始对局');
     }
     return;
   }
   if (ROOM.code && m.code === ROOM.code && m.t === 'needbuild' && m.id !== roomId() && ROOM.role === 'join'){
-    bcPost({t:'build', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots)});
+    bcPost({t:'build', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots});
     return;
   }
   if (ROOM.code && m.code === ROOM.code && m.t === 'start' && m.id !== roomId()){
@@ -3570,12 +3640,34 @@ function roomOnMessage(ev){
       toast('对手 ' + m.nick + ' 已离开房间');
       const st = $('room-status');
       if (st) st.innerHTML = '⏳ 对手已离开，等待新的对手加入…';
-      ROOM.peerNick = null; ROOM.peerAlloc = null;
+      ROOM.peerNick = null; ROOM.peerAlloc = null; ROOM.peerSlots = null;
     }
     return;
   }
   if (ROOM.inBattle && ROOM.code && m.code === ROOM.code && m.t === 'act' && m.id !== roomId()){
     applyRoomAct({turn: m.turn, act: m.act, from: m.nick});
+    return;
+  }
+  /* v13.6 E2 深化：guest 应用 host 权威结算结果（血量/能量/回合/日志镜像同步） */
+  if (ROOM.inBattle && ROOM.code && m.code === ROOM.code && m.t === 'res' && m.id !== roomId() && ROOM.role === 'join'){
+    const b = STATE.battle, r = m.res;
+    if (!b || !b.room || b.over || !r) return;
+    b.p.hp = r.pHp; b.e.hp = r.eHp;
+    b.p.energy = r.pE; b.e.energy = r.eE;
+    b.turn = r.turn;
+    if (r.first) b.first = r.first;
+    b.turnReady = false; b.resolving = false; b.rollDone = false;
+    b.predSel = null; b.predReward = false;
+    if (r.logs && r.logs.length) STATE.logs = r.logs.slice();
+    if (r.pTrail) b.pTrail = r.pTrail;
+    if (r.eTrail) b.eTrail = r.eTrail;
+    if (r.over){
+      b.over = true;
+      b.winner = r.winner || 'P';
+      finishBattle();
+    } else {
+      renderBattle();
+    }
     return;
   }
   if (m.t === 'letter' && m.toId === roomId()){
@@ -4204,7 +4296,7 @@ const I18N_DICT = {
   '宠物攻击': {en: 'Pet Attack', ja: 'ペット攻撃'},
   '宠物伤害，受对手抗性减免': {en: 'Pet damage, reduced by opponent resist', ja: 'ペットダメージ、相手の耐性で軽減'},
   '恢复生命，受恢复加成': {en: 'Restore HP, boosted by heal bonus', ja: 'HP回復、回復ボーナスで増加'},
-  '减伤 50%，被击中则反击 ×1.5': {en: '50% reduction, counter ×1.5 when hit', ja: '50%軽減、被弾時 反撃×1.5'},
+  '减伤 50%，受击后下一次攻击 ×1.5（反击蓄势）': {en: 'Damage Reduction 50%, next Attack ×1.5 after hit (Counter ready)', ja: '被ダメ軽減50%、被弾後次の攻撃×1.5（反撃スタンバイ）'},
   '能量（至上限）': {en: 'Energy (to cap)', ja: 'エネルギー（上限まで）'},
   '回合恢复 ': {en: 'Turn Heal ', ja: 'ターン回復 '},
   '专注恢复 ': {en: 'Focus Heal ', ja: '集中回復 '},
@@ -4384,7 +4476,7 @@ const I18N_DICT = {
   '预测对手动作（标配 · 耗 1 能量 · 点行动时统一判定）': {en: 'Predict opponent action (standard · costs 1 energy · judged at Action)', ja: '相手の行動を予測（標準 · 消費1 · 行動時に判定）'},
   '预测对手动作': {en: 'Predict opponent action', ja: '相手の行動を予測'},
   '已预测对手：': {en: 'Predicted: ', ja: '予測済み：'},
-  '本回合伤害 ×1.3 待触发': {en: 'this turn damage ×1.3 pending', ja: '今ターンのダメージ×1.3 待機中'},
+  '本回合首击伤害 ×1.3 待触发': {en: 'first hit this turn ×1.3 pending', ja: '今ターン最初の一撃×1.3 待機中'},
   '点击下方按钮选择要预测的动作（耗 1 能量）': {en: 'Pick the action to predict below (costs 1 energy)', ja: '下のボタンで予測する行動を選択（消費1）'},
   '预测：': {en: 'Predict: ', ja: '予測：'},
   '耗 1 能量押注对手本回合动作；命中则本回合己方伤害 ×1.3。点击选中，点「行动」时统一判定能量': {en: 'Spend 1 energy betting the opponent\u2019s action; hit = your damage ×1.3 this turn. Select then press Action.', ja: '1エネルギーで相手の行動に賭け、的中で今ターンのダメージ×1.3。選択後「行動」で判定。'},
@@ -4606,7 +4698,7 @@ const I18N_DICT = {
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.5 · 9大项×4组×8孔 · 多技能连招 · 战斗动画 · 多乐器配乐 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.5 · 9×4×8 sockets · Multi-skill combos · Battle FX · Multi-instrument BGM · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.5 · 9×4×8ソケット · マルチスキル連撃 · バトルアニメ · 多楽器BGM · 中/英/日 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v13.6 · 9大项×4组×8孔 · P0 修复：耗能统一 · 房间双端同步 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.6 · 9×4×8 sockets · P0 fixes: unified energy cost · room sync · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.6 · 9×4×8ソケット · P0修正：エネルギー統一 · ルーム同期 · 中/英/日 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},

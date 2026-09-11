@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.3（更新版）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.4（多语言版）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -21,6 +21,14 @@
   --ok:#4E8A5C; --bad:#B46355; --blue:#5E82A0;
   --shadow:0 3px 12px rgba(40,80,130,.14);
 }
+/* ---------- 多语言字体 ---------- */
+.lang-en body,body.lang-en{font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif}
+.lang-ja body,body.lang-ja{font-family:"Yu Gothic UI","Meiryo","Hiragino Kaku Gothic ProN","Microsoft YaHei",sans-serif}
+#set-lang{display:flex;gap:6px;flex-wrap:wrap}
+#set-lang .lng{padding:5px 14px;border-radius:9px;font-size:14px;font-weight:800;background:var(--card2);border:1.5px solid var(--line2);color:var(--deep)}
+#set-lang .lng:hover{border-color:var(--gold3)}
+#set-lang .lng.on{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent)}
+.set-lang-note{font-size:12px;color:var(--faint);margin-top:2px}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -605,12 +613,12 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub">宝石构筑版 v13.3 · 9大项×4组×8孔 · BUG修复 + 数值优化 · 本地房间对战 · 主菜单/好友/聊天书信 · AI熊猫宠物 · 25 种提示音效 · L0 安全防线 · 在线检查更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.4 · 9大项×4组×8孔 · BUG修复 + 数值优化 · 本地房间对战 · 主菜单/好友/聊天书信 · AI熊猫宠物 · 25 种提示音效 · L0 安全防线 · 在线检查更新 · 中/英/日多语言</div>
   </div>
   <div class="kpis">
-    <span>2500血 / 30回合</span><span>能量+3/回合(前8回合)</span><span>每5回合上限+2</span>
-    <span>暴击10%×1.5</span><span>背水≤30%×1.25</span><span>架势减伤50%+反击×1.5</span>
-    <span>预测耗能1·命中伤害×1.3</span><span id="kpi-nick" class="nick-chip" title="点击修改昵称"></span>
+    <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
+    <span data-i18n="kpi4">暴击10%×1.5</span><span data-i18n="kpi5">背水≤30%×1.25</span><span data-i18n="kpi6">架势减伤50%+反击×1.5</span>
+    <span data-i18n="kpi7">预测耗能1·命中伤害×1.3</span><span id="kpi-nick" class="nick-chip" title="点击修改昵称"></span>
     <button id="btn-music" class="music-btn">▶ 音乐</button>
     <button id="btn-home" class="music-btn">☰ 主菜单</button>
   </div>
@@ -630,18 +638,18 @@ body.in-battle .view{height:calc(100vh - 56px)}
   <!-- ===== 视图：主菜单 ===== -->
   <div id="view-menu" class="view on">
     <div class="menu-wrap cn-frame f4">
-      <div class="menu-title">构筑对决<span>数值之战</span></div>
+      <div class="menu-title" data-i18n-html="menu_title">构筑对决<span>数值之战</span></div>
       <div class="menu-sub">宝石镶嵌构筑 BD · 心理博弈回合对战</div>
       <div class="menu-grid">
-        <button class="menu-btn" data-go="build" onclick="goView('build')"><b>开始构筑</b><i>管理宝石背包 · 镶嵌 9 大项孔阵 · 合成升级</i></button>
-        <button class="menu-btn" data-go="room-host" onclick="openRoom('host')"><b>创建对战房间</b><i>以本机为主机 · 生成房间码 · 等待好友加入</i></button>
-        <button class="menu-btn" data-go="room-join" onclick="openRoom('join')"><b>加入对战房间</b><i>输入房间码 · 连接发起方主机</i></button>
-        <button class="menu-btn" data-go="social" onclick="goSocial('friends')"><b>好友</b><i>添加好友 · 在线状态 · 邀请对战</i></button>
-        <button class="menu-btn" data-go="social" onclick="goSocial('chat')"><b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i></button>
-        <button class="menu-btn" data-go="help" onclick="goSocial('help')"><b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i></button>
-        <button class="menu-btn" data-go="set" onclick="goSocial('set')"><b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i></button>
-        <button class="menu-btn" onclick="UPD.check(false)"><b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i></button>
-        <button class="menu-btn gold" onclick="startAiMatch()"><b>快速 AI 对战</b><i>当前构筑 vs 镜像 AI · 直接开战</i></button>
+        <button class="menu-btn" data-go="build" onclick="goView('build')" data-i18n-html="m_build"><b>开始构筑</b><i>管理宝石背包 · 镶嵌 9 大项孔阵 · 合成升级</i></button>
+        <button class="menu-btn" data-go="room-host" onclick="openRoom('host')" data-i18n-html="m_host"><b>创建对战房间</b><i>以本机为主机 · 生成房间码 · 等待好友加入</i></button>
+        <button class="menu-btn" data-go="room-join" onclick="openRoom('join')" data-i18n-html="m_join"><b>加入对战房间</b><i>输入房间码 · 连接发起方主机</i></button>
+        <button class="menu-btn" data-go="social" onclick="goSocial('friends')" data-i18n-html="m_friends"><b>好友</b><i>添加好友 · 在线状态 · 邀请对战</i></button>
+        <button class="menu-btn" data-go="social" onclick="goSocial('chat')" data-i18n-html="m_chat"><b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i></button>
+        <button class="menu-btn" data-go="help" onclick="goSocial('help')" data-i18n-html="m_help"><b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i></button>
+        <button class="menu-btn" data-go="set" onclick="goSocial('set')" data-i18n-html="m_set"><b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i></button>
+        <button class="menu-btn" onclick="UPD.check(false)" data-i18n-html="m_upd"><b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i></button>
+        <button class="menu-btn gold" onclick="startAiMatch()" data-i18n-html="m_ai"><b>快速 AI 对战</b><i>当前构筑 vs 镜像 AI · 直接开战</i></button>
       </div>
       <div class="menu-foot" id="menu-foot">本地存储进度 · 单文件 Demo · 房间对战同浏览器多标签页真实连通（跨设备联机待 WebRTC 信令）</div>
     </div>
@@ -825,30 +833,30 @@ body.in-battle .view{height:calc(100vh - 56px)}
 
       <div class="stab-pane" id="pane-help" style="display:none">
         <div class="help-doc">
-          <h4>对战规则（v13）</h4>
+          <h4 data-i18n-html="help_rules">对战规则（v13）</h4>
           <ul>
-            <li>目标：30 回合内把对手 2500 血打空；双方同归或超回合按血量比例判胜负。</li>
-            <li>每回合先手 roll：点数大者先手（先结算整套动作）；<b>后手方本回合 +1 能量补偿</b>（防滚雪球）。</li>
-            <li>能量：初始 3，每回合 +3（前 8 回合，之后 +2），每 5 回合能量上限 +2；蓄力 +2。</li>
-            <li>动作：攻击（主动技能宝石，耗能 1+组内辅助×0.6）/ 专注恢复（耗 3）/ 防御架势（耗 2，减伤50%+反击×1.5）/ 蓄力。</li>
-            <li>预测对手动作（标配，耗 1）：命中则本回合攻击伤害 ×1.3，回合末自动清零不残留。</li>
-            <li>能量判定：行动按钮统一在回合初入账后判定（与扣费同基准），超支警告音 + 重新制定策略。</li>
+            <li data-i18n-html="help_rules_1">目标：30 回合内把对手 2500 血打空；双方同归或超回合按血量比例判胜负。</li>
+            <li data-i18n-html="help_rules_2">每回合先手 roll：点数大者先手（先结算整套动作）；<b>后手方本回合 +1 能量补偿</b>（防滚雪球）。</li>
+            <li data-i18n-html="help_rules_3">能量：初始 3，每回合 +3（前 8 回合，之后 +2），每 5 回合能量上限 +2；蓄力 +2。</li>
+            <li data-i18n-html="help_rules_4">动作：攻击（主动技能宝石，耗能 1+组内辅助×0.6）/ 专注恢复（耗 3）/ 防御架势（耗 2，减伤50%+反击×1.5）/ 蓄力。</li>
+            <li data-i18n-html="help_rules_5">预测对手动作（标配，耗 1）：命中则本回合攻击伤害 ×1.3，回合末自动清零不残留。</li>
+            <li data-i18n-html="help_rules_6">能量判定：行动按钮统一在回合初入账后判定（与扣费同基准），超支警告音 + 重新制定策略。</li>
           </ul>
-          <h4>构筑（v13）</h4>
+          <h4 data-i18n-html="help_build">构筑（v13）</h4>
           <ul>
-            <li>9 大项 × 4 组 × 8 孔 = 288 孔；每组第 1 孔只能插主动技能宝石，其余 7 孔插辅助宝石；组内串联、组间不串联。</li>
-            <li>同大项内不可插同名宝石；主动技能耗能随组内辅助宝石数增加。</li>
-            <li>辅助宝石除数值外提供<b>行为词条</b>（连击/破甲/狂怒/壁垒/结界/轻灵/增幅/再生/祝福），让插满辅助有收益。</li>
-            <li>合成：任意 5 颗同品级宝石 → 1 颗同品级高 1 级（名字继承数量最多者）。</li>
+            <li data-i18n-html="help_build_1">9 大项 × 4 组 × 8 孔 = 288 孔；每组第 1 孔只能插主动技能宝石，其余 7 孔插辅助宝石；组内串联、组间不串联。</li>
+            <li data-i18n-html="help_build_2">同大项内不可插同名宝石；主动技能耗能随组内辅助宝石数增加。</li>
+            <li data-i18n-html="help_build_3">辅助宝石除数值外提供<b>行为词条</b>（连击/破甲/狂怒/壁垒/结界/轻灵/增幅/再生/祝福），让插满辅助有收益。</li>
+            <li data-i18n-html="help_build_4">合成：任意 5 颗同品级宝石 → 1 颗同品级高 1 级（名字继承数量最多者）。</li>
           </ul>
-          <h4>本地房间对战（v13）</h4>
+          <h4 data-i18n-html="help_room">本地房间对战（v13）</h4>
           <ul>
-            <li>创建房间：以发起方本机为主机，生成房间码；对方在另一个标签页打开同一文件 → 主菜单加入房间 → 输入房间码。</li>
-            <li>同浏览器多标签页真实连通（BroadcastChannel 直连，无需服务器）；先手由房间种子决定，双方结算一致。</li>
-            <li>跨设备真人对战需 WebRTC 信令或中转服务器（当前单文件环境无法提供），界面与协议已就绪。</li>
+            <li data-i18n-html="help_room_1">创建房间：以发起方本机为主机，生成房间码；对方在另一个标签页打开同一文件 → 主菜单加入房间 → 输入房间码。</li>
+            <li data-i18n-html="help_room_2">同浏览器多标签页真实连通（BroadcastChannel 直连，无需服务器）；先手由房间种子决定，双方结算一致。</li>
+            <li data-i18n-html="help_room_3">跨设备真人对战需 WebRTC 信令或中转服务器（当前单文件环境无法提供），界面与协议已就绪。</li>
           </ul>
-          <h4>操作</h4>
-          <ul><li>鼠标悬浮任意元素查看扩展信息；左键点击孔位拆除已装宝石；行动按钮统一判定能量。</li></ul>
+          <h4 data-i18n-html="help_ops">操作</h4>
+          <ul><li data-i18n-html="help_ops_1">鼠标悬浮任意元素查看扩展信息；左键点击孔位拆除已装宝石；行动按钮统一判定能量。</li></ul>
         </div>
       </div>
 
@@ -858,6 +866,8 @@ body.in-battle .view{height:calc(100vh - 56px)}
           <div class="set-row"><label>背景音乐</label><button id="set-music" class="set-btn">▶ 播放</button></div>
           <div class="set-row"><label>音效</label><button id="set-sfx" class="set-btn">开</button></div>
           <div class="set-row"><label>桌面宠物（熊猫幼崽）</label><button id="set-pet" class="set-btn">开</button></div>
+          <div class="set-row"><label data-i18n="set_lang_label">游戏语言</label><div id="set-lang"><button class="lng" data-lang="zh">中文</button><button class="lng" data-lang="en">English</button><button class="lng" data-lang="ja">日本語</button></div></div>
+          <div class="set-row"><label data-i18n="set_lang_hint">切换后界面将重启</label></div>
           <div class="set-row"><label>重置进度</label><button id="set-reset" class="set-btn danger">清空宝石背包与构筑（不可恢复）</button></div>
         </div>
       </div>
@@ -872,30 +882,30 @@ body.in-battle .view{height:calc(100vh - 56px)}
   </div>
   <div class="ov-body">
     <div class="ov-sec">
-      <h5>综合</h5>
+      <h5 data-i18n="ov_combo">综合</h5>
       <div class="ov-row">总属性点 <b id="ov-pts">0.0</b></div>
       <div class="ov-row">能量上限 <b id="ov-en">4</b> <span style="font-size:11px;color:var(--faint)">每5回合+2</span></div>
       <div class="ov-row">回合恢复 <b id="ov-heal">0.0</b></div>
     </div>
     <div class="ov-sec">
-      <h5>战斗期望（对 10 流派环境）</h5>
+      <h5 data-i18n="ov_expect">战斗期望（对 10 流派环境）</h5>
       <div id="ov-expect"></div>
     </div>
     <div class="ov-sec">
-      <h5>已装技能（点击组阵可卸下）</h5>
+      <h5 data-i18n="ov_skills">已装技能（点击组阵可卸下）</h5>
       <div class="ov-skills" id="ov-skills"></div>
     </div>
     <div class="ov-sec">
-      <h5>能量经济 · 能量上限成长</h5>
+      <h5 data-i18n="ov_energy">能量经济 · 能量上限成长</h5>
       <table class="ov-table" id="ov-energy"></table>
     </div>
     <div class="ov-sec">
-      <h5>宝石品级分布</h5>
+      <h5 data-i18n="ov_rarity">宝石品级分布</h5>
       <div id="ov-rarity"></div>
     </div>
     <div class="ov-sec">
-      <h5>操作提示</h5>
-      <div class="ov-hint">1. 在左侧背包点选宝石 → 点击组阵镶嵌<br>2. 无选中时点击组阵 = 卸下最后一颗<br>3. 同大项内不可镶同名宝石；5 颗同名同品级可合成升级<br>4. 鼠标悬浮任意元素可查看扩展信息<br>5. 点「随机对战」随机连接一名玩家对手（本地构筑池模拟）</div>
+      <h5 data-i18n="ov_hint_t">操作提示</h5>
+      <div class="ov-hint" data-i18n-html="ov_hint">1. 在左侧背包点选宝石 → 点击组阵镶嵌<br>2. 无选中时点击组阵 = 卸下最后一颗<br>3. 同大项内不可镶同名宝石；5 颗同名同品级可合成升级<br>4. 鼠标悬浮任意元素可查看扩展信息<br>5. 点「随机对战」随机连接一名玩家对手（本地构筑池模拟）</div>
     </div>
   </div>
 </div>
@@ -2393,7 +2403,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.3.0',
+  ver: '13.4.0',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -3459,6 +3469,13 @@ function initV13(){
   if (STATE.sfx === undefined) STATE.sfx = true;
   SFX.on = STATE.sfx;
   renderNick();
+  /* v13.4 多语言 */
+  I18N.start();
+  const langBtns = document.querySelectorAll('#set-lang .lng');
+  for (const lb of langBtns){
+    if (lb.dataset.lang === I18N.lang) lb.classList.add('on');
+    lb.onclick = () => I18N.set(lb.dataset.lang);
+  }
   setTimeout(() => UPD.check(true), 1800);
   /* 心跳广播 */
   bcPost({t:'hb', nick: myNick(), id: roomId(), at: Date.now()});
@@ -3507,6 +3524,815 @@ function initV13(){
   renderLetters();
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initV13); else initV13();
+
+/* ============================================================
+ * v13.4 国际化模块：中文（默认）/ English / 日本語
+ * 机制：中文原文即字典 key；tr() 按最长 key 优先做子串替换；
+ *       含数字的动态句走 I18N_WILD 正则表（高质量翻译）；
+ *       MutationObserver 自动翻译后续动态渲染的文本（零侵入渲染函数）。
+ * 切换语言：I18N.set() 保存 localStorage 后 reload，启动时按语言初始化。
+ * ============================================================ */
+const I18N_WILD = [
+  {re: /第 (\d+)\/(\d+) 回合/g,       en: 'Turn $1/$2',              ja: '$1/$2 ターン'},
+  {re: /第 (\d+) 回合/g,               en: 'Turn $1',                 ja: '$1ターン目'},
+  {re: /回合 (\d+)/g,                  en: 'Turn $1',                 ja: 'ターン $1'},
+  {re: /能量 (\d+)\/(\d+)/g,           en: 'Energy $1/$2',            ja: 'エネルギー $1/$2'},
+  {re: /能量上限 (\d+)/g,              en: 'Energy Cap $1',           ja: 'エネルギー上限 $1'},
+  {re: /回合初入账后约 (\d+)/g,        en: '~$1 after turn start',    ja: 'ターン開始後 約$1'},
+  {re: /行动耗能 (\d+)/g,              en: 'Action Cost $1',          ja: '行動コスト $1'},
+  {re: /本次行动共需 (\d+)/g,          en: 'This action needs $1',    ja: '今回の行動に必要なエネルギー $1'},
+  {re: /持有 (\d+)/g,                  en: 'have $1',                 ja: '所持 $1'},
+  {re: /每级 \+([\d.]+) 点/g,          en: 'per Lv +$1 pts',          ja: 'Lv毎 +$1 ポイント'},
+  {re: /每级 \+([\d.]+)/g,             en: 'per Lv +$1',              ja: 'Lv毎 +$1'},
+  {re: /\+([\d.]+) 点/g,               en: '+$1 pts',                 ja: '+$1 ポイント'},
+  {re: /颗 Lv(\d+)/g,                  en: 'gems Lv$1',               ja: '個 Lv$1'},
+  {re: /Lv(\d+)/g,                     en: 'Lv$1',                    ja: 'Lv$1'},
+  {re: /能量 \d+ 至上限/g,             en: 'energy (to cap)',         ja: 'エネルギー（上限まで）'},
+  {re: /^(T\d+ )/g,                    en: '$1',                      ja: '$1'},
+  {re: /第 (\d+) 回合胜负已定/g,       en: 'Decided at turn $1',      ja: '勝負が決したターン $1'},
+];
+const I18N_DICT = {
+  /* ---------- 通用 UI 术语 ---------- */
+  '回合': {en: 'Turn', ja: 'ターン'},
+  '回合数': {en: 'Turns', ja: 'ターン数'},
+  '能量': {en: 'Energy', ja: 'エネルギー'},
+  '血量': {en: 'HP', ja: 'HP'},
+  '血': {en: 'HP', ja: 'HP'},
+  '生命': {en: 'HP', ja: 'HP'},
+  '你': {en: 'You', ja: 'あなた'},
+  '我方': {en: 'You', ja: '味方'},
+  '对手': {en: 'Opponent', ja: '相手'},
+  '玩家': {en: 'Player', ja: 'プレイヤー'},
+  '先手': {en: 'First', ja: '先行'},
+  '后手': {en: 'Second', ja: '後攻'},
+  '当前': {en: 'Current', ja: '現在'},
+  '已装': {en: 'Equipped', ja: '装備中'},
+  '已镶嵌': {en: 'Equipped', ja: '装着済み'},
+  '未使用': {en: 'Unused', ja: '未使用'},
+  '总属性点': {en: 'Total Points', ja: '合計ポイント'},
+  '属性点': {en: 'Points', ja: 'ポイント'},
+  '点': {en: 'pts', ja: 'pt'},
+  '品级': {en: 'Rarity', ja: 'グレード'},
+  '等级': {en: 'Level', ja: 'レベル'},
+  '类型': {en: 'Type', ja: 'タイプ'},
+  '大项': {en: 'Category', ja: 'カテゴリ'},
+  '组': {en: 'group', ja: 'グループ'},
+  '孔': {en: 'slot', ja: 'ソケット'},
+  '孔位': {en: 'Slot', ja: 'ソケット'},
+  '技能': {en: 'Skill', ja: 'スキル'},
+  '宝石': {en: 'Gem', ja: 'ジェム'},
+  '背包': {en: 'Bag', ja: 'バッグ'},
+  '合成': {en: 'Craft', ja: '合成'},
+  '镶嵌': {en: 'Socket', ja: '装着'},
+  '拆除': {en: 'Remove', ja: '取り外し'},
+  '卸下': {en: 'Remove', ja: '取り外す'},
+  '取消': {en: 'Cancel', ja: 'キャンセル'},
+  '确认': {en: 'Confirm', ja: '確認'},
+  '保存': {en: 'Save', ja: '保存'},
+  '删除': {en: 'Delete', ja: '削除'},
+  '发送': {en: 'Send', ja: '送信'},
+  '添加': {en: 'Add', ja: '追加'},
+  '搜索': {en: 'Search', ja: '検索'},
+  '关闭': {en: 'Close', ja: '閉じる'},
+  '开始': {en: 'Start', ja: '開始'},
+  '继续': {en: 'Continue', ja: '続行'},
+  '返回': {en: 'Back', ja: '戻る'},
+  '提示': {en: 'Notice', ja: 'お知らせ'},
+  '普通': {en: 'Common', ja: 'ノーマル'},
+  '精良': {en: 'Fine', ja: 'アンコモン'},
+  '稀有': {en: 'Rare', ja: 'レア'},
+  '史诗': {en: 'Epic', ja: 'エピック'},
+  '开': {en: 'On', ja: 'オン'},
+  '关': {en: 'Off', ja: 'オフ'},
+  '播放中': {en: 'Playing', ja: '再生中'},
+  '音乐': {en: 'Music', ja: '音楽'},
+  '音效': {en: 'SFX', ja: '効果音'},
+  '难度': {en: 'Difficulty', ja: '難易度'},
+  '语言': {en: 'Language', ja: '言語'},
+  '中文': {en: '中文', ja: '中文'},
+  '日文': {en: '日本語', ja: '日本語'},
+  '英文': {en: 'English', ja: 'English'},
+  '好的': {en: 'OK', ja: 'OK'},
+  '胜利': {en: 'Victory', ja: '勝利'},
+  '失败': {en: 'Defeat', ja: '敗北'},
+  '平局': {en: 'Draw', ja: '引き分け'},
+  '胜利加成': {en: 'Victory Bonus', ja: '勝利ボーナス'},
+  '命中': {en: 'Hit', ja: '命中'},
+  '暴击': {en: 'Crit', ja: '会心'},
+  '被闪避': {en: 'Dodged', ja: '回避された'},
+  '减免': {en: 'Reduction', ja: '軽減'},
+  '连击': {en: 'Combo', ja: '連撃'},
+  '破甲': {en: 'Pierce', ja: '破甲'},
+  '狂怒': {en: 'Frenzy', ja: '激怒'},
+  '壁垒': {en: 'Bulwark', ja: '防壁'},
+  '结界': {en: 'Aegis', ja: '結界'},
+  '轻灵': {en: 'Agile', ja: '軽快'},
+  '增幅': {en: 'Amplify', ja: '増幅'},
+  '再生': {en: 'Regen', ja: '再生'},
+  '祝福': {en: 'Blessing', ja: '祝福'},
+  '攻击': {en: 'Attack', ja: '攻撃'},
+  '防御': {en: 'Guard', ja: '防御'},
+  '恢复': {en: 'Heal', ja: '回復'},
+  '蓄力': {en: 'Charge', ja: '溜め'},
+  '预测': {en: 'Predict', ja: '予測'},
+  '行动': {en: 'Action', ja: '行動'},
+  '消耗': {en: 'Cost', ja: '消費'},
+  '耗能': {en: 'Cost', ja: '消費'},
+  '暴击率': {en: 'Crit Rate', ja: '会心率'},
+  '闪避率': {en: 'Dodge Rate', ja: '回避率'},
+  '吸血': {en: 'Lifesteal', ja: 'ドレイン'},
+  '反击': {en: 'Counter', ja: '反撃'},
+  '减伤': {en: 'Damage Reduction', ja: '被ダメ軽減'},
+  '恢复加成': {en: 'Heal Bonus', ja: '回復ボーナス'},
+  '战斗耗能': {en: 'Battle Cost', ja: '戦闘消費'},
+  '来源': {en: 'Source', ja: '入手'},
+  '对战掉落': {en: 'Battle Drop', ja: '対戦ドロップ'},
+  '综合': {en: 'Overview', ja: '総合'},
+  '操作': {en: 'Controls', ja: '操作'},
+  '规则': {en: 'Rules', ja: 'ルール'},
+  '帮助': {en: 'Help', ja: 'ヘルプ'},
+  '设置': {en: 'Settings', ja: '設定'},
+  '好友': {en: 'Friends', ja: 'フレンド'},
+  '在线': {en: 'Online', ja: 'オンライン'},
+  '离线': {en: 'Offline', ja: 'オフライン'},
+  '在线玩家': {en: 'Online Players', ja: 'オンラインプレイヤー'},
+  '我的好友': {en: 'My Friends', ja: 'マイフレンド'},
+  '聊天': {en: 'Chat', ja: 'チャット'},
+  '书信': {en: 'Letter', ja: '手紙'},
+  '信箱': {en: 'Mailbox', ja: 'メールボックス'},
+  '房间': {en: 'Room', ja: 'ルーム'},
+  '房间码': {en: 'Room Code', ja: 'ルームコード'},
+  '对手技能栏': {en: 'Opponent Skills', ja: '相手スキル'},
+  '我方技能栏': {en: 'Your Skills', ja: '自分のスキル'},
+  '构筑': {en: 'Build', ja: 'ビルド'},
+  '构筑总览': {en: 'Build Overview', ja: 'ビルド概要'},
+  '主菜单': {en: 'Main Menu', ja: 'メインメニュー'},
+  '战斗': {en: 'Battle', ja: 'バトル'},
+  '胜利已定': {en: 'Settled', ja: '勝負あり'},
+  '奖励': {en: 'Reward', ja: '報酬'},
+  '回合结束': {en: 'Turn End', ja: 'ターン終了'},
+  '对战': {en: 'Battle', ja: '対戦'},
+  '随机': {en: 'Random', ja: 'ランダム'},
+  '新手包': {en: 'Starter Pack', ja: 'スターターパック'},
+  '重置': {en: 'Reset', ja: 'リセット'},
+  '进度': {en: 'Progress', ja: '進行'},
+  '昵称': {en: 'Nickname', ja: 'ニックネーム'},
+  '默认': {en: 'Default', ja: 'デフォルト'},
+  '确认重置': {en: 'Confirm Reset', ja: 'リセット確認'},
+  '操作提示': {en: 'Tips', ja: '操作ヒント'},
+  '宠物': {en: 'Pet', ja: 'ペット'},
+  '音乐已开启': {en: 'Music on', ja: '音楽オン'},
+  /* ---------- 顶栏 / 主菜单 ---------- */
+  '宝石构筑版': {en: 'Gem Build Edition', ja: 'ジェムビルド版'},
+  '宝石镶嵌构筑 BD · 心理博弈回合对战': {en: 'Gem-socket Builds · Turn-based Mind Games', ja: 'ジェム装着ビルド · 心理戦ターン制バトル'},
+  '开始构筑': {en: 'Start Building', ja: 'ビルド開始'},
+  '管理宝石背包 · 镶嵌 9 大项孔阵 · 合成升级': {en: 'Manage gems · Socket 9 categories · Craft & upgrade', ja: 'ジェム管理 · 9カテゴリ装着 · 合成強化'},
+  '创建对战房间': {en: 'Create Battle Room', ja: '対戦ルーム作成'},
+  '以本机为主机 · 生成房间码 · 等待好友加入': {en: 'Host on this PC · get a room code · invite friends', ja: 'このPCをホストに · ルームコード発行 · フレンド待機'},
+  '加入对战房间': {en: 'Join Battle Room', ja: '対戦ルーム参加'},
+  '输入房间码 · 连接发起方主机': {en: 'Enter room code · connect to host', ja: 'ルームコード入力 · ホストに接続'},
+  '聊天与书信': {en: 'Chat & Letters', ja: 'チャット＆手紙'},
+  '即时聊天 · 书信留言（离线送达）': {en: 'Instant chat · letter messages (delivered offline)', ja: '即時チャット · 手紙（オフライン配達）'},
+  '帮助与规则': {en: 'Help & Rules', ja: 'ヘルプ＆ルール'},
+  '对战规则 · 数值说明 · 操作指引': {en: 'Battle rules · values · controls', ja: '対戦ルール · 数値説明 · 操作ガイド'},
+  '昵称 · 音乐 · 音效 · 宠物': {en: 'Nickname · music · SFX · pet', ja: 'ニックネーム · 音楽 · 効果音 · ペット'},
+  '检查更新': {en: 'Check Updates', ja: 'アップデート確認'},
+  '检测新版本 · 一键热更新 · 下载安装包': {en: 'Check new version · hot update · download installer', ja: '新バージョン確認 · ワンクリック更新 · インストーラーDL'},
+  '快速 AI 对战': {en: 'Quick AI Battle', ja: 'クイックAI対戦'},
+  '当前构筑 vs 镜像 AI · 直接开战': {en: 'Your build vs mirror AI · fight now', ja: '現在のビルド vs ミラーAI · 即バトル'},
+  '本地存储进度 · 单文件 Demo · 房间对战同浏览器多标签页真实连通（跨设备联机待 WebRTC 信令）': {en: 'Local save · single-file demo · room battles connect across tabs (cross-device needs WebRTC signaling)', ja: 'ローカル保存 · 単一ファイル · ルーム対戦は同ブラウザのタブ間で接続（端末間はWebRTC予定）'},
+  '宝石背包 · 战利品池': {en: 'Gem Bag · Loot Pool', ja: 'ジェムバッグ · 戦利品プール'},
+  '颗': {en: 'gems', ja: '個'},
+  '合成：任意5颗同品级 → 1颗同品级高1级': {en: 'Craft: any 5 same-rarity → 1 of the next level', ja: '合成：同グレード5個 → 次のレベルのジェム1個'},
+  '合成（5 合 1）': {en: 'Craft (5→1)', ja: '合成（5→1）'},
+  '等级 高→低': {en: 'Level: High→Low', ja: 'レベル：高い→低い'},
+  '等级 低→高': {en: 'Level: Low→High', ja: 'レベル：低い→高い'},
+  '品级 高→低': {en: 'Rarity: High→Low', ja: 'グレード：高い→低い'},
+  '品级 低→高': {en: 'Rarity: Low→High', ja: 'グレード：低い→高い'},
+  '主动技能': {en: 'Active Skill', ja: 'アクティブスキル'},
+  '辅助宝石': {en: 'Support Gem', ja: 'サポートジェム'},
+  '仅看未使用': {en: 'Unused only', ja: '未使用のみ'},
+  '重置为新手包（清空进度）': {en: 'Reset to Starter Pack (clear progress)', ja: 'スターターパックに戻す（進行リセット）'},
+  '没有符合条件的宝石——去对局赢取宝石，或用合成升级吧': {en: 'No matching gems — win gems in battle or craft to upgrade', ja: '該当ジェムなし — 対戦で入手するか合成で強化を'},
+  '可合成：任意 5 颗': {en: 'Craftable: any 5', ja: '合成可：任意の5個'},
+  '颗同品级': {en: 'same-rarity gems', ja: '同グレード'},
+  '名字继承：': {en: 'Name inherits: ', ja: '名前は引き継ぎ：'},
+  '取该品级中名字最多的一组（找 5 颗：优先同名，不足从该品级其他宝石补齐）': {en: 'Uses the most common name in that rarity (5 gems: same name first, else fill from others)', ja: 'そのグレードで最も多い名前を使用（5個：同名優先、不足分は他から補填）'},
+  '合成：任意 5 颗同品级宝石': {en: 'Craft: any 5 same-rarity gems', ja: '合成：同グレードのジェム5個'},
+  '颗同品级高 1 级（名字取数量最多者；当前无可用组合）': {en: 'same-rarity → 1 level up (name from the majority; no combo available now)', ja: '同グレード→1レベルアップ（名前は最多のもの；現在組合せなし）'},
+  '无法镶嵌': {en: 'Cannot Socket', ja: '装着不可'},
+  '被动技能宝石只能镶入其所属防御大项组头（中心孔）': {en: 'Passive gems only fit the center slot of their defensive category', ja: 'パッシブジェムは該当カテゴリの中心ソケットのみ'},
+  '该主动技能宝石只能镶入对应大项组头（中心孔）': {en: 'This active skill gem only fits the center slot of its category', ja: 'このアクティブスキルジェムは該当カテゴリの中心ソケットのみ'},
+  '辅助宝石只能镶入同名大项': {en: 'Support gems only fit their matching category', ja: 'サポートジェムは同名カテゴリのみ'},
+  '该组辅助孔（内圈/外圈 7 孔）已满': {en: 'This group\u2019s support slots are full', ja: 'このグループのサポート枠は満杯'},
+  '同大项内已有同名宝石「': {en: 'This category already has a gem named \u201c', ja: 'このカテゴリに同名ジェム「'},
+  '请选择其他名字的宝石': {en: 'Please choose a different gem name', ja: '別の名前のジェムを選んでください'},
+  '请先在左侧宝石背包点选一颗宝石，再点击孔位镶嵌': {en: 'Select a gem in the left bag first, then click a slot to socket it', ja: '左のバッグでジェムを選択してからソケットをクリック'},
+  '组 × 8 孔 · 组内串联、组间不串联': {en: 'groups × 8 slots · linked within group only', ja: 'グループ × 8ソケット · グループ内のみ連結'},
+  '当前合计': {en: 'Total', ja: '合計'},
+  '中心孔镶主动技能宝石，7 个辅助孔镶辅助宝石；同大项内不可镶同名宝石': {en: 'Center = active skill, 7 support slots = support gems; no duplicate names per category', ja: '中心＝アクティブ、7サポート枠＝サポート；同カテゴリで同名不可'},
+  '组×8孔 · 组阵内滚动查看': {en: 'groups×8 slots · scroll within group', ja: 'グループ×8ソケット · グループ内スクロール'},
+  '被动': {en: 'Passive', ja: 'パッシブ'},
+  '空组': {en: 'Empty Group', ja: '空きグループ'},
+  '主动：': {en: 'Active: ', ja: 'アクティブ：'},
+  '被动·不占动作': {en: 'Passive (no action)', ja: 'パッシブ（行動消費なし）'},
+  '主动技能：空': {en: 'Active skill: none', ja: 'アクティブ：なし'},
+  '已装': {en: 'Equipped', ja: '装備中'},
+  '空组 · 8 孔全部可镶': {en: 'Empty group · all 8 slots open', ja: '空きグループ · 8ソケット全て装着可'},
+  '规则：中心孔': {en: 'Rule: center', ja: 'ルール：中心'},
+  '主动技能，7 辅助孔': {en: 'active skill, 7 support', ja: 'アクティブ、7サポート'},
+  '辅助宝石，组内串联、组间不串联；点击孔位': {en: 'support gems, linked in group; click slot to', ja: 'サポート、グループ内連結；クリックで'},
+  '镶嵌/拆除宝石': {en: 'socket/remove', ja: '装着/取り外し'},
+  '左键点击已装宝石的孔位': {en: 'Left-click a filled slot to', ja: '装着済みソケットを左クリックで'},
+  '弹出拆除确认': {en: 'confirm removal', ja: '取り外し確認'},
+  '拆除宝石': {en: 'Remove Gem', ja: 'ジェム取り外し'},
+  '拆除': {en: 'Remove', ja: '取り外す'},
+  '已镶嵌': {en: 'Equipped', ja: '装着済み'},
+  '颗 · 总属性点': {en: 'gems · total points', ja: '個 · 合計ポイント'},
+  '每 5 回合 +2）—— 详细数据见「构筑总览」浮层': {en: '+2 every 5 turns) — see Build Overview panel', ja: '5ターン毎 +2）— 詳細は「ビルド概要」パネル'},
+  '右侧构筑总览面板': {en: 'Build Overview panel on the right', ja: '右側のビルド概要パネル'},
+  '近战期望': {en: 'Melee Expect', ja: '近接期待値'},
+  '法术期望': {en: 'Spell Expect', ja: '魔法期待値'},
+  '宠物期望': {en: 'Pet Expect', ja: 'ペット期待値'},
+  '护甲减免': {en: 'Armor Mitigation', ja: '鎧軽減'},
+  '抗性减免': {en: 'Resist Mitigation', ja: '耐性軽減'},
+  '尚未镶嵌主动技能宝石——先为攻击大项组头镶入主动技能': {en: 'No active gem socketed — add one to an attack category first', ja: 'アクティブ未装着 — 攻撃カテゴリに装着を'},
+  '上限': {en: 'Cap', ja: '上限'},
+  '初始': {en: 'Start', ja: '初期'},
+  '每 5 回合': {en: 'Every 5 turns', ja: '5ターン毎'},
+  '回合恢复': {en: 'Turn Heal', ja: 'ターン回復'},
+  '专注恢复': {en: 'Focus Heal', ja: '集中回復'},
+  '近战攻击': {en: 'Melee Attack', ja: '近接攻撃'},
+  '物理伤害，受对手护甲减免': {en: 'Physical damage, reduced by opponent armor', ja: '物理ダメージ、相手の鎧で軽減'},
+  '法术攻击': {en: 'Spell Attack', ja: '魔法攻撃'},
+  '法术伤害，受对手抗性减免': {en: 'Spell damage, reduced by opponent resist', ja: '魔法ダメージ、相手の耐性で軽減'},
+  '宠物攻击': {en: 'Pet Attack', ja: 'ペット攻撃'},
+  '宠物伤害，受对手抗性减免': {en: 'Pet damage, reduced by opponent resist', ja: 'ペットダメージ、相手の耐性で軽減'},
+  '恢复生命，受恢复加成': {en: 'Restore HP, boosted by heal bonus', ja: 'HP回復、回復ボーナスで増加'},
+  '减伤 50%，被击中则反击 ×1.5': {en: '50% reduction, counter ×1.5 when hit', ja: '50%軽減、被弾時 反撃×1.5'},
+  '能量（至上限）': {en: 'Energy (to cap)', ja: 'エネルギー（上限まで）'},
+  '回合恢复 ': {en: 'Turn Heal ', ja: 'ターン回復 '},
+  '专注恢复 ': {en: 'Focus Heal ', ja: '集中回復 '},
+  /* ---------- 九大项 ---------- */
+  '近战伤害': {en: 'Melee Damage', ja: '近接ダメージ'},
+  '法术伤害': {en: 'Spell Damage', ja: '魔法ダメージ'},
+  '宠物伤害': {en: 'Pet Damage', ja: 'ペットダメージ'},
+  '护甲': {en: 'Armor', ja: '鎧'},
+  '抗性': {en: 'Resistance', ja: '耐性'},
+  '闪避': {en: 'Dodge', ja: '回避'},
+  '属性加成': {en: 'Attribute Bonus', ja: '属性ボーナス'},
+  '基础恢复': {en: 'Base Heal', ja: '基礎回復'},
+  '近战': {en: 'Melee', ja: '近接'},
+  '法术': {en: 'Spell', ja: '魔法'},
+  '宠物': {en: 'Pet', ja: 'ペット'},
+  /* ---------- 主动技能类 ---------- */
+  '近战技能': {en: 'Melee Skill', ja: '近接スキル'},
+  '远程法术': {en: 'Ranged Spell', ja: '遠隔魔法'},
+  '召唤物技能': {en: 'Summon Skill', ja: '召喚スキル'},
+  '被动技能': {en: 'Passive Skill', ja: 'パッシブスキル'},
+  '主动技能：强化近战攻击，战斗中作为攻击动作': {en: 'Active: boosts melee attack; used as your attack action', ja: 'アクティブ：近接攻撃強化、攻撃アクションとして使用'},
+  '主动技能：强化法术攻击，战斗中作为攻击动作': {en: 'Active: boosts spell attack; used as your attack action', ja: 'アクティブ：魔法攻撃強化、攻撃アクションとして使用'},
+  '主动技能：强化宠物攻击，战斗中作为攻击动作': {en: 'Active: boosts pet attack; used as your attack action', ja: 'アクティブ：ペット攻撃強化、攻撃アクションとして使用'},
+  '主动位被动技能：不提供攻击动作，仅强化对应大项': {en: 'Passive in active slot: no attack action, just boosts its category', ja: 'アクティブ枠のパッシブ：攻撃アクションなし、該当カテゴリを強化'},
+  /* ---------- 主动技能宝石名池 ---------- */
+  '裂地斩': {en: 'Earthsplit', ja: '裂地斬'},
+  '旋风斩': {en: 'Whirlwind', ja: '旋風斬'},
+  '破甲猛击': {en: 'Armor Break', ja: '破甲猛撃'},
+  '雷霆突刺': {en: 'Thunder Thrust', ja: '雷霆突刺'},
+  '断钢斩': {en: 'Steelbreaker', ja: '断鋼斬'},
+  '奥术轰击': {en: 'Arcane Barrage', ja: '秘術爆撃'},
+  '寒冰箭': {en: 'Ice Bolt', ja: '氷の矢'},
+  '烈焰风暴': {en: 'Flame Storm', ja: '炎嵐'},
+  '闪电链': {en: 'Chain Lightning', ja: '連鎖雷撃'},
+  '奥术弹幕': {en: 'Arcane Volley', ja: '秘術弾幕'},
+  '召唤狼群': {en: 'Summon Wolves', ja: '狼群召喚'},
+  '召唤蜂群': {en: 'Summon Swarm', ja: '蜂群召喚'},
+  '召唤石像': {en: 'Summon Golem', ja: '石像召喚'},
+  '召唤毒蛇': {en: 'Summon Vipers', ja: '毒蛇召喚'},
+  '召唤灵蝶': {en: 'Summon Wisps', ja: '霊蝶召喚'},
+  /* ---------- 被动宝石名池（6 大项 × 5） ---------- */
+  '钢铁壁垒': {en: 'Steel Bulwark', ja: '鉄鋼の防壁'},
+  '花岗岩躯': {en: 'Granite Body', ja: '花崗岩の体'},
+  '龙鳞甲': {en: 'Dragonscale', ja: '竜鱗鎧'},
+  '玄武护盾': {en: 'Turtle Ward', ja: '玄武の盾'},
+  '金刚不坏': {en: 'Adamantine', ja: '金剛不壊'},
+  '魔法护盾': {en: 'Magic Shield', ja: '魔法の盾'},
+  '元素亲和': {en: 'Elemental Affinity', ja: '元素親和'},
+  '秘银肌肤': {en: 'Mithril Skin', ja: 'ミスリルの肌'},
+  '抗魔斗篷': {en: 'Anti-Magic Cloak', ja: '魔防クローク'},
+  '元素图腾': {en: 'Element Totem', ja: '元素トーテム'},
+  '影步': {en: 'Shadow Step', ja: '影歩'},
+  '风之优雅': {en: 'Wind Grace', ja: '風の優雅'},
+  '幻影身法': {en: 'Phantom Step', ja: '幻影身法'},
+  '闪瞬': {en: 'Blink', ja: '瞬間移動'},
+  '无影之足': {en: 'Invisible Feet', ja: '無影の足'},
+  '增幅核心': {en: 'Amplify Core', ja: '増幅コア'},
+  '能量枢纽': {en: 'Energy Hub', ja: 'エネルギー中枢'},
+  '力量泉源': {en: 'Power Spring', ja: '力の泉'},
+  '天赋树突': {en: 'Talent Node', ja: '才能の樹突起'},
+  '共鸣水晶': {en: 'Resonance Crystal', ja: '共鳴水晶'},
+  '再生之泉': {en: 'Regen Spring', ja: '再生の泉'},
+  '生命之息': {en: 'Breath of Life', ja: '生命の息吹'},
+  '自然回响': {en: 'Nature Echo', ja: '自然の反響'},
+  '活力之泉': {en: 'Vitality Spring', ja: '活力の泉'},
+  '春雨润物': {en: 'Spring Rain', ja: '春の雨'},
+  '疗愈图腾': {en: 'Healing Totem', ja: '癒しのトーテム'},
+  '圣光祝福': {en: 'Holy Blessing', ja: '聖光の祝福'},
+  '草药精通': {en: 'Herbal Mastery', ja: '薬草精通'},
+  '复苏祈愿': {en: 'Revival Prayer', ja: '復活の祈り'},
+  '生命颂歌': {en: 'Hymn of Life', ja: '生命の賛歌'},
+  /* ---------- 辅助宝石名池（9 大项 × 6） ---------- */
+  '蛮力': {en: 'Brute Force', ja: '剛力'},
+  '斩击技巧': {en: 'Slash Arts', ja: '斬撃技巧'},
+  '锋刃': {en: 'Edge', ja: '鋒刃'},
+  '战意': {en: 'Battle Will', ja: '戦意'},
+  '裂伤': {en: 'Laceration', ja: '裂傷'},
+  '残暴': {en: 'Savagery', ja: '残虐'},
+  '魔力涌动': {en: 'Mana Surge', ja: '魔力の高鳴り'},
+  '咒法亲和': {en: 'Cantrip Affinity', ja: '呪法親和'},
+  '奥术共鸣': {en: 'Arcane Resonance', ja: '秘術共鳴'},
+  '元素冲击': {en: 'Elemental Impact', ja: '元素衝撃'},
+  '秘法聚焦': {en: 'Arcane Focus', ja: '秘法集中'},
+  '法术穿透': {en: 'Spell Pierce', ja: '魔法貫通'},
+  '兽性本能': {en: 'Beast Instinct', ja: '獣の本能'},
+  '野兽共鸣': {en: 'Beast Resonance', ja: '獣の共鳴'},
+  '驯兽指令': {en: 'Tame Command', ja: '調教指令'},
+  '共生': {en: 'Symbiosis', ja: '共生'},
+  '野性呼唤': {en: 'Wild Call', ja: '野生の呼び声'},
+  '群居本能': {en: 'Pack Instinct', ja: '群れの本能'},
+  '硬化': {en: 'Harden', ja: '硬化'},
+  '淬炼之肤': {en: 'Tempered Skin', ja: '鍛えし肌'},
+  '重甲术': {en: 'Heavy Armor', ja: '重甲術'},
+  '铁壁': {en: 'Iron Wall', ja: '鉄壁'},
+  '石肤': {en: 'Stone Skin', ja: '石の肌'},
+  '钢化': {en: 'Steelize', ja: '鋼化'},
+  '抗魔涂层': {en: 'Ward Coat', ja: '魔防コーティング'},
+  '屏障术': {en: 'Barrier', ja: 'バリア術'},
+  '元素屏障': {en: 'Element Barrier', ja: '元素バリア'},
+  '魔抗之环': {en: 'Resist Ring', ja: '魔抗の環'},
+  '净化膜': {en: 'Purity Membrane', ja: '浄化膜'},
+  '幽灵步': {en: 'Ghost Step', ja: '幽霊歩'},
+  '疾风': {en: 'Gale', ja: '疾風'},
+  '影舞': {en: 'Shadow Dance', ja: '影舞'},
+  '风行': {en: 'Wind Walk', ja: '風行'},
+  '鬼魅': {en: 'Phantom', ja: '鬼魅'},
+  '超频': {en: 'Overclock', ja: 'オーバークロック'},
+  '潜能激发': {en: 'Potential Unleash', ja: '潜在解放'},
+  '强化': {en: 'Reinforce', ja: '強化'},
+  '蜕变': {en: 'Metamorph', ja: '変貌'},
+  '觉醒': {en: 'Awaken', ja: '覚醒'},
+  '催化': {en: 'Catalyze', ja: '触媒'},
+  '活力': {en: 'Vitality', ja: '活力'},
+  '生命润泽': {en: 'Life Moisture', ja: '生命の潤い'},
+  '滋养': {en: 'Nourish', ja: '滋養'},
+  '复苏': {en: 'Recover', ja: '復活'},
+  '回春': {en: 'Rejuvenate', ja: '回春'},
+  '温养': {en: 'Gentle Nurture', ja: '温養'},
+  '恩泽': {en: 'Grace', ja: '恩恵'},
+  '圣疗': {en: 'Holy Mending', ja: '聖療'},
+  '关怀': {en: 'Care', ja: '慈愛'},
+  '怜悯': {en: 'Mercy', ja: '慈悲'},
+  '祈福': {en: 'Prayer', ja: '祈願'},
+  /* ---------- 行为词条 ---------- */
+  '连击：攻击 25% 概率追加一次 60% 伤害': {en: 'Combo: 25% chance of a bonus 60% hit', ja: '連撃：25%の確率で60%の追撃'},
+  '破甲：无视对手 10% 的对应减免': {en: 'Pierce: ignore 10% of relevant mitigation', ja: '破甲：相手の軽減10%無視'},
+  '狂怒：本组技能暴击率 +6%': {en: 'Frenzy: +6% crit chance for this group', ja: '激怒：このグループの会心率+6%'},
+  '壁垒：防御架势减伤 50%': {en: 'Bulwark: guard reduction 50%', ja: '防壁：防御の軽減50%'},
+  '结界：受暴击概率 -6%': {en: 'Aegis: -6% chance to be crit', ja: '結界：被会心率-6%'},
+  '轻灵：自身闪避率 +5%': {en: 'Agile: +5% dodge chance', ja: '軽快：回避率+5%'},
+  '增幅：属性加成效果 +10%': {en: 'Amplify: attribute bonus +10%', ja: '増幅：属性ボーナス+10%'},
+  '再生：回合末恢复 +25%': {en: 'Regen: +25% end-of-turn heal', ja: '再生：ターン終了時回復+25%'},
+  '祝福：专注恢复量 +20%': {en: 'Blessing: focus heal +20%', ja: '祝福：集中回復量+20%'},
+  '行为「': {en: 'bonus \u201c', ja: '効果「'},
+  '辅助强化「': {en: 'Support boost \u201c', ja: 'サポート強化「'},
+  /* ---------- 流派 / AI 昵称池 ---------- */
+  '狂战士': {en: 'Berserker', ja: 'バーサーカー'},
+  '奥术师': {en: 'Arcanist', ja: '秘術師'},
+  '驯兽师': {en: 'Beast Tamer', ja: '調教師'},
+  '重装卫士': {en: 'Juggernaut', ja: '重装衛士'},
+  '秘法壁垒': {en: 'Mystic Bulwark', ja: '秘法防壁'},
+  '游荡者': {en: 'Rogue', ja: 'ローグ'},
+  '不死消耗': {en: 'Undying Drain', ja: '不死消耗'},
+  '均衡战士': {en: 'Balanced Warrior', ja: 'バランス型戦士'},
+  '爆发法师': {en: 'Burst Mage', ja: '爆発型メイジ'},
+  '召唤大师': {en: 'Summon Master', ja: '召喚マスター'},
+  '蓝珀之刃': {en: 'Amber Blade', ja: '藍珀の刃'},
+  '暗夜玫瑰': {en: 'Night Rose', ja: '暗夜の薔薇'},
+  '钛金机械': {en: 'Titan Machine', ja: 'チタン機械'},
+  '月影行者': {en: 'Moonshadow', ja: '月影の歩行者'},
+  '绯红猎手': {en: 'Crimson Hunter', ja: '紅蓮の狩人'},
+  '翡翠旅人': {en: 'Jade Traveler', ja: '翡翠の旅人'},
+  '星尘法师': {en: 'Stardust Mage', ja: '星屑の魔術師'},
+  '霜语剑客': {en: 'Frostblade', ja: '霜語の剣士'},
+  '赤金战神': {en: 'Gold War God', ja: '赤金の戦神'},
+  '紫电游侠': {en: 'Violet Ranger', ja: '紫電の遊侠'},
+  '墨羽弓手': {en: 'Inkfeather Archer', ja: '墨羽の弓手'},
+  '白焰骑士': {en: 'Whiteflame Knight', ja: '白焔の騎士'},
+  '青岚术士': {en: 'Azure Caster', ja: '青嵐の術士'},
+  '玄铁卫士': {en: 'Iron Sentinel', ja: '玄鉄の衛士'},
+  '琥珀歌者': {en: 'Amber Singer', ja: '琥珀の歌姫'},
+  '苍狼召唤': {en: 'Grey Wolf Summoner', ja: '蒼狼の召喚士'},
+  '银翼狙击': {en: 'Silverwing Sniper', ja: '銀翼の狙撃手'},
+  '鎏金刺客': {en: 'Gilded Assassin', ja: '鎏金の暗殺者'},
+  '霓虹舞姬': {en: 'Neon Dancer', ja: 'ネオンの踊り子'},
+  '青铜老兵': {en: 'Bronze Veteran', ja: '青銅の老兵'},
+  '晶石收藏家': {en: 'Crystal Collector', ja: '結晶コレクター'},
+  '雾都侦探': {en: 'Fog City Detective', ja: '霧都の探偵'},
+  '烈焰舞者': {en: 'Flame Dancer', ja: '炎の舞姫'},
+  '冰川守卫': {en: 'Glacier Guardian', ja: '氷河の守護者'},
+  '流沙商人': {en: 'Quicksand Merchant', ja: '流砂の商人'},
+  '海盐诗人': {en: 'Sea Salt Poet', ja: '海塩の詩人'},
+  '雷泽祭司': {en: 'Thunder Priest', ja: '雷沢の祭司'},
+  '云隐忍者': {en: 'Cloud Ninja', ja: '雲隠れ忍者'},
+  '燃灯行者': {en: 'Lantern Walker', ja: '燃灯の行者'},
+  /* ---------- 战斗：预测 / 动作 / 技能栏 ---------- */
+  '预测对手动作（标配 · 耗 1 能量 · 点行动时统一判定）': {en: 'Predict opponent action (standard · costs 1 energy · judged at Action)', ja: '相手の行動を予測（標準 · 消費1 · 行動時に判定）'},
+  '预测对手动作': {en: 'Predict opponent action', ja: '相手の行動を予測'},
+  '已预测对手：': {en: 'Predicted: ', ja: '予測済み：'},
+  '本回合伤害 ×1.3 待触发': {en: 'this turn damage ×1.3 pending', ja: '今ターンのダメージ×1.3 待機中'},
+  '点击下方按钮选择要预测的动作（耗 1 能量）': {en: 'Pick the action to predict below (costs 1 energy)', ja: '下のボタンで予測する行動を選択（消費1）'},
+  '预测：': {en: 'Predict: ', ja: '予測：'},
+  '耗 1 能量押注对手本回合动作；命中则本回合己方伤害 ×1.3。点击选中，点「行动」时统一判定能量': {en: 'Spend 1 energy betting the opponent\u2019s action; hit = your damage ×1.3 this turn. Select then press Action.', ja: '1エネルギーで相手の行動に賭け、的中で今ターンのダメージ×1.3。選択後「行動」で判定。'},
+  '我方技能栏（点击选择主动技能 · 被动技能常驻）': {en: 'Your Skills (click an active skill · passives always on)', ja: '自分のスキル（アクティブを選択 · パッシブは常時）'},
+  '选择你的动作（攻击=我方主动技能宝石，按满配度耗能）': {en: 'Choose your action (attack = active gem, cost scales with support gems)', ja: 'アクション選択（攻撃＝アクティブジェム、サポート数で消費増）'},
+  '请先选择技能动作（攻击 / 专注 / 架势 / 蓄力）': {en: 'Pick an action first (attack / focus / guard / charge)', ja: '先にアクションを選択（攻撃 / 集中 / 防御 / 溜め）'},
+  '请先选择技能动作：攻击（点技能栏主动宝石）/ 专注恢复 / 防御架势 / 蓄力': {en: 'Pick an action: attack (active gem) / focus / guard / charge', ja: 'アクション選択：攻撃（アクティブ） / 集中 / 防御 / 溜め'},
+  ' · 可执行': {en: ' · ready', ja: ' · 実行可'},
+  ' · 预计超支': {en: ' · over budget', ja: ' · 超過見込み'},
+  '行动耗能 ': {en: 'Action cost ', ja: '行動消費 '},
+  ' 回合初入账后约 ': {en: ' · ~', ja: ' ターン開始後 約'},
+  '点击选中为本次行动的技能': {en: 'Click to select as this turn\u2019s action', ja: 'クリックで今回の行動に選択'},
+  '点击选中为本次行动，再点「行动」统一判定能量': {en: 'Click to select, then press Action to check energy', ja: 'クリックで選択、その後「行動」でエネルギー判定'},
+  '点击选中为本次行动的攻击动作，再点下方「行动」统一判定能量': {en: 'Select as this turn\u2019s attack, then press Action below', ja: '今回の攻撃として選択し、下の「行動」で判定'},
+  '耗能：': {en: 'Cost: ', ja: '消費：'},
+  '技能栏：主动技能宝石': {en: 'Skills: active gems', ja: 'スキル：アクティブジェム'},
+  '攻击动作卡；被动技能宝石': {en: 'attack cards; passive gems', ja: '攻撃カード；パッシブジェム'},
+  '展示卡': {en: 'display cards', ja: '表示カード'},
+  '主动技能宝石 ·': {en: 'Active gem ·', ja: 'アクティブジェム ·'},
+  '组内辅助宝石数）': {en: 'support gems in group)', ja: 'グループ内サポート数）'},
+  '被动技能 ·': {en: 'Passive ·', ja: 'パッシブ ·'},
+  '被动技能宝石 ·': {en: 'Passive gem ·', ja: 'パッシブジェム ·'},
+  '未装配任何技能宝石': {en: 'No skill gems equipped', ja: 'スキルジェム未装着'},
+  '被动技能常驻生效，不占攻击动作': {en: 'Passives always active, no action cost', ja: 'パッシブは常時発動、行動消費なし'},
+  '主动技能宝石 · 战斗耗能：': {en: 'Active gem · battle cost: ', ja: 'アクティブジェム · 戦闘消費：'},
+  '本局动作统计': {en: 'Action Stats', ja: '行動統計'},
+  '本局动作统计（双方动作分布，填充战斗界面空间 + 学习对手偏好）': {en: 'Action stats (both sides, learn opponent habits)', ja: '行動統計（両者の分布、相手の癖を学ぶ）'},
+  '对战速度': {en: 'Battle Speed', ja: '対戦速度'},
+  '手动': {en: 'Manual', ja: '手動'},
+  '自动×1': {en: 'Auto×1', ja: '自動×1'},
+  '自动×2': {en: 'Auto×2', ja: '自動×2'},
+  '自动×4': {en: 'Auto×4', ja: '自動×4'},
+  '行 动': {en: 'A C T', ja: '行 動'},
+  '行动': {en: 'Action', ja: '行動'},
+  '行动失败': {en: 'Action Failed', ja: '行動失敗'},
+  '行动失败 · 能量不足': {en: 'Action Failed · Not Enough Energy', ja: '行動失敗 · エネルギー不足'},
+  '能量，回合初入账后持有': {en: 'energy, but you have only', ja: 'エネルギー必要、所持'},
+  '请重新制定行动策略。': {en: 'Please re-plan your action.', ja: '行動を立て直してください。'},
+  '请重新制定行动策略：取消预测、换低耗动作或先蓄力。': {en: 'Re-plan: drop prediction, pick a cheaper action, or charge first.', ja: '立て直し：予測をやめる、低コスト行動、または先に溜め。'},
+  '等待对方行动': {en: 'Waiting for opponent...', ja: '相手の行動待ち...'},
+  '先手补偿': {en: 'First-move Compensation', ja: '先行補償'},
+  '后手补偿': {en: 'Second-move Bonus', ja: '後攻補償'},
+  '每回合亲自选择动作与预测': {en: 'Pick actions & predictions each turn', ja: '毎ターン行動と予測を選択'},
+  '每回合自动选择最优动作与预测，快速推进对局': {en: 'Auto-choose best actions each turn for fast play', ja: '毎ターン最適行動を自動選択し高速進行'},
+  '你获得先手': {en: 'You go first!', ja: 'あなたが先行！'},
+  '对手获得先手': {en: 'Opponent goes first', ja: '相手が先行'},
+  '先手判定 · 掷色子': {en: 'First-move Roll', ja: '先行判定 · サイコロ'},
+  '先手由房间种子决定，双端一致': {en: 'First move from room seed, synced', ja: '先行はルームシードで決定、両端一致'},
+  '点行动时统一判定': {en: 'judged at Action', ja: '行動時に判定'},
+  '回合初入账后': {en: 'after turn start', ja: 'ターン開始後'},
+  '的预估可用能量，与判定基准一致': {en: 'estimated available energy, same basis as check', ja: '予測使用可能エネルギー（判定と同基準）'},
+  '行动按钮与耗能提示（': {en: 'Action button & cost hint (', ja: '行動ボタンと消費表示（'},
+  '显示': {en: 'shows', ja: '表示'},
+  '修复：判定与扣费同基准）': {en: 'fix: check & charge on same basis)', ja: '修正：判定と消費を同基準）'},
+  '后手方本回合 +1 能量（至上限）': {en: 'second player +1 energy this turn (to cap)', ja: '後攻は今ターン+1（上限まで）'},
+  '房间对战：动作发往对方，等对方动作回执后本地结算': {en: 'Room battle: send action, settle locally after opponent\u2019s reply', ja: 'ルーム対戦：行動を送信し、相手の返信後にローカル決済'},
+  '房间对战：收到对方动作': {en: 'Room: received opponent action', ja: 'ルーム：相手の行動を受信'},
+  '双方动作齐': {en: 'Both actions ready', ja: '両者の行動が揃った'},
+  '统一结算（本地规则一致，': {en: 'settle together (same local rules, ', ja: '一括決済（ローカルルール一致、'},
+  '一致）': {en: 'synced)', ja: '一致）'},
+  '本方尚未行动，先记录对方动作': {en: 'You haven\u2019t acted; opponent action recorded', ja: '未行動のため相手の行動を記録'},
+  '回合初能量（+每回合恢复 + 先手补偿）在判定前统一入账，': {en: 'Turn-start energy (regen + first-move bonus) is credited before the check, ', ja: 'ターン開始時エネルギー（回復+先行補償）は判定前に加算され、'},
+  '判定与扣费使用同一能量基准；失败弹窗后能量已入账（符合回合初恢复规则），': {en: 'check & charge use the same energy; after failure the energy is already credited, ', ja: '判定と消費は同じエネルギー基準；失敗後もエネルギーは加算済み（ターン初回復ルール）、'},
+  '玩家重新制定动作后不再重复入账（': {en: 're-planning won\u2019t credit again (', ja: '立て直し後は重複加算されない（'},
+  '幂等）。': {en: 'idempotent).', ja: '冪等）。'},
+  /* ---------- 战斗日志 / 结算 ---------- */
+  '预测命中': {en: 'Prediction Hit', ja: '予測的中'},
+  '预测落空（对手': {en: 'Prediction Missed (opponent ', ja: '予測外れ（相手は'},
+  '）': {en: ')', ja: '）'},
+  '对手专注恢复': {en: 'Opponent Focus Heal', ja: '相手の集中回復'},
+  '先手方整套动作先结算': {en: 'First player\u2019s actions resolve first', ja: '先行の行動から先に解決'},
+  '回合结束 · 宝石构筑': {en: 'Turn End · Gem Build', ja: 'ターン終了 · ジェムビルド'},
+  '我方总伤': {en: 'Your Total Damage', ja: '味方総ダメージ'},
+  '我方承伤': {en: 'Damage Taken', ja: '被ダメージ'},
+  '我方恢复': {en: 'Your Healing', ja: '味方回復'},
+  '暴击次数': {en: 'Crits', ja: '会心回数'},
+  '架势/反击': {en: 'Guard/Counter', ja: '防御/反撃'},
+  '终局血量': {en: 'Final HP', ja: '最終HP'},
+  '背水触发': {en: 'Last Stand', ja: '背水発動'},
+  '败局仍获安慰奖': {en: 'Consolation reward on loss', ja: '敗北でも慰めの報酬'},
+  '已自动存入宝石背包': {en: 'auto-added to gem bag', ja: 'ジェムバッグに自動追加'},
+  '本场未掉落宝石': {en: 'No gems dropped this battle', ja: '今回ドロップなし'},
+  '战利品（自动存入宝石背包）': {en: 'Loot (auto-added to bag)', ja: '戦利品（バッグに自動追加）'},
+  '胜负已定回合 · 热区': {en: 'Deciding Turn · Heat Zone', ja: '勝負確定ターン · ヒートゾーン'},
+  '本场于第': {en: 'Decided at turn', ja: '勝負が決したのは'},
+  '回合胜负已定': {en: 'the battle was decided', ja: 'ターン'},
+  '批量模拟（60 场 · 10 流派环境）': {en: 'Batch Sim (60 battles · 10 archetypes)', ja: '一括シミュ（60戦 · 10流派環境）'},
+  '回合日志': {en: 'Turn Log', ja: 'ターンログ'},
+  '继续构筑 / 再来一局': {en: 'Keep Building / Rematch', ja: 'ビルドに戻る / 再戦'},
+  '场模拟（你的构筑': {en: 'battles (your build vs ', ja: '戦シミュ（あなたのビルド vs '},
+  '流派环境 · 老手': {en: 'archetype env · Veteran', ja: '流派環境 · ベテラン'},
+  '平均': {en: 'Average', ja: '平均'},
+  '回合；12': {en: 'turns; 12', ja: 'ターン；12'},
+  '区间占比': {en: 'in-zone ratio', ja: '区間比率'},
+  '验收线': {en: 'Acceptance', ja: '合格ライン'},
+  '过早（': {en: 'too early (', ja: '早すぎ（'},
+  '垃圾时间风险）': {en: 'dead-time risk)', ja: '消化試合のリスク）'},
+  '过晚（': {en: 'too late (', ja: '遅すぎ（'},
+  '接近封顶僵持）': {en: 'stall near cap)', ja: '上限付近の膠着）'},
+  '落在 12': {en: 'within 12', ja: '12以内'},
+  '健康区间': {en: 'healthy zone', ja: '健康区間'},
+  '对局应落在 12': {en: 'battles should end within 12', ja: '対局は12ターン以内に'},
+  '胜利加成：掉落更多更稀有': {en: 'Win bonus: more & rarer drops', ja: '勝利ボーナス：より多くレアなドロップ'},
+  '随机对战': {en: 'Random PvP', ja: 'ランダム対戦'},
+  '随机对战 · 玩家': {en: 'Random PvP · Player', ja: 'ランダム対戦 · プレイヤー'},
+  '随机连接一名玩家对手并交换构筑': {en: 'Randomly match a player and swap builds', ja: 'ランダムにプレイヤーとマッチングしビルド交換'},
+  '单文件': {en: 'Single-file', ja: '単一ファイル'},
+  '以本地构筑池模拟随机对手（10 流派 × 扰动，昵称与构筑每次不同）': {en: 'Simulates random opponents from a local pool (10 archetypes × variance)', ja: 'ローカルプールでランダム相手を再現（10流派×変動）'},
+  /* ---------- 难度 ---------- */
+  '新手 · 随机': {en: 'Novice · Random', ja: '初級 · ランダム'},
+  '从可用动作随机选择，教学与上手': {en: 'Random actions, for learning', ja: 'ランダム行動、初心者向け'},
+  '老手 · 启发式': {en: 'Veteran · Heuristic', ja: '中級 · ヒューリスティック'},
+  '低血恢复 / 高血架势 / 理性选系': {en: 'Heals when low, guards when high', ja: '低HPで回復 / 高HPで防御'},
+  '高手 · 最优反制': {en: 'Master · Optimal Counter', ja: '上級 · 最適対抗'},
+  '预测你的动作并反制，近似最优解': {en: 'Predicts & counters, near-optimal', ja: 'あなたの行動を予測し対抗、ほぼ最適'},
+  '镜像 AI（同构筑）': {en: 'Mirror AI (same build)', ja: 'ミラーAI（同ビルド）'},
+  '房间对手': {en: 'Room Opponent', ja: 'ルーム相手'},
+  '本地房间对战 · 主机即房间': {en: 'Local room battle · host = room', ja: 'ローカルルーム対戦 · ホスト＝ルーム'},
+  '随机玩家 · 构筑': {en: 'Random Player · Build', ja: 'ランダムプレイヤー · ビルド'},
+  ' 点': {en: ' pts', ja: ' ポイント'},
+  '对手技能栏（': {en: 'Opponent Skills (', ja: '相手スキル（'},
+  '对手技能栏（随机玩家构筑）': {en: 'Opponent Skills (random player build)', ja: '相手スキル（ランダムプレイヤーのビルド）'},
+  '对手技能栏（镜像同构筑）': {en: 'Opponent Skills (mirror build)', ja: '相手スキル（ミラービルド）'},
+  /* ---------- 房间 / 社交 / 宠物 / 设置 / 更新 ---------- */
+  '本地对战房间': {en: 'Local Battle Room', ja: 'ローカル対戦ルーム'},
+  '创建对战房间 · 本机为主机': {en: 'Create Room · This PC is Host', ja: 'ルーム作成 · このPCがホスト'},
+  '房间码（发给好友，在另一个标签页打开本文件后加入）：': {en: 'Room code (share with a friend who opens this file in another tab):', ja: 'ルームコード（別タブで開いたフレンドに送信）：'},
+  '等待对手加入': {en: 'Waiting for opponent...', ja: '相手の参加待ち...'},
+  '同一浏览器新开标签页': {en: 'Open in a new tab of the same browser', ja: '同じブラウザの新しいタブで開く'},
+  '主菜单「加入对战房间」输入房间码）': {en: 'then Join Room from the main menu with this code)', ja: 'メインメニューの「参加」でコードを入力）'},
+  '开始对局': {en: 'Start Battle', ja: '対戦開始'},
+  '加入对战房间': {en: 'Join Room', ja: 'ルームに参加'},
+  '房间聊天': {en: 'Room Chat', ja: 'ルームチャット'},
+  '输入消息…': {en: 'Type a message…', ja: 'メッセージを入力…'},
+  '发送给': {en: 'Send to', ja: '送信先'},
+  '房间对战 · 先手由房间种子决定': {en: 'Room battle · first move from room seed', ja: 'ルーム対戦 · 先行はシードで決定'},
+  '房间聊天（同浏览器标签页互通）': {en: 'Room chat (shared across tabs)', ja: 'ルームチャット（タブ間で共有）'},
+  '提示：好友在线状态基于本机浏览器广播（同浏览器多标签页）。跨设备联机需 WebRTC 信令服务器，当前单文件环境无法提供。': {en: 'Note: friend online status uses local browser broadcast (same browser, multiple tabs). Cross-device play needs a WebRTC signaling server, unavailable in this single-file build.', ja: '注意：フレンドのオンライン状態は同ブラウザのタブ間ブロードキャスト。端末間はWebRTCサーバーが必要（本ビルドでは不可）。'},
+  '即时聊天（在线）': {en: 'Instant Chat (online)', ja: '即時チャット（オンライン）'},
+  '发给谁（昵称，留空=大厅广播）': {en: 'Send to (nickname; empty = lobby)', ja: '送信先（ニックネーム；空欄＝ロビー）'},
+  '书信信箱': {en: 'Letter Mailbox', ja: '手紙ボックス'},
+  '收信人昵称': {en: 'Recipient nickname', ja: '受取人のニックネーム'},
+  '书信内容…（对方在线即时送达；离线存入信箱，上线后收取）': {en: 'Letter body… (delivered instantly if online; else stored in mailbox)', ja: '手紙本文…（オンラインなら即配達、オフラインなら受信箱へ）'},
+  '寄出书信': {en: 'Send Letter', ja: '手紙を送る'},
+  '输入好友昵称或 ID 添加（同浏览器标签页可在线）': {en: 'Add by nickname or ID (online within same browser tabs)', ja: 'ニックネームかIDで追加（同ブラウザ内でオンライン）'},
+  '邀请对战': {en: 'Invite to Battle', ja: '対戦招待'},
+  '被邀请对战中': {en: 'Invited to battle', ja: '対戦に招待中'},
+  '好友已添加': {en: 'Friend added', ja: 'フレンド追加完了'},
+  '该昵称已是好友': {en: 'Already a friend', ja: '既にフレンドです'},
+  '找不到该玩家': {en: 'Player not found', ja: 'プレイヤーが見つかりません'},
+  '新的书信': {en: 'New Letter', ja: '新しい手紙'},
+  '收到': {en: 'Received', ja: '受信'},
+  '在线（当前标签页）': {en: 'Online (this tab)', ja: 'オンライン（このタブ）'},
+  '单击抚摸 · 双击投喂竹子 · 拖拽移动': {en: 'Click to pet · double-click to feed bamboo · drag to move', ja: 'クリックで撫でる · ダブルクリックで竹をあげる · ドラッグで移動'},
+  '团团': {en: 'Tuan Tuan', ja: 'トゥアントゥアン'},
+  '的团团': {en: '\u2019s Tuan Tuan', ja: 'のトゥアントゥアン'},
+  '玩家昵称': {en: 'Nickname', ja: 'ニックネーム'},
+  '背景音乐': {en: 'Background Music', ja: 'BGM'},
+  '桌面宠物（熊猫幼崽）': {en: 'Desktop Pet (panda cub)', ja: 'デスクトップペット（パンダの子）'},
+  '重置进度': {en: 'Reset Progress', ja: '進行リセット'},
+  '清空宝石背包与构筑（不可恢复）': {en: 'Clear gem bag & build (irreversible)', ja: 'ジェムとビルドを消去（元に戻せない）'},
+  '游戏语言': {en: 'Language', ja: 'ゲーム言語'},
+  '欢迎回来，斗士': {en: 'Welcome back, fighter', ja: 'おかえり、ファイター'},
+  '要打一局吗': {en: 'Want a battle?', ja: '一戦どうですか？'},
+  '请先到「开始构筑」领取新手宝石包': {en: 'Claim your starter gem pack in Start Building first', ja: '先に「ビルド開始」でスタータージェムを受け取って'},
+  '当前对局进行中，确定返回主菜单吗': {en: 'A battle is in progress. Return to main menu?', ja: '対戦中です。メインメニューに戻りますか？'},
+  '继续对战': {en: 'Keep Fighting', ja: '対戦を続ける'},
+  '将清空宝石背包、构筑、好友、书信与昵称，不可恢复。确定？': {en: 'This clears gems, build, friends, letters and nickname. Irreversible. Continue?', ja: 'ジェム、ビルド、フレンド、手紙、ニックネームを消去します。元に戻せません。続行しますか？'},
+  '昵称不能为空': {en: 'Nickname cannot be empty', ja: 'ニックネームを入力してください'},
+  '昵称已保存：': {en: 'Nickname saved: ', ja: 'ニックネーム保存：'},
+  '当前昵称：': {en: 'Current nickname: ', ja: '現在のニックネーム：'},
+  '点击到设置中修改': {en: 'Click to change in Settings', ja: '設定で変更できます'},
+  '自动昵称带随机后缀，避免多标签重名': {en: 'Auto nickname with random suffix to avoid duplicates', ja: '自動ニックネーム（重複回避のためランダム接尾辞）'},
+  '正在对战中，请先结束当前对局。': {en: 'A battle is in progress. Finish it first.', ja: '対戦中です。先に対戦を終えてください。'},
+  '发现新版本': {en: 'New Version Found', ja: '新バージョン発見'},
+  '包含新内容与修复': {en: 'includes new content & fixes', ja: '新コンテンツと修正を含む'},
+  '点击「立即更新」将下载新版游戏并自动替换，重启后生效。': {en: 'Click Update Now to download and replace the game; takes effect after restart.', ja: '「今すぐ更新」で新バージョンをダウンロードして置き換え、再起動後に有効。'},
+  '立即更新': {en: 'Update Now', ja: '今すぐ更新'},
+  '下载完整安装包': {en: 'Download Installer', ja: 'インストーラーをDL'},
+  '暂不': {en: 'Later', ja: '後で'},
+  '网页版无法自动更新：请下载新版': {en: 'Web version can\u2019t auto-update: download the new ', ja: 'Web版は自動更新不可：新しい'},
+  '覆盖原文件，或安装完整安装包（存档自动保留）。': {en: 'file and overwrite, or install the full installer (saves kept).', ja: 'ファイルで上書きするか、インストーラーを導入（セーブは保持）。'},
+  '下载新版': {en: 'Download New Version', ja: '新バージョンをDL'},
+  '检查更新失败：网络不可用': {en: 'Update check failed: no network', ja: '更新確認失敗：ネットワーク不可'},
+  '桌面版才支持一键热更新': {en: 'Hot update is only for the desktop app', ja: 'ワンクリック更新はデスクトップ版のみ'},
+  '更新完成': {en: 'Update Complete', ja: '更新完了'},
+  '已下载（': {en: 'downloaded (', ja: 'ダウンロード済み（'},
+  '重启游戏后生效。': {en: 'restart the game to apply.', ja: '再起動で有効になります。'},
+  '立即重启': {en: 'Restart Now', ja: '今すぐ再起動'},
+  '稍后重启': {en: 'Restart Later', ja: '後で再起動'},
+  '更新失败': {en: 'Update Failed', ja: '更新失敗'},
+  '自动更新未成功（': {en: 'Auto-update failed (', ja: '自動更新に失敗（'},
+  '未知原因': {en: 'unknown reason', ja: '不明な理由'},
+  '可改用手动安装。': {en: 'please install manually.', ja: '手動インストールしてください。'},
+  '已是最新版本': {en: 'Already up to date', ja: '最新版です'},
+  '游戏语言设置': {en: 'Language Settings', ja: '言語設定'},
+  '语言已切换，正在重启界面…': {en: 'Language switched, reloading…', ja: '言語を切り替えました。再読み込み中…'},
+  '点击修改昵称': {en: 'Click to change nickname', ja: 'クリックでニックネーム変更'},
+  '构筑对决：数值之战': {en: 'Build Duel: Numbers at War', ja: 'ビルド決闘：数値の戦い'},
+  '构筑对决': {en: 'Build Duel', ja: 'ビルド決闘'},
+  '数值之战': {en: 'Numbers at War', ja: '数値の戦い'},
+  '战斗结算': {en: 'Battle Result', ja: 'バトル結果'},
+  '请选择': {en: 'Please choose', ja: '選択してください'},
+  '选择': {en: 'Select', ja: '選択'},
+  '已选：': {en: 'Selected: ', ja: '選択中：'},
+  '已选择': {en: 'Selected', ja: '選択済み'},
+  '结算': {en: 'Result', ja: '結果'},
+  '试炼对手': {en: 'Trial Opponent', ja: '試練の相手'},
+  '回合初入账': {en: 'credited at turn start', ja: 'ターン開始時に加算'},
+  '满配度': {en: 'build level', ja: '完成度'},
+  '满配': {en: 'Maxed', ja: '完成'},
+  '预测对手': {en: 'Predict Opponent', ja: '相手を予測'},
+  '耗': {en: 'cost ', ja: '消費'},
+  '猜': {en: 'Guess', ja: 'を予測'},
+  '架势': {en: 'Stance', ja: '構え'},
+  '对局': {en: 'Battle', ja: '対戦'},
+  '加油': {en: 'Go!', ja: '頑張れ！'},
+  'v13.3 更新：新增在线检查更新系统 —— 启动自动检测 + 主菜单「检查更新」按钮，支持一键热更新与安装包下载。': {en: 'v13.3 update: online update checker — auto-check at start + Main Menu "Check Updates" button, with one-click hot update and installer download.', ja: 'v13.3更新：オンライン更新チェッカー — 起動時自動確認 + メインメニュー「アップデート確認」、ワンクリック更新とインストーラーDL。'},
+};
+/* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
+const I18N_TXT = {
+  'sub': {zh: '宝石构筑版 v13.3 · 9大项×4组×8孔 · BUG修复 + 数值优化 · 本地房间对战 · 主菜单/好友/聊天书信 · AI熊猫宠物 · 25 种提示音效 · L0 安全防线 · 在线检查更新', en: 'Gem Build v13.4 · 9 categories × 4 groups × 8 slots · fixes + balance · local room battles · menu/friends/chat/letters · AI panda pet · 25 SFX · L0 security · online updates', ja: 'ジェムビルド版 v13.4 · 9カテゴリ×4グループ×8ソケット · 修正+調整 · ローカルルーム対戦 · メニュー/フレンド/チャット/手紙 · AIパンダペット · 25種効果音 · L0セキュリティ · オンライン更新'},
+  'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
+  'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
+  'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},
+  'kpi4': {zh: '暴击10%×1.5', en: 'Crit 10% ×1.5', ja: '会心10%×1.5'},
+  'kpi5': {zh: '背水≤30%×1.25', en: 'Last stand ≤30% ×1.25', ja: '背水≤30%×1.25'},
+  'kpi6': {zh: '架势减伤50%+反击×1.5', en: 'Guard -50% + counter ×1.5', ja: '防御-50%+反撃×1.5'},
+  'kpi7': {zh: '预测耗能1·命中伤害×1.3', en: 'Predict 1 · hit dmg ×1.3', ja: '予測1·的中ダメ×1.3'},
+  'm_build': {zh: '<b>开始构筑</b><i>管理宝石背包 · 镶嵌 9 大项孔阵 · 合成升级</i>', en: '<b>Start Building</b><i>Manage gems · socket 9 categories · craft &amp; upgrade</i>', ja: '<b>ビルド開始</b><i>ジェム管理 · 9カテゴリ装着 · 合成強化</i>'},
+  'm_host': {zh: '<b>创建对战房间</b><i>以本机为主机 · 生成房间码 · 等待好友加入</i>', en: '<b>Create Battle Room</b><i>Host on this PC · get a code · invite friends</i>', ja: '<b>対戦ルーム作成</b><i>このPCをホストに · コード発行 · フレンド待機</i>'},
+  'm_join': {zh: '<b>加入对战房间</b><i>输入房间码 · 连接发起方主机</i>', en: '<b>Join Battle Room</b><i>Enter code · connect to host</i>', ja: '<b>対戦ルーム参加</b><i>コード入力 · ホストに接続</i>'},
+  'm_friends': {zh: '<b>好友</b><i>添加好友 · 在线状态 · 邀请对战</i>', en: '<b>Friends</b><i>Add friends · online status · invite to battle</i>', ja: '<b>フレンド</b><i>追加 · オンライン表示 · 対戦招待</i>'},
+  'm_chat': {zh: '<b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i>', en: '<b>Chat &amp; Letters</b><i>Instant chat · letters (offline delivery)</i>', ja: '<b>チャット＆手紙</b><i>即時チャット · 手紙（オフライン配達）</i>'},
+  'm_help': {zh: '<b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i>', en: '<b>Help &amp; Rules</b><i>Battle rules · values · controls</i>', ja: '<b>ヘルプ＆ルール</b><i>対戦ルール · 数値 · 操作</i>'},
+  'm_set': {zh: '<b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i>', en: '<b>Settings</b><i>Nickname · music · SFX · pet</i>', ja: '<b>設定</b><i>ニックネーム · 音楽 · 効果音 · ペット</i>'},
+  'm_upd': {zh: '<b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i>', en: '<b>Check Updates</b><i>New version · hot update · installer</i>', ja: '<b>アップデート確認</b><i>新バージョン · ワンクリック更新 · インストーラー</i>'},
+  'm_ai': {zh: '<b>快速 AI 对战</b><i>当前构筑 vs 镜像 AI · 直接开战</i>', en: '<b>Quick AI Battle</b><i>Your build vs mirror AI · fight now</i>', ja: '<b>クイックAI対戦</b><i>現在のビルド vs ミラーAI · 即バトル</i>'},
+  'menu_title': {zh: '构筑对决<span>数值之战</span>', en: 'Build Duel<span>Numbers at War</span>', ja: 'ビルド決闘<span>数値の戦い</span>'},
+  'help_rules': {zh: '对战规则（v13）', en: 'Battle Rules (v13)', ja: '対戦ルール（v13）'},
+  'help_rules_1': {zh: '目标：30 回合内把对手 2500 血打空；双方同归或超回合按血量比例判胜负。', en: 'Goal: reduce the opponent from 2500 HP to 0 within 30 turns; mutual KO or time-up is decided by HP ratio.', ja: '目標：30ターン以内に相手のHP2500を0にする。相打ち・時間切れはHP比で判定。'},
+  'help_rules_2': {zh: '每回合先手 roll：点数大者先手（先结算整套动作）；<b>后手方本回合 +1 能量补偿</b>（防滚雪球）。', en: 'Each turn starts with a first-move roll; the higher roll acts first. <b>The second player gets +1 energy this turn</b> (anti-snowball).', ja: '毎ターン先行ロール：目が大きい方が先行（先に行動解決）。<b>後攻は今ターン+1エネルギー</b>（雪だるま防止）。'},
+  'help_rules_3': {zh: '能量：初始 3，每回合 +3（前 8 回合，之后 +2），每 5 回合能量上限 +2；蓄力 +2。', en: 'Energy: start 3, +3 per turn (first 8 turns, then +2), cap +2 every 5 turns; charge +2.', ja: 'エネルギー：初期3、毎ターン+3（最初の8ターン、以降+2）、5ターン毎に上限+2；溜め+2。'},
+  'help_rules_4': {zh: '动作：攻击（主动技能宝石，耗能 1+组内辅助×0.6）/ 专注恢复（耗 3）/ 防御架势（耗 2，减伤50%+反击×1.5）/ 蓄力。', en: 'Actions: attack (active gem, cost 1 + support×0.6) / focus heal (3) / guard (2, -50% + counter ×1.5) / charge.', ja: '行動：攻撃（アクティブジェム、消費1+サポート×0.6）/ 集中回復（3）/ 防御（2、-50%+反撃×1.5）/ 溜め。'},
+  'help_rules_5': {zh: '预测对手动作（标配，耗 1）：命中则本回合攻击伤害 ×1.3，回合末自动清零不残留。', en: 'Predict opponent action (standard, cost 1): on hit, this turn\u2019s damage ×1.3, cleared at turn end.', ja: '相手の行動を予測（標準、消費1）：的中で今ターンのダメージ×1.3、ターン終了時にリセット。'},
+  'help_rules_6': {zh: '能量判定：行动按钮统一在回合初入账后判定（与扣费同基准），超支警告音 + 重新制定策略。', en: 'Energy check: the Action button checks after turn-start credit (same basis as charging); overdraft warns and asks you to re-plan.', ja: 'エネルギー判定：行動ボタンはターン開始加算後に判定（消費と同基準）。超過は警告音と立て直し。'},
+  'help_build': {zh: '构筑（v13）', en: 'Build (v13)', ja: 'ビルド（v13）'},
+  'help_build_1': {zh: '9 大项 × 4 组 × 8 孔 = 288 孔；每组第 1 孔只能插主动技能宝石，其余 7 孔插辅助宝石；组内串联、组间不串联。', en: '9 categories × 4 groups × 8 slots = 288 slots; slot 1 of each group takes an active gem, the other 7 take supports; linked within group only.', ja: '9カテゴリ×4グループ×8ソケット＝288。各グループの1番目はアクティブ専用、残り7つはサポート。グループ内のみ連結。'},
+  'help_build_2': {zh: '同大项内不可插同名宝石；主动技能耗能随组内辅助宝石数增加。', en: 'No duplicate gem names within a category; active skill cost grows with support gems in its group.', ja: '同カテゴリ内で同名ジェム不可；アクティブの消費はグループ内サポート数で増加。'},
+  'help_build_3': {zh: '辅助宝石除数值外提供<b>行为词条</b>（连击/破甲/狂怒/壁垒/结界/轻灵/增幅/再生/祝福），让插满辅助有收益。', en: 'Support gems add <b>behavior bonuses</b> (combo/pierce/frenzy/bulwark/aegis/agile/amplify/regen/blessing) beyond stats.', ja: 'サポートジェムは数値に加え<b>行動効果</b>（連撃/破甲/激怒/防壁/結界/軽快/増幅/再生/祝福）を付与。'},
+  'help_build_4': {zh: '合成：任意 5 颗同品级宝石 → 1 颗同品级高 1 级（名字继承数量最多者）。', en: 'Craft: any 5 same-rarity gems → 1 gem of the next level (name inherited from the majority).', ja: '合成：同グレード5個 → 次のレベルのジェム1個（名前は最多のものを継承）。'},
+  'help_room': {zh: '本地房间对战（v13）', en: 'Local Room Battles (v13)', ja: 'ローカルルーム対戦（v13）'},
+  'help_room_1': {zh: '创建房间：以发起方本机为主机，生成房间码；对方在另一个标签页打开同一文件 → 主菜单加入房间 → 输入房间码。', en: 'Create: your PC hosts, a room code is generated; the other player opens this file in another tab → Join Room → enter the code.', ja: '作成：このPCがホストになりコード発行。相手は別タブでこのファイルを開き → 参加 → コード入力。'},
+  'help_room_2': {zh: '同浏览器多标签页真实连通（BroadcastChannel 直连，无需服务器）；先手由房间种子决定，双方结算一致。', en: 'Tabs in the same browser connect directly via BroadcastChannel (no server); first move comes from the room seed and both sides settle identically.', ja: '同ブラウザのタブ間はBroadcastChannelで直結（サーバー不要）。先行はルームシードで決定し両端一致。'},
+  'help_room_3': {zh: '跨设备真人对战需 WebRTC 信令或中转服务器（当前单文件环境无法提供），界面与协议已就绪。', en: 'Cross-device play needs a WebRTC signaling or relay server (not available in this single-file build); UI and protocol are ready.', ja: '端末間対戦にはWebRTCシグナリング/中継サーバーが必要（本ビルドでは不可）。UIとプロトコルは準備済み。'},
+  'help_ops': {zh: '操作', en: 'Controls', ja: '操作'},
+  'help_ops_1': {zh: '鼠标悬浮任意元素查看扩展信息；左键点击孔位拆除已装宝石；行动按钮统一判定能量。', en: 'Hover any element for details; left-click a slot to remove its gem; the Action button checks energy.', ja: 'ホバーで詳細表示。ソケットを左クリックで装着解除。行動ボタンで一括判定。'},
+  'ov_combo': {zh: '综合', en: 'Overview', ja: '総合'},
+  'ov_expect': {zh: '战斗期望（对 10 流派环境）', en: 'Battle Expectation (vs 10 archetypes)', ja: '戦闘期待値（10流派環境）'},
+  'ov_skills': {zh: '已装技能（点击组阵可卸下）', en: 'Equipped Skills (click a group to remove)', ja: '装着スキル（クリックで取り外し）'},
+  'ov_energy': {zh: '能量经济 · 能量上限成长', en: 'Energy Economy · Cap Growth', ja: 'エネルギー経済 · 上限成長'},
+  'ov_rarity': {zh: '宝石品级分布', en: 'Gem Rarity Distribution', ja: 'ジェムグレード分布'},
+  'ov_hint': {zh: '1. 在左侧背包点选宝石 → 点击组阵镶嵌<br>2. 无选中时点击组阵 = 卸下最后一颗<br>3. 同大项内不可镶同名宝石；5 颗同名同品级可合成升级<br>4. 鼠标悬浮任意元素可查看扩展信息<br>5. 点「随机对战」随机连接一名玩家对手（本地构筑池模拟）', en: '1. Pick a gem in the bag → click a group to socket<br>2. Click a group with no selection = remove the last gem<br>3. No duplicate names per category; 5 same-name same-rarity gems can craft up<br>4. Hover anything for details<br>5. Random PvP matches a player (simulated from the local pool)', ja: '1. バッグでジェムを選択 → グループをクリックして装着<br>2. 未選択でクリック＝最後の1個を取り外し<br>3. 同カテゴリで同名不可；同名同グレード5個で合成可<br>4. ホバーで詳細表示<br>5. 「ランダム対戦」でプレイヤーとマッチング（ローカルプールで再現）'},
+  'ov_pts': {zh: '总属性点', en: 'Total Points', ja: '合計ポイント'},
+  'ov_en': {zh: '能量上限', en: 'Energy Cap', ja: 'エネルギー上限'},
+  'ov_heal': {zh: '回合恢复', en: 'Turn Heal', ja: 'ターン回復'},
+  'set_lang_label': {zh: '游戏语言', en: 'Language', ja: 'ゲーム言語'},
+  'set_lang_hint': {zh: '切换后界面将重启', en: 'The UI reloads after switching', ja: '切り替えると再読み込みします'},
+};
+/* ---------- I18N 模块主体 ---------- */
+const I18N = {
+  lang: (function(){
+    try { var l = localStorage.getItem('gd_lang'); return (l === 'en' || l === 'ja') ? l : 'zh'; } catch (e) { return 'zh'; }
+  })(),
+  keys: null,
+  tr(s){
+    if (!s || I18N.lang === 'zh') return s;
+    if (!/[\u4e00-\u9fff]/.test(s)) return s;
+    if (!I18N.keys){ I18N.keys = Object.keys(I18N_DICT).sort(function(a, b){ return b.length - a.length; }); }
+    var out = s;
+    for (var round = 0; round < 3; round++){
+      var next = out;
+      for (var i = 0; i < I18N_WILD.length; i++){
+        var w = I18N_WILD[i];
+        w.re.lastIndex = 0;
+        if (w.re.test(next)){ next = next.replace(w.re, I18N.lang === 'en' ? w.en : w.ja); }
+      }
+      for (var j = 0; j < I18N.keys.length; j++){
+        var k = I18N.keys[j];
+        if (next.indexOf(k) >= 0){
+          var v = I18N_DICT[k][I18N.lang] || k;
+          next = next.split(k).join(v);
+        }
+      }
+      if (next === out) return out;
+      out = next;
+    }
+    return out;
+  },
+  txt(key){
+    if (I18N.lang === 'zh') return null;
+    var e = I18N_TXT[key];
+    return e ? (e[I18N.lang] || null) : null;
+  },
+  apply(root, force){
+    if (I18N.lang === 'zh' || (I18N._busy && !force)) return;
+    I18N._busy = true;
+    try {
+      var r = root || document.body;
+      if (!r) return;
+      /* data-i18n / data-i18n-html 整节点 */
+      var tagged = r.querySelectorAll ? r.querySelectorAll('[data-i18n],[data-i18n-html]') : [];
+      for (var i = 0; i < tagged.length; i++){
+        var el = tagged[i];
+        var k = el.getAttribute('data-i18n') || el.getAttribute('data-i18n-html');
+        var v = I18N.txt(k);
+        if (v === null) continue;
+        if (el.getAttribute('data-i18n-html')) el.innerHTML = v; else el.textContent = v;
+      }
+      /* 文本节点子串翻译 */
+      var walker = document.createTreeWalker(r, NodeFilter.SHOW_TEXT);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      for (var m = 0; m < nodes.length; m++){
+        var tn = nodes[m];
+        if (tn.parentNode && tn.parentNode.tagName && /^(SCRIPT|STYLE|TEXTAREA)$/.test(tn.parentNode.tagName)) continue;
+        if (tn.parentNode && tn.parentNode.hasAttribute && tn.parentNode.hasAttribute('data-i18n')) continue;
+        var v2 = I18N.tr(tn.data);
+        if (v2 !== tn.data) tn.data = v2;
+      }
+      /* placeholder */
+      if (r === document.body){
+        var els = document.querySelectorAll('[placeholder]');
+        for (var n = 0; n < els.length; n++){
+          var ph = els[n].getAttribute('placeholder');
+          if (ph){ var pv = I18N.tr(ph); if (pv !== ph) els[n].setAttribute('placeholder', pv); }
+        }
+        document.title = I18N.tr(document.title);
+      }
+    } finally { I18N._busy = false; }
+  },
+  start(){
+    if (I18N.lang !== 'zh'){
+      try { document.documentElement.setAttribute('lang', I18N.lang); } catch (e) {}
+      document.body.classList.add('lang-' + I18N.lang);
+      I18N.apply();
+      if (window.MutationObserver){
+        try {
+          new MutationObserver(function(ms){
+            if (I18N._busy) return;
+            I18N._busy = true;
+            try {
+              for (var i = 0; i < ms.length; i++){
+                var m = ms[i];
+                if (m.type === 'characterData' && m.target && m.target.data){
+                  var pn = m.target.parentNode;
+                  if (pn && pn.tagName && /^(SCRIPT|STYLE|TEXTAREA)$/.test(pn.tagName)) continue;
+                  var v = I18N.tr(m.target.data);
+                  if (v !== m.target.data) m.target.data = v;
+                } else if (m.type === 'childList' && m.addedNodes){
+                  for (var j = 0; j < m.addedNodes.length; j++){
+                    var node = m.addedNodes[j];
+                    if (node.nodeType === 3){
+                      var v2 = I18N.tr(node.data);
+                      if (v2 !== node.data) node.data = v2;
+                    } else if (node.nodeType === 1 && !/^(SCRIPT|STYLE|TEXTAREA)$/.test(node.tagName)){
+                      I18N.apply(node, true);
+                    }
+                  }
+                }
+              }
+            } finally { I18N._busy = false; }
+          }).observe(document.body, {childList: true, subtree: true, characterData: true});
+        } catch (e) {}
+      }
+    }
+  },
+  set(lang){
+    try { localStorage.setItem('gd_lang', lang); } catch (e) {}
+    I18N.lang = lang;
+    location.reload();
+  },
+};
 
 </script>
 </body>

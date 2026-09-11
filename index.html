@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.6（P0 修复 · 耗能统一 · 房间同步）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.7（柔和音乐 · 差异化技能动画与打击音）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -278,12 +278,12 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .skill-title{font-size:13px;font-weight:900;color:var(--accent);margin:10px 0 4px}
 #p-skills,#e-skills{display:flex;gap:6px;flex-wrap:wrap;min-height:66px}
 .skill-card{
-  background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:6px 8px;
+  background:var(--card2);border:1.5px solid var(--line2);border-radius:12px;padding:6px 8px;
   display:flex;align-items:center;gap:8px;cursor:pointer;min-width:160px;
 }
 .skill-card:hover{border-color:var(--gold3)}
 .skill-card.active{border-color:var(--gold3);box-shadow:0 0 8px rgba(200,155,78,.45)}
-.skill-card.sel{border-color:var(--accent);background:#E7EFF8}
+.skill-card.sel{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent);color:var(--deep)}
 .skill-card .sk{flex:0 0 36px;display:flex;justify-content:center}
 .skill-card .sm .n{font-size:14px;font-weight:900;color:var(--deep)}
 .skill-card .sm .d{font-size:11px;color:var(--dim);display:block}
@@ -749,7 +749,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.6 · 9大项×4组×8孔 · P0 修复：耗能统一 · 房间双端同步 · 中/英/日多语言 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.7 · 9大项×4组×8孔 · 柔和多乐器音乐 · 差异化技能动画/打击音 · 中/英/日多语言 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -2653,7 +2653,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.6',
+  ver: '13.7',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -2816,15 +2816,35 @@ function sfx(key){
   }
 }
 function warnSound(){ sfx('warn'); }
-/* 技能宝石独立打击音：按宝石 id 哈希在 3 种变调中选一个，保证每颗宝石音色不同 */
+/* 技能宝石独立打击音：按宝石 uid 哈希生成每颗宝石唯一音色（近战重击 / 法术上升 / 宠物软扑 三系 × 变体） */
+function gemHash(g){
+  const s = String(g && (g.uid || g.name) || '');
+  let h = 7;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
 function playHitSfx(g, crit){
   if (!g) { sfx(crit ? 'crit' : 'hit'); return; }
-  const h = (g.uid || g.name || '').split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % 3;
-  const base = g.cat === '法术' ? 'hitArcane' : (g.cat === '宠物' ? 'hitPet' : 'hitMelee');
-  sfx(base);
+  const h = gemHash(g);
+  if (g.cat === '法术伤害'){
+    const base = 720 + (h % 8) * 80, top = base + 380 + (h % 5) * 120;
+    sfxTone(base, top, 0.12, (h % 2) ? 'sine' : 'triangle', 0.09);
+    sfxNoise(0.09, 0.1, 1600 + (h % 6) * 260);
+    sfxTone(top * 0.55, top, 0.15, 'triangle', 0.055, 0.03);
+  } else if (g.cat === '宠物伤害'){
+    const base = 240 + (h % 6) * 40;
+    sfxNoise(0.08, 0.13, 550 + (h % 5) * 150);
+    sfxTone(base, base * 0.42, 0.13, (h % 2) ? 'triangle' : 'sine', 0.09);
+    sfxTone(base * 2, base * 3, 0.09, 'sine', 0.045, 0.03);
+  } else {
+    const base = 170 + (h % 6) * 34;
+    sfxNoise(0.1, 0.16, 750 + (h % 5) * 220);
+    sfxTone(base, base * 0.3, 0.17, (h % 3 === 0) ? 'sawtooth' : 'square', 0.11);
+    sfxTone(base * 0.48, base * 0.2, 0.12, 'triangle', 0.07, 0.02);
+  }
   if (crit){
-    sfxTone(300 + h * 80, 120, 0.2, 'sawtooth', 0.13);
-    sfxTone(900 + h * 120, 1400 + h * 160, 0.12, 'square', 0.06, 0.02);
+    sfxTone(860 + (h % 4) * 90, 1500 + (h % 3) * 140, 0.13, 'square', 0.055, 0.02);
+    sfxNoise(0.1, 0.1, 2200);
   }
 }
 /* ---------- v13.5：全局按钮点击音（同一按钮固定音色，不同按钮各不相同） ---------- */
@@ -2885,28 +2905,36 @@ function skillNameOf(side, sys){
   if (side === 'p') return (activeGemFor(STATE.slots, sys) || {}).name || sys;
   return (b.eActName && b.eActName[sys]) || ('对手' + sys);
 }
-/* 战斗动画：按技能类别播放（近战斩击 / 法术弹 / 宠物扑击 / 光环），返回 Promise */
+/* 战斗动画：按技能类别播放（近战斩击 / 法术弹 / 宠物扑击 / 光环），并按宝石 uid 差异化色相，使每颗技能宝石释放表现不同；连招时按顺序逐个播放 */
 function playSkillAnim(side, sys, g){
   return new Promise(res => {
     const layer = $('anim-layer');
     if (!layer){ res(); return; }
     const rev = side === 'e';
+    const hue = g && g.uid ? ((gemHash(g) % 300) - 150) : 0;   /* -150° ~ +150° 色相偏移 */
+    const hueF = hue ? 'hue-rotate(' + hue + 'deg)' : '';
     const box = document.createElement('div');
     box.className = 'anim-box';
     if (sys === 'charge') box.innerHTML = '<div class="anim-charge"></div>';
     else if (sys === 'focus') box.innerHTML = '<div class="anim-focus"></div>';
     else if (sys === 'guard') box.innerHTML = '<div class="anim-guard"></div>';
-    else if (g && g.cat === '宠物'){
-      box.innerHTML = '<div class="anim-pet"><i class="ear l"></i><i class="ear r"></i><i class="eye l"></i><i class="eye r"></i><i class="nose"></i></div>';
-    } else if (g && g.cat === '法术'){
+    else if (g && g.cat === '宠物伤害'){
+      const p = document.createElement('div'); p.className = 'anim-pet';
+      p.innerHTML = '<i class="ear l"></i><i class="ear r"></i><i class="eye l"></i><i class="eye r"></i><i class="nose"></i>';
+      if (hueF) p.style.filter = hueF;
+      box.appendChild(p);
+    } else if (g && g.cat === '法术伤害'){
       const b2 = document.createElement('div'); b2.className = 'anim-bolt' + (rev ? ' rev' : '');
+      if (hueF) b2.style.filter = hueF;
       box.appendChild(b2);
     } else {
       const s2 = document.createElement('div'); s2.className = 'anim-slash' + (rev ? ' rev' : '');
+      if (hueF) s2.style.filter = hueF + ' drop-shadow(0 0 12px rgba(255,190,60,.9))';
       box.appendChild(s2);
     }
     const burst = document.createElement('div'); burst.className = 'anim-burst';
     burst.style.left = (rev ? 12 : 88) + '%';
+    if (hueF) burst.style.filter = hueF;
     box.appendChild(burst);
     layer.appendChild(box);
     const dur = (sys === 'charge' || sys === 'focus' || sys === 'guard') ? 620 : 560;
@@ -3157,10 +3185,10 @@ const CHORDS12 = [
 function musicStart(){
   if (!MUSIC.ctx) MUSIC.ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (!MUSIC.master){
-    MUSIC.master = MUSIC.ctx.createGain(); MUSIC.master.gain.value = 0.42;
-    const delay = MUSIC.ctx.createDelay(); delay.delayTime.value = 0.46;
-    const fb = MUSIC.ctx.createGain(); fb.gain.value = 0.42;
-    const wet = MUSIC.ctx.createGain(); wet.gain.value = 0.34;
+    MUSIC.master = MUSIC.ctx.createGain(); MUSIC.master.gain.value = 0.3;
+    const delay = MUSIC.ctx.createDelay(); delay.delayTime.value = 0.52;
+    const fb = MUSIC.ctx.createGain(); fb.gain.value = 0.38;
+    const wet = MUSIC.ctx.createGain(); wet.gain.value = 0.28;
     MUSIC.master.connect(MUSIC.ctx.destination);
     MUSIC.master.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(MUSIC.ctx.destination);
     MUSIC.wet = wet;
@@ -3217,12 +3245,20 @@ function instNote(inst, freq, t, dur, vol, dest){
     return;
   }
   if (inst === 'strings'){
-    o.type = 'sawtooth'; o.frequency.value = freq;
-    const fl = ctx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = 1600;
-    g.gain.linearRampToValueAtTime(vol, t + 0.22);
+    /* 温暖 Pad：双 sine（基频 + 纯五度泛音），慢起音，无锯齿噪声 */
+    o.type = 'sine'; o.frequency.value = freq;
+    const fl = ctx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = 700;
+    g.gain.linearRampToValueAtTime(vol, t + 0.3);
     g.gain.exponentialRampToValueAtTime(0.001, t + dur);
     o.connect(fl); fl.connect(g); g.connect(out);
     o.start(t); o.stop(t + dur + 0.1);
+    const o3 = ctx.createOscillator(), g3 = ctx.createGain();
+    o3.type = 'sine'; o3.frequency.value = freq * 1.5;
+    const fl3 = ctx.createBiquadFilter(); fl3.type = 'lowpass'; fl3.frequency.value = 900;
+    g3.gain.linearRampToValueAtTime(vol * 0.5, t + 0.3);
+    g3.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o3.connect(fl3); fl3.connect(g3); g3.connect(out);
+    o3.start(t); o3.stop(t + dur + 0.1);
     return;
   }
   if (inst === 'bass'){
@@ -3241,9 +3277,9 @@ function instNote(inst, freq, t, dur, vol, dest){
     o.connect(g); g.connect(out);
     o.start(t); o.stop(t + dur + 0.1);
     const o2 = ctx.createOscillator(), g2 = ctx.createGain();
-    o2.type = 'sine'; o2.frequency.value = freq * 2.76;
+    o2.type = 'sine'; o2.frequency.value = freq * 2.0;
     g2.gain.setValueAtTime(0, t);
-    g2.gain.linearRampToValueAtTime(vol * 0.4, t + 0.005);
+    g2.gain.linearRampToValueAtTime(vol * 0.32, t + 0.005);
     g2.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.7);
     o2.connect(g2); g2.connect(out);
     o2.start(t); o2.stop(t + dur);
@@ -3281,27 +3317,26 @@ function instNote(inst, freq, t, dur, vol, dest){
   o.start(t); o.stop(t + dur + 0.1);
 }
 function scheduleBGM(){
-  const spb = 60 / 76; /* 76 BPM 四分音符（欢快舒缓） */
+  const spb = 60 / 64; /* 64 BPM 四分音符（柔和舒缓，无刺激高频） */
   while (MUSIC.nextT < MUSIC.ctx.currentTime + 0.5){
     const t = MUSIC.nextT, step = MUSIC.step % 32;
     const bar = Math.floor(step / 4) % 4, chord = CHORDS12[bar];
-    /* 主旋律：钢琴（甜美清亮） */
+    /* 主旋律：钢琴（温暖中音区，-5 半音，降低音量） */
     const m = MELODY[step];
-    if (m) instNote('piano', MNOTE(m + 12), t, 1.1, 0.07, MUSIC.wet);
-    /* 分解和弦：竖琴（柔和拨弦） */
-    instNote('harp', MNOTE(chord[step % 4]), t, 0.8, 0.04, MUSIC.wet);
-    /* 弦乐 Pad：每小节根音 + 五度（空间感） */
+    if (m) instNote('piano', MNOTE(m - 5), t, 1.3, 0.05, MUSIC.wet);
+    /* 分解和弦：竖琴（轻柔拨弦） */
+    instNote('harp', MNOTE(chord[step % 4]), t, 1.0, 0.03, MUSIC.wet);
+    /* 弦乐 Pad：每小节根音 + 五度（温暖空间感，sine 双层） */
     if (step % 4 === 0){
-      instNote('strings', MNOTE(chord[0] - 12), t, 3.4, 0.05);
-      instNote('strings', MNOTE(chord[2] - 12), t, 3.4, 0.034);
+      instNote('strings', MNOTE(chord[0] - 12), t, 4.2, 0.04);
+      instNote('strings', MNOTE(chord[2] - 12), t, 4.2, 0.027);
     }
-    /* 贝斯：每小节第 1、3 拍（沉稳律动） */
-    if (step % 2 === 0) instNote('bass', MNOTE(chord[0] - 24), t, 1.1, 0.1);
-    /* 铃铛点缀：每小节第 2、4 拍（晶莹） */
-    if (step % 2 === 1) instNote('bell', MNOTE(chord[1] + 12), t, 0.9, 0.026, MUSIC.wet);
-    /* 轻快节奏：底鼓 1、3 拍 + 沙锤 2、4 拍（欢快不噪） */
-    if (step % 2 === 0) instNote('kick', 130, t, 0.14, 0.028);
-    else instNote('shaker', 0, t, 0.05, 0.022);
+    /* 贝斯：每小节第 1、3 拍（轻柔低音，音量减半） */
+    if (step % 2 === 0) instNote('bass', MNOTE(chord[0] - 24), t, 1.4, 0.05);
+    /* 铃铛点缀：每小节第 2、4 拍（柔和八度泛音，音量减半） */
+    if (step % 2 === 1) instNote('bell', MNOTE(chord[1] + 7), t, 1.1, 0.013, MUSIC.wet);
+    /* 轻柔底鼓：仅每小节第 3 拍（去沙锤噪声，节奏轻不可扰） */
+    if (step % 4 === 2) instNote('kick', 130, t, 0.14, 0.014);
     MUSIC.nextT += spb;
     MUSIC.step++;
   }
@@ -3346,7 +3381,7 @@ function init(){
   $('btn-ov').onclick = () => $('ov-pop').classList.add('on');
   $('btn-ov-close').onclick = () => $('ov-pop').classList.remove('on');
   $('modal').addEventListener('click', (e) => { if (e.target === $('modal')) $('modal').classList.remove('on'); });
-  $('btn-music').setAttribute('data-tip', '<span class="tip-t">背景音乐</span><br>旋律化配乐 · 多层声部（甜美主旋律 + 分解和弦 + 长音 Pad + 低音 + 晶莹点缀）· 76 BPM · C 大调 I–vi–IV–V 进行<br><span class="tip-k">点击开始 / 暂停</span>');
+  $('btn-music').setAttribute('data-tip', '<span class="tip-t">背景音乐</span><br>柔和多乐器配乐（温暖钢琴主旋律 + 竖琴分解 + 纯音 Pad + 低音 + 轻铃）· 64 BPM · C 大调 I–vi–IV–V 进行 · 已去除高频噪声与刺耳打击<br><span class="tip-k">点击开始 / 暂停</span>');
   $('btn-pvp').setAttribute('data-tip', '<span class="tip-t">随机对战 · 玩家 VS 玩家</span><br>随机连接一名玩家对手并交换构筑<br><span class="tip-k">单文件 Demo 以本地构筑池模拟随机对手（10 流派 × 扰动，昵称与构筑每次不同）</span>');
   $('btn-ov').setAttribute('data-tip', '<span class="tip-t">构筑总览</span><br>查看综合属性 / 战斗期望 / 能量经济成长 / 宝石品级分布');
   $('btn-reset').onclick = resetProgress;
@@ -4698,7 +4733,7 @@ const I18N_DICT = {
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.6 · 9大项×4组×8孔 · P0 修复：耗能统一 · 房间双端同步 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.6 · 9×4×8 sockets · P0 fixes: unified energy cost · room sync · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.6 · 9×4×8ソケット · P0修正：エネルギー統一 · ルーム同期 · 中/英/日 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v13.7 · 9大项×4组×8孔 · 柔和多乐器音乐 · 差异化技能动画/打击音 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.7 · 9×4×8 sockets · gentle multi-instrument BGM · distinct skill FX & hit SFX · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.7 · 9×4×8ソケット · やわらかな多楽器BGM · スキル毎の演出/打撃音 · 中/英/日 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},

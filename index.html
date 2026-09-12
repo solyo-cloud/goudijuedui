@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.8（引擎强化 · 聊天修复 · 字体加大）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.9（构筑革新 · 流派预设 · 分享码）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -121,9 +121,70 @@ b{color:var(--deep)}
 #btn-reset:hover{background:#DBE6F0}
 /* 中：9 大项网格——弹性铺满全部剩余宽度（无右侧空白） */
 #cat-grid{
-  flex:1;display:grid;grid-template-columns:repeat(3,1fr);
-  grid-auto-rows:1fr;gap:10px;min-width:0;
+  flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;height:100%;
 }
+/* ---------- v13.9：大项导航 + 当前大项详图（全量可见、免滚动） ---------- */
+.cat-nav{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.cat-tab{
+  flex:1 1 0;min-width:96px;display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:7px 5px;border-radius:11px;cursor:pointer;text-align:center;
+  background:var(--card2);border:2px solid var(--line);color:var(--ink);
+  transition:border-color .15s,background .15s;
+}
+.cat-tab:hover{border-color:var(--gold3);background:#EAF2FA}
+.cat-tab.on{background:linear-gradient(160deg,var(--gold2),var(--gold));border-color:var(--accent);color:#fff;box-shadow:0 3px 10px rgba(200,155,78,.45)}
+.cat-tab .ct{font-size:15px;font-weight:900;line-height:1.2}
+.cat-tab.on .ct{color:#fff}
+.cat-tab .cs{font-size:11px;font-weight:700;color:var(--faint)}
+.cat-tab.on .cs{color:rgba(255,255,255,.92)}
+.cat-tools{margin-left:auto;display:flex;gap:6px;align-items:center}
+.tool-btn{
+  padding:8px 13px;border-radius:11px;font-size:14px;font-weight:900;cursor:pointer;
+  background:var(--card2);border:2px solid var(--line2);color:var(--deep);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 2px 6px rgba(40,80,130,.12);
+  transition:border-color .15s,transform .1s;
+}
+.tool-btn:hover{border-color:var(--accent2);transform:translateY(-1px)}
+.tool-btn.gold{background:linear-gradient(160deg,var(--gold2),var(--gold3));border-color:var(--gold3);color:#fff;text-shadow:0 1px 2px rgba(80,50,0,.35)}
+.cat-detail{
+  flex:1;min-height:0;display:flex;flex-direction:column;
+  background:var(--card);border:2px solid var(--line2);border-radius:14px;
+  box-shadow:var(--shadow);padding:8px;
+}
+.cat-detail-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.cat-detail-head .cn2{font-size:21px;font-weight:900;color:var(--deep)}
+.cat-detail-head .dd{font-size:12.5px;color:var(--faint);font-weight:700}
+.cat-detail-head .dp{font-size:16px;color:var(--accent);font-weight:900;margin-left:auto}
+.cat-groups2{
+  flex:1;min-height:0;display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.cat-groups2 .chain{height:100%;justify-content:center;gap:1px;padding:2px}
+.cat-groups2 .stargroup{width:min(100%,248px)}
+.cat-groups2 .cinfo .clabel{font-size:15px}
+.cat-groups2 .cinfo .csub{font-size:13px}
+/* 流派预设 / 分享码弹层 */
+.arch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:46vh;overflow-y:auto}
+.arch-row{
+  display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px;border-radius:11px;cursor:pointer;
+  background:var(--card2);border:2px solid var(--line);color:var(--deep);
+}
+.arch-row:hover{border-color:var(--gold3);background:#EAF2FA}
+.arch-row .at{font-size:16px;font-weight:900}
+.arch-row .ap{font-size:12px;color:var(--dim);font-weight:700}
+.arch-row .ad{font-size:12px;color:var(--faint);font-weight:600;margin-top:2px}
+.arch-note{font-size:12px;color:var(--faint);margin-top:8px;font-weight:600}
+.share-box{display:flex;flex-direction:column;gap:8px}
+.share-box textarea{width:100%;min-height:64px;border:2px solid var(--line2);border-radius:10px;padding:8px;font-size:13px;font-family:Consolas,monospace;background:#fff;color:var(--deep);resize:vertical}
+.share-note{font-size:12px;color:var(--faint);font-weight:600}
+/* 结算：输出构成 */
+.dmg-zone{margin-top:6px}
+.dmg-row{display:flex;align-items:center;gap:8px;margin:3px 0}
+.dmg-row .dk{width:72px;font-size:13px;font-weight:900;color:var(--deep);flex:none}
+.dmg-row .db{flex:1;height:16px;border-radius:8px;background:var(--card2);overflow:hidden;border:1px solid var(--line)}
+.dmg-row .df{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--accent2),var(--gold2));transition:width .5s}
+.dmg-row .dv{width:104px;font-size:12.5px;font-weight:800;color:var(--dim);text-align:right;flex:none}
 .cat{
   background:var(--card);border:2px solid var(--line2);border-radius:14px;
   box-shadow:var(--shadow);padding:6px 6px 4px;display:flex;flex-direction:column;overflow:hidden;
@@ -738,7 +799,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.8 · 9大项×4组×8孔 · 引擎强化（预测/连招/行为建模 · 高手AI预测） · 聊天系统修复 · 字体加大 · 中/英/日多语言 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.9 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -888,6 +949,8 @@ body.in-battle .view{height:calc(100vh - 56px)}
       <div class="rt" id="r-title"></div>
       <div id="r-sub"></div>
       <div class="cards" id="r-cards"></div>
+      <h3 style="font-size:15px;color:var(--accent);font-weight:900;margin:4px 0">输出构成（本场伤害）</h3>
+      <div class="dmg-zone" id="r-dmg"></div>
       <h3 style="font-size:15px;color:var(--accent);font-weight:900;margin:4px 0">战利品（自动存入宝石背包）</h3>
       <div id="r-loot"></div>
       <div class="zone">
@@ -1699,8 +1762,11 @@ function battle(aAlloc, bAlloc, aLevel, bLevel, seed, aCosts, bCosts, opts){
   for (let t = 1; t <= RULES.maxTurns; t++){
     A.energy = Math.min(energyMaxAt(t), A.energy + energyPerTurnAt(t));
     B.energy = Math.min(energyMaxAt(t), B.energy + energyPerTurnAt(t));
-    /* D7：先手补偿 —— 模拟中 A 恒先结算，后手 B 每回合 +1 能量（至上限） */
-    B.energy = Math.min(energyMaxAt(t), B.energy + RULES.firstCompBonus);
+    /* v13.9：先手交替 —— 单数回合 A 先、偶数回合 B 先（贴近真实战斗每回合掷骰的期望）；
+       D7 后手补偿：后手方本回合 +1 能量（至上限） */
+    const aFirst = (t % 2 === 1);
+    if (aFirst) B.energy = Math.min(energyMaxAt(t), B.energy + RULES.firstCompBonus);
+    else A.energy = Math.min(energyMaxAt(t), A.energy + RULES.firstCompBonus);
     const aActs = aiCombo(aLevel, A, B, rng, aiDecide(aLevel, A, B, rng));
     const bActs = aiCombo(bLevel, B, A, rng, aiDecide(bLevel, B, A, rng));
     /* 预测判定：能量足够时按概率触发，命中（猜中对方首动作）→ 本回合己方首击伤害 ×1.3 */
@@ -1719,38 +1785,28 @@ function battle(aAlloc, bAlloc, aLevel, bLevel, seed, aCosts, bCosts, opts){
     if (bMain === 'charge') B.energy = Math.min(energyMaxAt(t), B.energy + RULES.chargeGain);
     if (aMain === 'focus'){ A.energy -= RULES.costFocus; const h = focusHealValue(A.eff); A.hp = Math.min(RULES.baseHp, A.hp + h); stats.focuses++; stats.aHeal += h; }
     if (bMain === 'focus'){ B.energy -= RULES.costFocus; const h = focusHealValue(B.eff); B.hp = Math.min(RULES.baseHp, B.hp + h); stats.focuses++; stats.bHeal += h; }
-    for (const act of aActs){
-      if (act in RULES.systemAttr){
-        A.energy -= (aCosts[act] || RULES.costAtk);
-        const r = rollAttack(A, act, B, rng, undefined, aPredHit ? RULES.predictReward : undefined, opts.bonusA);
-        if (aPredHit) aPredHit = false;   /* 预测奖励仅作用于本回合首击 */
-        if (r.hit){
-          B.hp = Math.max(0, B.hp - r.dmg);
-          stats.aDmg += r.dmg;
-          if (r.crit) stats.crits++;
-          if (r.combo) stats.aCombos++;
-          if (inLastStand(B.hp)){ stats.stands++; stats.bStand++; B.lsTriggered = true; }
-          if (B.guarding) B.counter = true;
-          log.push(`T${t} A·${act} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : '') + (r.combo ? ' 连击' : ''));
-        } else log.push(`T${t} A·${act} 被闪避`);
+    /* v13.9：结算顺序随先手交替（贴近真实战斗）；双方逻辑经对称闭包执行，避免重复代码 */
+    const runSide = (att, def, acts, costs, isA, predHit) => {
+      for (const act of acts){
+        if (act in RULES.systemAttr){
+          att.energy -= (costs[act] || RULES.costAtk);
+          const r = rollAttack(att, act, def, rng, undefined, predHit ? RULES.predictReward : undefined, isA ? opts.bonusA : opts.bonusB);
+          if (predHit) predHit = false;   /* 预测奖励仅作用于本回合首击 */
+          if (r.hit){
+            def.hp = Math.max(0, def.hp - r.dmg);
+            if (isA) stats.aDmg += r.dmg; else stats.bDmg += r.dmg;
+            if (r.crit) stats.crits++;
+            if (r.combo){ if (isA) stats.aCombos++; else stats.bCombos++; }
+            if (inLastStand(def.hp)){ stats.stands++; if (isA) stats.bStand++; else stats.aStand++; def.lsTriggered = true; }
+            if (def.guarding) def.counter = true;
+            log.push(`T${t} ${isA ? 'A' : 'B'}·${act} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : '') + (r.combo ? ' 连击' : ''));
+          } else log.push(`T${t} ${isA ? 'A' : 'B'}·${act} 被闪避`);
+        }
       }
-    }
-    for (const act of bActs){
-      if (act in RULES.systemAttr){
-        B.energy -= (bCosts[act] || RULES.costAtk);
-        const r = rollAttack(B, act, A, rng, undefined, bPredHit ? RULES.predictReward : undefined, opts.bonusB);
-        if (bPredHit) bPredHit = false;
-        if (r.hit){
-          A.hp = Math.max(0, A.hp - r.dmg);
-          stats.bDmg += r.dmg;
-          if (r.crit) stats.crits++;
-          if (r.combo) stats.bCombos++;
-          if (inLastStand(A.hp)){ stats.stands++; stats.aStand++; A.lsTriggered = true; }
-          if (A.guarding) A.counter = true;
-          log.push(`T${t} B·${act} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : '') + (r.combo ? ' 连击' : ''));
-        } else log.push(`T${t} B·${act} 被闪避`);
-      }
-    }
+    };
+    if (aFirst) runSide(A, B, aActs, aCosts, true, aPredHit);
+    runSide(B, A, bActs, bCosts, false, bPredHit);
+    if (!aFirst) runSide(A, B, aActs, aCosts, true, aPredHit);
     stats.guards += (A.guarding?1:0) + (B.guarding?1:0);
     if (A.hp <= 0 || B.hp <= 0){
       if (A.hp <= 0 && B.hp <= 0) winner = 'draw';
@@ -1872,7 +1928,7 @@ const $ = id => document.getElementById(id);
 
 const LS_POOL = 'gdd-gem-pool-v8', LS_SLOTS = 'gdd-gem-slots-v8';
 const STATE = {
-  pool: [], slots: [], sel: null,
+  pool: [], slots: [], sel: null, catFocus: 0,
   sortBy: 'lv-desc', fRarity: [], fKind: [], fUnused: false,
   diff: 'veteran', speed: 'manual',
   battle: null, logs: [],
@@ -2166,37 +2222,58 @@ function renderCats(){
     save(); renderBuild();
     return true;
   };
+  /* v13.9：大项导航 —— 9 大项平铺为导航条，点击切换；当前大项 4 组 × 8 孔 2×2 全量展示，孔位最大化、无需滚动 */
+  const focus = (STATE.catFocus !== undefined && STATE.catFocus >= 0 && STATE.catFocus < GEM_CATS.length) ? STATE.catFocus : 0;
+  const nav = document.createElement('div'); nav.className = 'cat-nav';
   for (let i = 0; i < GEM_CATS.length; i++){
     const cat = GEM_CATS[i];
-    const grps = STATE.slots[i];
-    let catPts = 0;
-    for (const grp of grps) for (const g of grp) if (g) catPts += gemPoints(g);
-    const catEl = document.createElement('div');
-    catEl.className = 'cat';
-    let html = `<div class="cat-head"${TIP(`<span class="tip-t">${cat}</span><br>4 组 × 8 孔 · 组内串联、组间不串联<br>当前合计 ${catPts.toFixed(1)} 点<br><span class="tip-k">中心孔镶主动技能宝石，7 个辅助孔镶辅助宝石；同大项内不可镶同名宝石</span>`)}><span class="cn">${cat}</span><span class="cd">4组×8孔 · 组阵内滚动查看</span><span class="cp">${catPts.toFixed(1)} 点</span></div><div class="cat-groups">`;
-    for (let s = 0; s < 4; s++){
-      const grp = grps[s];
-      const active = grp[0];
-      const filled = grp.filter(Boolean).length;
-      const gCost = supCostOf(grp);
-      const list = grp.filter(Boolean).map(g => `${gemName(g)} Lv${g.lv}（${gemKindName(g)}${g.kind==='active'&&g.subkind==='passive'?'被动':g.kind==='active'?'·耗'+gCost:''}）`).join(' · ') || '空组';
-      const tCost = active && active.subkind !== 'passive' ? '（耗 ' + gCost + ' 能量）' : '';
-      const tTip = `<span class="tip-t">组 ${s+1} · ${cat}</span><br>` +
-        (active ? '主动：' + gemName(active) + ' · ' + gemKindName(active) + (active.subkind==='passive' ? '（被动·不占动作）' : tCost) : '主动技能：空') + '<br>' +
-        (filled ? '已装 ' + filled + ' / 8 颗：' + list : '空组 · 8 孔全部可镶') +
-        '<br><span class="tip-k">规则：中心孔=主动技能，7 辅助孔=辅助宝石，组内串联、组间不串联；点击孔位=镶嵌/拆除宝石</span>';
-      html += `<div class="chain${filled ? ' filled' : ''}" data-cat="${i}" data-grp="${s}"${TIP(tTip)}>
-        ${starGroupHTML(grp)}
-        <div class="cinfo">
-          <span class="clabel">${active ? gemName(active) : '组 ' + (s+1)}</span>
-          <span class="csub">${active ? gemKindName(active) + (active.subkind==='passive' ? '被动' : '·耗' + gCost) : (filled ? '已装 ' + filled + ' 颗' : '空组')}</span>
-        </div>
-      </div>`;
-    }
-    html += '</div>';
-    catEl.innerHTML = html;
-    grid.appendChild(catEl);
+    let pts = 0, filled = 0;
+    for (const grp of STATE.slots[i]) for (const g of grp){ if (g){ pts += gemPoints(g); filled++; } }
+    const tb = document.createElement('button');
+    tb.className = 'cat-tab' + (i === focus ? ' on' : '');
+    tb.innerHTML = `<span class="ct">${cat}</span><span class="cs">${pts.toFixed(1)} 点 · ${filled} 颗</span>`;
+    tb.setAttribute('data-tip', (i === focus ? '当前大项' : '点击切换大项') + '：' + cat + '<br><span class="tip-k">4 组 × 8 孔 · 组内串联、组间不串联 · 中心孔=主动技能，7 孔=辅助宝石</span>');
+    tb.onclick = () => { if (STATE.catFocus !== i){ STATE.catFocus = i; sfx('ui'); renderCats(); } };
+    nav.appendChild(tb);
   }
+  const tools = document.createElement('div'); tools.className = 'cat-tools';
+  tools.innerHTML = `
+    <button class="tool-btn gold" id="btn-arche"${TIP('<span class="tip-t">流派预设</span><br>按 10 个经典流派一键装配背包宝石（狂战士 / 奥术师 / 驯兽师…）')}>流派预设</button>
+    <button class="tool-btn" id="btn-share"${TIP('<span class="tip-t">导出构筑</span><br>将当前 9 大项装配生成为分享码，可发给好友导入')}>导出构筑</button>
+    <button class="tool-btn" id="btn-load"${TIP('<span class="tip-t">导入构筑</span><br>粘贴分享码，还原分享者的宝石装配')}>导入构筑</button>`;
+  nav.appendChild(tools);
+  grid.appendChild(nav);
+  /* 当前大项详图：4 组 2×2 网格全部可见 */
+  const i = focus, cat = GEM_CATS[i], grps = STATE.slots[i];
+  let catPts = 0;
+  for (const grp of grps) for (const g of grp) if (g) catPts += gemPoints(g);
+  const det = document.createElement('div'); det.className = 'cat-detail';
+  let html = `<div class="cat-detail-head"><span class="cn2">${cat}</span><span class="dd">4 组 × 8 孔 · 组内串联、组间不串联 · 中心孔=主动技能 · 7 孔=辅助宝石 · 同大项不可同名</span><span class="dp">${catPts.toFixed(1)} 点</span></div><div class="cat-groups2">`;
+  for (let s = 0; s < 4; s++){
+    const grp = grps[s];
+    const active = grp[0];
+    const filled = grp.filter(Boolean).length;
+    const gCost = supCostOf(grp);
+    const list = grp.filter(Boolean).map(g => `${gemName(g)} Lv${g.lv}（${gemKindName(g)}${g.kind==='active'&&g.subkind==='passive'?'被动':g.kind==='active'?'·耗'+gCost:''}）`).join(' · ') || '空组';
+    const tCost = active && active.subkind !== 'passive' ? '（耗 ' + gCost + ' 能量）' : '';
+    const tTip = `<span class="tip-t">组 ${s+1} · ${cat}</span><br>` +
+      (active ? '主动：' + gemName(active) + ' · ' + gemKindName(active) + (active.subkind==='passive' ? '（被动·不占动作）' : tCost) : '主动技能：空') + '<br>' +
+      (filled ? '已装 ' + filled + ' / 8 颗：' + list : '空组 · 8 孔全部可镶') +
+      '<br><span class="tip-k">规则：中心孔=主动技能，7 辅助孔=辅助宝石，组内串联、组间不串联；点击孔位=镶嵌/拆除宝石</span>';
+    html += `<div class="chain${filled ? ' filled' : ''}" data-cat="${i}" data-grp="${s}"${TIP(tTip)}>
+      ${starGroupHTML(grp)}
+      <div class="cinfo">
+        <span class="clabel">${active ? gemName(active) : '组 ' + (s+1)}</span>
+        <span class="csub">${active ? gemKindName(active) + (active.subkind==='passive' ? '被动' : '·耗' + gCost) : (filled ? '已装 ' + filled + ' 颗' : '空组')}</span>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  det.innerHTML = html;
+  grid.appendChild(det);
+  const bA = document.getElementById('btn-arche'); if (bA) bA.onclick = openArchetypes;
+  const bS = document.getElementById('btn-share'); if (bS) bS.onclick = exportBuild;
+  const bL = document.getElementById('btn-load'); if (bL) bL.onclick = importBuild;
   grid.querySelectorAll('.chain').forEach(ch => ch.onclick = (ev) => {
     const i = +ch.dataset.cat, s = +ch.dataset.grp;
     const grp = STATE.slots[i][s];
@@ -2217,6 +2294,154 @@ function renderCats(){
     } else if (STATE.sel) trySock(i, s, grp);
   });
 }
+
+/* ================= v13.9 构筑工具：流派预设 / 构筑分享码 ================= */
+const ARCH_DESC = {
+  '狂战士':'近战猛攻 + 护甲硬抗',
+  '奥术师':'法术爆发 + 抗性护体',
+  '驯兽师':'宠物协同 + 抗性续航',
+  '重装卫士':'铁壁防御 + 近战补伤',
+  '秘法壁垒':'魔抗核心 + 法术反击',
+  '游荡者':'闪避游击 + 近战连击',
+  '不死消耗':'恢复续航 + 护甲托底',
+  '均衡战士':'攻守兼备 + 恢复均衡',
+  '爆发法师':'法术高伤 + 属性爆发',
+  '召唤大师':'宠物成军 + 属性压制',
+};
+const RAR_ORDER = ['epic','rare','fine','normal'];
+function takeGem(free, usedNow, pred){
+  const g = free.find(x => !usedNow.has(x.uid) && pred(x));
+  if (g) usedNow.add(g.uid);
+  return g || null;
+}
+function makeGemIfNeed(cat, kind, subkind, usedNames){
+  const pool = kind === 'active'
+    ? (subkind === 'passive' ? (PASSIVE_NAMES[cat] || []) : (SKILLS[subkind] || {}).names || [])
+    : (SUPPORT_NAMES[cat] || []);
+  const nm = pool.find(n => !usedNames.has(n)) || (kind === 'active' ? (subkind === 'passive' ? '坚守' : '突击') : '滋养');
+  const g = newGem(cat, kind, subkind, 1, 'normal', nm, () => 0.5);
+  STATE.pool.push(g);
+  usedNames.add(nm);
+  return g;
+}
+function openArchetypes(){
+  const keys = Object.keys(ARCHETYPES);
+  const rows = keys.map((k, idx) => {
+    const pts = Object.entries(ARCHETYPES[k]).map(([c, p]) => `${c} ${p}`).join(' / ');
+    return `<button class="arch-row" data-i="${idx}"><span class="at">${k}</span><span class="ap">${pts}</span><span class="ad">${ARCH_DESC[k] || ''}</span></button>`;
+  }).join('');
+  showModal('流派预设 · 一键装配', `<div class="arch-grid">${rows}</div><div class="arch-note">按流派思路自动从背包挑选未使用宝石装配（不足时补充新手宝石）。装配后仍可自由调整。</div>`, [{label:'取消', cls:'btn-ghost', fn:null}]);
+  document.querySelectorAll('.arch-row').forEach(r => r.onclick = () => {
+    applyArchetype(keys[+r.dataset.i]);
+    const m = $('modal'); if (m) m.classList.remove('on');
+  });
+}
+function applyArchetype(name){
+  const alloc = ARCHETYPES[name];
+  if (!alloc) return;
+  const used = usedGemIds(STATE.slots);
+  const free = STATE.pool.slice();
+  const usedNow = new Set(used);
+  const usedNames = new Set();
+  for (const grps of STATE.slots) for (const grp of grps) for (const g of grp) if (g) usedNames.add(g.name);
+  const newSlots = emptySlots();
+  const atkCats = Object.keys(alloc).filter(c => ['近战伤害','法术伤害','宠物伤害'].includes(c));
+  const defCats = Object.keys(alloc).filter(c => !['近战伤害','法术伤害','宠物伤害'].includes(c));
+  const putActive = (cat, subkind) => {
+    const ci = GEM_CATS.indexOf(cat); if (ci < 0) return null;
+    const g = takeGem(free, usedNow, x => x.kind === 'active' && x.cat === cat && (subkind ? x.subkind === subkind : x.subkind !== 'passive'));
+    const gg = g || makeGemIfNeed(cat, 'active', subkind || 'melee', usedNames);
+    newSlots[ci][0][0] = gg; usedNames.add(gg.name);
+    return gg;
+  };
+  const fillSupports = (cat, count) => {
+    const ci = GEM_CATS.indexOf(cat); if (ci < 0) return;
+    const grp = newSlots[ci][0];
+    for (let k = 1; k < 8 && count > 0; k++){
+      if (grp[k]) continue;
+      const g = takeGem(free, usedNow, x => x.kind === 'support' && x.cat === cat && !usedNames.has(x.name));
+      const gg = g || makeGemIfNeed(cat, 'support', null, usedNames);
+      grp[k] = gg; count--;
+    }
+  };
+  const mainCat = atkCats[0];
+  if (mainCat){
+    const ci = GEM_CATS.indexOf(mainCat);
+    putActive(mainCat, (SYS_SUBKIND[ATK_SYS_MAP[mainCat]] || 'melee'));
+    fillSupports(mainCat, 7);
+    const g2 = takeGem(free, usedNow, x => x.kind === 'active' && x.cat === mainCat && x.subkind !== 'passive' && !usedNames.has(x.name));
+    if (g2){ newSlots[ci][1][0] = g2; usedNames.add(g2.name); fillSupports(mainCat, 7); }
+  }
+  for (const c of atkCats.slice(1)){ putActive(c, (SYS_SUBKIND[ATK_SYS_MAP[c]] || 'melee')); fillSupports(c, 4); }
+  for (const c of defCats){
+    const ci = GEM_CATS.indexOf(c);
+    const g = takeGem(free, usedNow, x => x.kind === 'active' && x.subkind === 'passive' && x.cat === c && !usedNames.has(x.name));
+    if (g){ newSlots[ci][0][0] = g; usedNames.add(g.name); }
+    else { const pg = makeGemIfNeed(c, 'active', 'passive', usedNames); newSlots[ci][0][0] = pg; }
+    fillSupports(c, 3);
+  }
+  STATE.slots = newSlots; STATE.sel = null;
+  sfx('craft'); save(); renderBuild();
+  let cnt = 0; for (const grps of STATE.slots) for (const grp of grps) cnt += grp.filter(Boolean).length;
+  toast('已按「' + name + '」流派装配 ' + cnt + ' 颗宝石');
+}
+function buildCode(){
+  const data = {v:1, s: STATE.slots.map(cat => cat.map(grp => grp.map(g => g ? {n:g.name,c:g.cat,k:g.kind,sk:g.subkind,l:g.lv,r:g.rarity} : null)))};
+  return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function exportBuild(){
+  const code = buildCode();
+  showModal('导出构筑分享码', `<div class="share-box"><textarea id="share-code" readonly rows="3">${code}</textarea><div class="share-note">把这段分享码发给好友，对方在构筑页点「导入构筑」即可还原你的宝石装配（含品级/等级/外观）。</div></div>`, [
+    {label:'复制分享码', cls:'btn-primary', fn:() => copyText(code)},
+    {label:'关闭', cls:'btn-ghost', fn:null}
+  ]);
+}
+function copyText(t){
+  const ta = document.createElement('textarea');
+  ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  if (!ok && navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).catch(() => {}); ok = true; }
+  toast(ok ? '已复制分享码' : '复制失败，请手动选择复制');
+}
+function importBuild(){
+  showModal('导入构筑分享码', `<div class="share-box"><textarea id="share-code-in" rows="3" placeholder="粘贴分享码…"></textarea><div class="share-note">导入将覆盖当前 9 大项装配；背包中已有的同名同品级宝石将被复用，缺失宝石自动补齐。</div></div>`, [
+    {label:'导入', cls:'btn-primary', fn:() => { const el = document.getElementById('share-code-in'); applyCode((el && el.value || '').trim()); }},
+    {label:'取消', cls:'btn-ghost', fn:null}
+  ]);
+}
+function applyCode(code){
+  try{
+    let j = code.replace(/-/g, '+').replace(/_/g, '/');
+    while (j.length % 4) j += '=';
+    const data = JSON.parse(decodeURIComponent(escape(atob(j))));
+    if (!data || data.v !== 1 || !Array.isArray(data.s) || data.s.length !== GEM_CATS.length) throw new Error('bad');
+    const usedNow = new Set();
+    const newSlots = data.s.map(catArr => {
+      const grps = (catArr || []).slice(0, 4).map(grpArr => {
+        const grp = Array(8).fill(null);
+        (grpArr || []).slice(0, 8).forEach((gd, k) => {
+          if (!gd || !gd.n) return;
+          let g = STATE.pool.find(x => !usedNow.has(x.uid) && x.name === gd.n && x.cat === gd.c && x.kind === gd.k && x.subkind === gd.sk && x.lv === gd.l && x.rarity === gd.r);
+          if (!g){ g = newGem(gd.c, gd.k, gd.sk, gd.l, gd.r, gd.n, () => 0.5); STATE.pool.push(g); }
+          usedNow.add(g.uid);
+          grp[k] = g;
+        });
+        return grp;
+      });
+      while (grps.length < 4) grps.push(Array(8).fill(null));
+      return grps;
+    });
+    STATE.slots = newSlots; STATE.sel = null;
+    sfx('craft'); save(); renderBuild();
+    toast('构筑导入成功');
+  }catch(e){
+    showModal('导入失败', '分享码无效或格式不正确', [{label:'好的', cls:'btn-ghost', fn:null}]);
+  }
+}
+
 function renderPreview(){
   const alloc = allocFromSlots(STATE.slots);
   const eff = effective(alloc);
@@ -2354,7 +2579,7 @@ function startBattle(opts){
 }
 function renderBattle(){
   const b = STATE.battle;
-  $('turn-info').textContent = `第 ${b.turn}/30 回合 · 能量上限 ${energyMaxAt(b.turn)} · 先手 ${b.first === 'P' ? '你' : '对手'}`;
+  $('turn-info').textContent = `第 ${b.turn}/${RULES.maxTurns} 回合 · 能量上限 ${energyMaxAt(b.turn)} · 先手 ${b.first === 'P' ? '你' : '对手'}`;
   const mk = (side) => {
     const f = side === 'p' ? b.p : b.e;
     const hpEl = $(side+'-hp-fill'), hpTx = $(side+'-hp-txt');
@@ -2572,7 +2797,7 @@ function actGo(){
   }
   const eActObj = aiActObj(STATE.diff, b);
   if (STATE.speed === 'manual'){
-    rollAnimation().then(() => doAction(pActObj, eActObj)).catch(e => console.error(e));
+    rollAnimation().then(() => doAction(pActObj, eActObj)).catch(() => {});
   } else {
     rollFirst(); doAction(pActObj, eActObj);
   }
@@ -2615,7 +2840,7 @@ function applyRoomAct(msg){
   const pActObj = ROOM.sentAct.act, eActObj = msg.act;
   ROOM.sentAct = null; ROOM.pendingAct = null;
   if (ROOM.role === 'host'){
-    rollAnimation().then(() => executeTurn(pActObj, eActObj)).catch(e => console.error(e));
+    rollAnimation().then(() => executeTurn(pActObj, eActObj)).catch(() => {});
   } else {
     const ti = $('turn-info');
     if (ti) ti.textContent = '回合 ' + b.turn + ' · 等待对方结算…';
@@ -2713,7 +2938,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.8',
+  ver: '13.9',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -3116,8 +3341,9 @@ async function executeTurn(pActObj, eActObj){
           foe.hp = Math.max(0, foe.hp - r.dmg);
           if (side === 'p'){
             st.pDmg += r.dmg;
+            st.pSys = st.pSys || {}; st.pSys[sys] = (st.pSys[sys] || 0) + r.dmg;
             if (b.pLifesteal > 0){ const ls = Math.floor(r.dmg * b.pLifesteal); P.hp = Math.min(RULES.baseHp, P.hp + ls); st.pHeal += ls; }
-          } else st.eDmg += r.dmg;
+          } else { st.eDmg += r.dmg; st.eSys = st.eSys || {}; st.eSys[sys] = (st.eSys[sys] || 0) + r.dmg; }
           if (foe.guarding){ foe.counter = true; st.counters++; lg((side === 'p' ? '对手' : '你') + ' 架势受击 → 反击蓄势（下一次攻击 ×1.5）', 'lg-dim'); }
           if (r.crit){ st.crits++; }
           if (inLastStand(foe.hp)) st.stands++;
@@ -3144,11 +3370,13 @@ async function executeTurn(pActObj, eActObj){
     finishBattle();
     return;
   }
-  /* D4 行为：再生（回合末恢复 +25%） */
+  /* D4 行为：再生（回合末恢复 +25%）—— v13.9 恢复量计入统计 */
   let pHealT = healPerTurn(P.eff);
   if (allBehaviors().includes('vital')) pHealT *= 1.25;
+  const eHealT = healPerTurn(E.eff);
   P.hp = Math.min(RULES.baseHp, P.hp + pHealT);
-  E.hp = Math.min(RULES.baseHp, E.hp + healPerTurn(E.eff));
+  E.hp = Math.min(RULES.baseHp, E.hp + eHealT);
+  st.pHeal += pHealT; st.eHeal += eHealT;
   b.pTrail.push(P.hp); b.eTrail.push(E.hp);
   if (t >= RULES.maxTurns){
     const pa = P.hp / RULES.baseHp, pe = E.hp / RULES.baseHp;
@@ -3209,6 +3437,19 @@ function finishBattle(){
     ['预测命中', st.preds ? Math.round(st.predHits / st.preds * 100) + '%' : '—'], ['终局血量', `我方 ${Math.round(b.p.hp)} / 对手 ${Math.round(b.e.hp)}`], ['背水触发', st.stands],
   ];
   $('r-cards').innerHTML = cards.map(([k,v]) => `<div class="scard"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+  /* v13.9：输出构成（按攻击系统分布） */
+  {
+    const SYS_FULL = {'近战':'近战伤害','法术':'法术伤害','宠物':'宠物伤害'};
+    const dmg = st.pSys || {};
+    const rows = Object.keys(dmg).length
+      ? Object.entries(dmg).sort((a,b) => b[1] - a[1]).map(([sys, v]) => {
+          const pct = st.pDmg ? Math.round(v / st.pDmg * 100) : 0;
+          return `<div class="dmg-row"><span class="dk">${SYS_FULL[sys] || sys}</span><div class="db"><div class="df" style="width:${Math.max(2, pct)}%"></div></div><span class="dv">${Math.round(v)}（${pct}%）</span></div>`;
+        }).join('')
+      : '<div style="font-size:13px;color:var(--faint);font-weight:600">本场未造成伤害</div>';
+    const rD = $('r-dmg');
+    if (rD) rD.innerHTML = rows + (st.eDmg ? `<div style="font-size:12px;color:var(--faint);margin-top:4px;font-weight:600">对手造成 ${Math.round(st.eDmg)} 点伤害</div>` : '');
+  }
   $('r-loot').innerHTML = loot.length
     ? `<div class="loot-grid">${loot.map(g => gemHTML(g)).join('')}</div><div style="font-size:12px;color:var(--dim);margin-top:6px;font-weight:700">${win ? '胜利加成：掉落更多更稀有' : '败局仍获安慰奖'} · ${b.pvp ? '随机对战' : '难度 ' + DIFFS[STATE.diff].name} · 已自动存入宝石背包</div>`
     : '<div class="pool-empty">本场未掉落宝石</div>';
@@ -3235,7 +3476,7 @@ function finishBattle(){
     `<div class="brow"><span class="bl">${labels[i]}</span><div class="bt"><div class="bf" style="width:${(n/maxN*100).toFixed(0)}%"></div></div><span class="bv">${n}</span></div>`).join('');
   const inZone = sim.decided.filter(d => d >= 12 && d <= 24).length;
   const avgT = (sim.turns.reduce((a,b)=>a+b,0) / sim.turns.length).toFixed(1);
-  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· v13.8 已建模预测（双方）/ 连招 / 辅助行为，接近真实战斗口径`;
+  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· v13.9 已建模预测（双方）/ 连招 / 辅助行为 / 先手交替，接近真实战斗口径`;
   $('r-log').innerHTML = STATE.logs.map(s => `<div>${s}</div>`).join('');
   STATE.battle = null;
 }
@@ -3606,8 +3847,9 @@ function openRoom(mode){
     body.innerHTML = `
       <div>房间码（发给好友，在另一个标签页打开本文件后加入）：</div>
       <div class="room-code" id="room-code">${ROOM.code}</div>
-      <div id="room-status">⏳ 等待对手加入…（同一浏览器新开标签页 → 主菜单「加入对战房间」输入房间码）</div>
-      <div class="rbtn"><button id="room-btn-start" style="display:none" class="gold">开始对局</button><button class="ghost" id="room-btn-cancel">取消</button></div>`;
+      <div id="room-status-create">⏳ 等待对手加入…（同一浏览器新开标签页 → 主菜单「加入对战房间」输入房间码）</div>
+      <div class="rbtn"><button id="room-btn-start" style="display:none" class="gold">开始对局</button><button class="ghost" id="room-btn-cancel-create">取消</button></div>`;
+    const cc = $('room-btn-cancel-create'); if (cc) cc.onclick = () => { closeRoom(true); };
     ROOM.peerAlloc = null; ROOM.peerSlots = null;
     bcPost({t:'host', code: ROOM.code, nick: ROOM.myNick, id: roomId(), at: Date.now()});
   } else {
@@ -3616,18 +3858,18 @@ function openRoom(mode){
     body.innerHTML = `
       <div>输入创建者给你的房间码：</div>
       <input id="room-code-in" maxlength="10" placeholder="GDDXXXX" style="text-transform:uppercase">
-      <div id="room-status"></div>
-      <div class="rbtn"><button id="room-btn-join">加入房间</button><button class="ghost" id="room-btn-cancel">取消</button></div>`;
+      <div id="room-status-join"></div>
+      <div class="rbtn"><button id="room-btn-join">加入房间</button><button class="ghost" id="room-btn-cancel-join">取消</button></div>`;
     $('room-btn-join').onclick = () => {
       const code = ($('room-code-in').value || '').trim().toUpperCase();
       if (code.length < 4){ toast('请输入有效房间码'); return; }
       ROOM.code = code;
-      $('room-status').textContent = '⏳ 正在连接创建者主机…';
+      $('room-status-join').textContent = '⏳ 正在连接创建者主机…';
       bcPost({t:'join', code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots, at: Date.now()});
-      setTimeout(() => { if (ROOM.role === 'join' && !ROOM.peerNick) $('room-status').textContent = '未收到回应：请确认房间码正确、且创建者在同一浏览器打开了本文件。'; }, 6000);
+      setTimeout(() => { if (ROOM.role === 'join' && !ROOM.peerNick) $('room-status-join').textContent = '未收到回应：请确认房间码正确、且创建者在同一浏览器打开了本文件。'; }, 6000);
     };
   }
-  $('room-btn-cancel').onclick = () => { closeRoom(); };
+  const _ccj = $('room-btn-cancel-join'); if (_ccj) _ccj.onclick = () => { closeRoom(); };
   renderRoomChat();
   $('btn-rc-send').onclick = () => { const t = $('rc-text'); if (t && t.value.trim()){ roomChat(t.value.trim()); t.value = ''; } };
   $('rc-text').addEventListener('keydown', (e) => { if (e.key === 'Enter'){ const t = $('rc-text'); if (t && t.value.trim()){ roomChat(t.value.trim()); t.value = ''; } } });
@@ -3691,7 +3933,7 @@ function roomOnMessage(ev){
     ROOM.peerAlloc = m.alloc || null;
     ROOM.peerSlots = m.slots || null;
     touchOnline(m.nick, m.id, true);
-    const st = $('room-status');
+    const st = $('room-status-create') || $('room-status-join');
     if (st) st.innerHTML = `✅ 对手已加入：<b>${m.nick}</b> · 构筑 ${m.alloc ? Math.round(Object.values(m.alloc).reduce((a,b)=>a+b,0)) : '?'} 点`;
     const s = $('room-btn-start');
     if (s) s.style.display = 'inline-block';
@@ -3705,7 +3947,7 @@ function roomOnMessage(ev){
     ROOM.peerAlloc = m.alloc || null;
     ROOM.peerSlots = m.slots || null;
     touchOnline(m.nick, m.id, true);
-    const st = $('room-status');
+    const st = $('room-status-create') || $('room-status-join');
     if (st) st.innerHTML = `✅ 已连接创建者主机：<b>${m.nick}</b><br>等待创建者点击「开始对局」…`;
     bcPost({t:'build', code: ROOM.code, nick: ROOM.myNick, id: roomId(), alloc: allocFromSlots(STATE.slots), slots: STATE.slots});
     return;
@@ -3751,7 +3993,7 @@ function roomOnMessage(ev){
       }
     } else {
       toast('对手 ' + m.nick + ' 已离开房间');
-      const st = $('room-status');
+      const st = $('room-status-create') || $('room-status-join');
       if (st) st.innerHTML = '⏳ 对手已离开，等待新的对手加入…';
       ROOM.peerNick = null; ROOM.peerAlloc = null; ROOM.peerSlots = null;
     }
@@ -3889,8 +4131,8 @@ function inviteFriend(nick){
   bcPost({t:'invite', toId: targetId, nick: myNick(), code, at: Date.now()});
   $('room-modal').classList.add('on');
   $('room-title').textContent = '对战邀请已发送';
-  $('room-body').innerHTML = `<div>已邀请 <b>${escapeHtml(nick)}</b> 对战，房间码 <b>${code}</b>。</div><div id="room-status">⏳ 等待对方接受…</div><div class="rbtn"><button class="ghost" id="room-btn-cancel">取消</button></div>`;
-  $('room-btn-cancel').onclick = () => { closeRoom(true); };
+  $('room-body').innerHTML = `<div>已邀请 <b>${escapeHtml(nick)}</b> 对战，房间码 <b>${code}</b>。</div><div id="room-status-invite">⏳ 等待对方接受…</div><div class="rbtn"><button class="ghost" id="room-btn-cancel-invite">取消</button></div>`;
+  $('room-btn-cancel-invite').onclick = () => { closeRoom(true); };
   renderRoomChat();
 }
 /* ================= 聊天与书信 ================= */
@@ -4837,10 +5079,27 @@ const I18N_DICT = {
   '对局': {en: 'Battle', ja: '対戦'},
   '加油': {en: 'Go!', ja: '頑張れ！'},
   'v13.3 更新：新增在线检查更新系统 —— 启动自动检测 + 主菜单「检查更新」按钮，支持一键热更新与安装包下载。': {en: 'v13.3 update: online update checker — auto-check at start + Main Menu "Check Updates" button, with one-click hot update and installer download.', ja: 'v13.3更新：オンライン更新チェッカー — 起動時自動確認 + メインメニュー「アップデート確認」、ワンクリック更新とインストーラーDL。'},
+
+  /* ---------- v13.9 构筑工具与结算 ---------- */
+  '流派预设': {en: 'Archetype Preset', ja: '流派プリセット'},
+  '导出构筑': {en: 'Export Build', ja: '構築エクスポート'},
+  '导入构筑': {en: 'Import Build', ja: '構築インポート'},
+  '分享码': {en: 'Share Code', ja: '共有コード'},
+  '复制分享码': {en: 'Copy Code', ja: 'コードをコピー'},
+  '输出构成': {en: 'Damage Output', ja: 'ダメージ構成'},
+  '伤害': {en: 'DMG', ja: 'ダメージ'},
+  '当前大项': {en: 'Current', ja: '現在'},
+  '点击切换大项': {en: 'Switch', ja: '切替'},
+  '已复制分享码': {en: 'Code copied', ja: 'コードをコピーしました'},
+  '构筑导入成功': {en: 'Build imported', ja: '構築をインポートしました'},
+  '导入失败': {en: 'Import failed', ja: 'インポート失敗'},
+  '本场未造成伤害': {en: 'No damage dealt', ja: 'ダメージなし'},
+  '对手造成': {en: 'Opponent dealt', ja: '相手の与ダメージ'},
+  '装配': {en: 'equipped', ja: '装備'},
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.8 · 9大项×4组×8孔 · 引擎强化（预测/连招/行为建模 · 高手AI预测） · 聊天系统修复 · 字体加大 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.8 · 9×4×8 sockets · engine upgrade (predict/combo/behavior + master AI) · chat fixed · bigger fonts · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.8 · 9×4×8ソケット · エンジン強化（予測/連撃/行動モデル · 熟練AI予測） · チャット修正 · フォント拡大 · 中/英/日 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v13.9 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.9 · 9×4×8 sockets · build upgrade (category nav / archetype presets / share code) · alt-first simulator · damage breakdown · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.9 · 9×4×8ソケット · 構築革新（カテゴリnav/流派プリセット/共有コード） · シミュ先行交代 · ダメージ構成 · 中/英/日 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},
@@ -4902,7 +5161,8 @@ const I18N = {
     for (var round = 0; round < 3; round++){
       var next = out;
       for (var i = 0; i < I18N_WILD.length; i++){
-        var w = I18N_WILD[i];
+        var w = 
+I18N_WILD[i];
         w.re.lastIndex = 0;
         if (w.re.test(next)){ next = next.replace(w.re, I18N.lang === 'en' ? w.en : w.ja); }
       }

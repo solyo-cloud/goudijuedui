@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.9（构筑革新 · 流派预设 · 分享码）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v14.0（光粒子特效 · 真联网对战 · 图鉴成就）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -793,13 +793,129 @@ body.in-battle .view{height:calc(100vh - 56px)}
 
 /* v13 补充：遮罩/掷色子打开时宠物弱化，避免遮挡交互（v13.8 新增 roll-overlay） */
 #modal.on ~ #pet, #room-modal.on ~ #pet, #roll-overlay.on ~ #pet{opacity:.25;pointer-events:none}
+
+/* ============ v14.0 新样式：光粒子 / 图鉴 / 成就 / 联网 ============ */
+.fx-canvas{
+  position: fixed; inset: 0; z-index: 885; pointer-events: none;
+}
+.codex-wrap, .ach-wrap{
+  width: 94%; max-width: 1180px; height: calc(100% - 120px); margin: 60px auto;
+  display: flex; flex-direction: column; overflow: hidden; padding: 16px;
+}
+.codex-head, .ach-head{
+  flex: none; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 6px 4px 12px;
+}
+.codex-title, .ach-title{
+  font-size: 24px; font-weight: 900; color: var(--deep); letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(255,255,255,.7);
+}
+.codex-title .n, .ach-title .n{ color: var(--gold); font-size: 18px; }
+.codex-bar{
+  flex: 1; min-width: 120px; height: 14px; border-radius: 8px;
+  background: linear-gradient(180deg,#D6E2EE,#E8F0F8);
+  border: 1px solid var(--line); box-shadow: inset 0 2px 4px rgba(60,100,150,.18);
+  overflow: hidden;
+}
+.codex-bar i{
+  display: block; height: 100%; border-radius: 8px;
+  background: linear-gradient(90deg, var(--gold3), var(--gold2), #F0DCA0);
+  box-shadow: 0 0 10px rgba(200,155,78,.55);
+}
+.codex-filters{ display: flex; gap: 8px; flex-wrap: wrap; }
+.csel{
+  padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line2);
+  background: #fff; color: var(--ink); font-size: 14px; font-weight: 700;
+  outline: none; box-shadow: 0 2px 6px rgba(50,90,140,.10);
+}
+.csel:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(93,143,196,.25); }
+.codex-grid{
+  flex: 1; overflow-y: auto; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px; padding: 6px 2px 14px;
+}
+.codex-card{
+  background: linear-gradient(180deg, #FFFFFF, #F3F8FD);
+  border: 1px solid var(--line); border-radius: 14px; padding: 10px;
+  text-align: center; box-shadow: 0 2px 8px rgba(50,90,140,.10);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.codex-card:hover{ transform: translateY(-2px); box-shadow: 0 6px 16px rgba(50,90,140,.18); }
+.codex-card.owned{ border-color: var(--gold2); box-shadow: 0 0 0 1px var(--gold4), 0 3px 10px rgba(200,155,78,.18); }
+.cx-gem{ height: 66px; display: flex; align-items: center; justify-content: center; }
+.cx-name{ font-size: 15px; font-weight: 900; color: var(--deep); margin-top: 2px; }
+.cx-kind{ display: inline-block; margin-top: 4px; font-size: 11px; font-weight: 900;
+  padding: 2px 8px; border-radius: 8px; letter-spacing: 1px; }
+.k-act{ background: #FDEBD2; color: #B5772A; }
+.k-pas{ background: #DCE9F8; color: #33618F; }
+.k-sup{ background: #DEF1E4; color: #3E7A52; }
+.cx-cat{ font-size: 12px; color: var(--dim); font-weight: 700; margin-top: 3px; }
+.cx-owned{ font-size: 12px; color: var(--gold3); font-weight: 800; margin-top: 3px; }
+.codex-empty{ grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--faint); font-size: 15px; font-weight: 700; }
+.ach-grid{
+  flex: 1; overflow-y: auto; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px; padding: 6px 2px 14px;
+}
+.ach-card{
+  display: flex; gap: 10px; align-items: flex-start;
+  background: linear-gradient(180deg, #F6FAFE, #EDF4FB);
+  border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px;
+  box-shadow: 0 2px 6px rgba(50,90,140,.08);
+}
+.ach-card.on{
+  background: linear-gradient(135deg, #FEF6E3, #FFFDF5);
+  border-color: var(--gold2); box-shadow: 0 0 0 1px var(--gold4), 0 4px 12px rgba(200,155,78,.2);
+}
+.ach-ic{
+  flex: none; width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900; color: #fff;
+  background: linear-gradient(135deg, #A9BFD6, #6E8BA8);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.5), 0 2px 5px rgba(50,90,140,.25);
+}
+.ach-card.on .ach-ic{ background: linear-gradient(135deg, #E8C88E, #C89B4E); }
+.ach-body{ flex: 1; min-width: 0; }
+.ach-name{ font-size: 15px; font-weight: 900; color: var(--deep); }
+.ach-card.on .ach-name{ color: #8A6420; }
+.ach-desc{ font-size: 12px; color: var(--dim); font-weight: 600; margin-top: 2px; }
+.ach-prog{
+  height: 8px; border-radius: 5px; margin-top: 6px; overflow: hidden;
+  background: #DDE7F2; border: 1px solid var(--line);
+}
+.ach-prog i{
+  display: block; height: 100%; border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+}
+.ach-card.on .ach-prog i{ background: linear-gradient(90deg, var(--gold3), var(--gold2)); }
+.ach-ptx{ font-size: 11px; color: var(--faint); font-weight: 700; margin-top: 3px; }
+.ach-card.on .ach-ptx{ color: var(--gold3); }
+.net-line{
+  margin-top: 8px; padding: 8px 10px; border-radius: 10px;
+  background: #EAF3FD; border: 1px dashed var(--accent2);
+  font-size: 13px; color: var(--ink); font-weight: 700; line-height: 1.6;
+}
+.net-code{ color: var(--accent); font-size: 15px; font-weight: 900; letter-spacing: 1px; }
+.net-hint{ font-size: 12px; color: var(--dim); font-weight: 600; }
+.mini-btn{
+  margin-left: 6px; padding: 3px 10px; border-radius: 8px; border: 1px solid var(--accent2);
+  background: linear-gradient(180deg,#FFFFFF,#E6F0FA); color: var(--accent);
+  font-size: 12px; font-weight: 800; cursor: pointer;
+  box-shadow: 0 2px 4px rgba(60,110,170,.2);
+}
+.mini-btn:hover{ background: linear-gradient(180deg,#FFF,#D8E9FA); }
+/* 数字等宽（对齐与可读性） */
+.scard .v, .hp-txt, .en-txt, .dmg-zone .dv, .codex-card .cx-owned, .ach-ptx{
+  font-variant-numeric: tabular-nums;
+}
+
 </style>
 </head>
 <body>
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.9 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v14.0 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -832,12 +948,14 @@ body.in-battle .view{height:calc(100vh - 56px)}
         <button class="menu-btn" data-go="room-join" onclick="openRoom('join')" data-i18n-html="m_join"><b>加入对战房间</b><i>输入房间码 · 连接发起方主机</i></button>
         <button class="menu-btn" data-go="social" onclick="goSocial('friends')" data-i18n-html="m_friends"><b>好友</b><i>添加好友 · 在线状态 · 邀请对战</i></button>
         <button class="menu-btn" data-go="social" onclick="goSocial('chat')" data-i18n-html="m_chat"><b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i></button>
+        <button class="menu-btn" data-go="codex" onclick="goView('codex')" data-i18n-html="m_codex"><b>宝石图鉴</b><i>收录全部宝石 · 收集进度 · 外观与说明</i></button>
+        <button class="menu-btn" data-go="ach" onclick="goView('ach')" data-i18n-html="m_ach"><b>成就</b><i>20 项挑战 · 连胜 / 暴击 / 预测 / 收藏</i></button>
         <button class="menu-btn" data-go="help" onclick="goSocial('help')" data-i18n-html="m_help"><b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i></button>
         <button class="menu-btn" data-go="set" onclick="goSocial('set')" data-i18n-html="m_set"><b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i></button>
         <button class="menu-btn" onclick="UPD.check(false)" data-i18n-html="m_upd"><b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i></button>
         <button class="menu-btn gold" onclick="startAiMatch()" data-i18n-html="m_ai"><b>快速 AI 对战</b><i>当前构筑 vs 镜像 AI · 直接开战</i></button>
       </div>
-      <div class="menu-foot" id="menu-foot">本地存储进度 · 单文件 Demo · 房间对战同浏览器多标签页真实连通（跨设备联机待 WebRTC 信令）</div>
+      <div class="menu-foot" id="menu-foot">本地存储进度 · 单文件 Demo · 房间对战同机/局域网/联网（PeerJS P2P 异地直连）三通道 · 技能光粒子特效 · 图鉴与成就</div>
     </div>
   </div>
 
@@ -971,6 +1089,16 @@ body.in-battle .view{height:calc(100vh - 56px)}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ===== 视图：宝石图鉴 ===== -->
+  <div id="view-codex" class="view">
+    <div class="codex-wrap cn-frame f4" id="view-codex-root"></div>
+  </div>
+
+  <!-- ===== 视图：成就 ===== -->
+  <div id="view-ach" class="view">
+    <div class="ach-wrap cn-frame f4" id="view-ach-root"></div>
   </div>
 
   <!-- ===== 视图：社交（好友 / 聊天书信 / 帮助 / 设置） ===== -->
@@ -2186,6 +2314,7 @@ function renderCraft(){
       STATE.pool.push(newGem(src.cat, src.kind, src.subkind, c.maxLv + 1, c.rar, c.name, () => 0.3));
       STATE.sel = null;
       sfx('craft');
+      achStat('crafts', 1); achCheck(); achSave();
       save(); renderBuild();
     };
   } else {
@@ -2339,6 +2468,7 @@ function openArchetypes(){
 function applyArchetype(name){
   const alloc = ARCHETYPES[name];
   if (!alloc) return;
+  achStat('archUsed', 1); achCheck(); achSave();
   const used = usedGemIds(STATE.slots);
   const free = STATE.pool.slice();
   const usedNow = new Set(used);
@@ -2391,6 +2521,7 @@ function buildCode(){
 }
 function exportBuild(){
   const code = buildCode();
+  achStat('shareUsed', 1); achCheck(); achSave();
   showModal('导出构筑分享码', `<div class="share-box"><textarea id="share-code" readonly rows="3">${code}</textarea><div class="share-note">把这段分享码发给好友，对方在构筑页点「导入构筑」即可还原你的宝石装配（含品级/等级/外观）。</div></div>`, [
     {label:'复制分享码', cls:'btn-primary', fn:() => copyText(code)},
     {label:'关闭', cls:'btn-ghost', fn:null}
@@ -2938,7 +3069,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.9',
+  ver: '14.0',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -3060,6 +3191,7 @@ function sfx(key){
     case 'unsocket':  sfxTone(640, 260, 0.13, 'triangle', 0.14); break;
     case 'craft':     [523,659,784,1047].forEach((f,i)=>sfxTone(f, f, 0.16, 'triangle', 0.13, i*0.07)); break;
     case 'loot':      [660,880,1320].forEach((f,i)=>sfxTone(f, f, 0.12, 'sine', 0.12, i*0.06)); sfxTone(1760,1760,0.22,'sine',0.07,0.2); break;
+    case 'ach':       [523,659,784,1047,1319].forEach((f,i)=>sfxTone(f, f, 0.3, 'triangle', 0.12, i*0.09)); sfxTone(1568,1568,0.5,'sine',0.06,0.42); break;
     case 'dice':      sfxNoise(0.07, 0.09, 2600); sfxTone(1500, 1000, 0.05, 'square', 0.03); break;
     case 'diceEnd':   sfxTone(700, 1100, 0.1, 'square', 0.07); sfxTone(1400, 1400, 0.14, 'sine', 0.08, 0.08); break;
     case 'hit':       sfxNoise(0.1, 0.16, 900); sfxTone(220, 90, 0.16, 'sawtooth', 0.1); break;
@@ -3222,6 +3354,19 @@ function playSkillAnim(side, sys, g){
     if (hueF) burst.style.filter = hueF;
     box.appendChild(burst);
     layer.appendChild(box);
+    /* v14：Canvas 光粒子特效与 DOM 动画并行 */
+    try {
+      FX.init();
+      const col = g && g.name ? 'hsl(' + ((gemHash(g) % 180) * 2) + ' 85% 70%)' : 'hsl(' + (rev ? 30 : 210) + ' 85% 72%)';
+      const src = FX.centerOf(rev ? document.getElementById('e-hp-fill') : document.getElementById('p-hp-fill'));
+      const dst = FX.centerOf(rev ? document.getElementById('p-hp-fill') : document.getElementById('e-hp-fill'));
+      if (sys === 'charge') FX.chargeUp(src.x, src.y, '#9BD6FF');
+      else if (sys === 'focus') FX.healRise(src.x, src.y, '#8FE3A6');
+      else if (sys === 'guard') FX.guardRing(src.x, src.y, '#9FC6F2');
+      else if (g && g.cat === '法术伤害') FX.bolt(src, dst, col);
+      else if (g && g.cat === '宠物伤害') FX.pounce(src, dst, col);
+      else FX.slash(src, dst, col);
+    } catch (e) {}
     const dur = (sys === 'charge' || sys === 'focus' || sys === 'guard') ? 620 : 560;
     setTimeout(() => { if (box.parentNode) box.parentNode.removeChild(box); res(); }, dur);
   });
@@ -3278,6 +3423,7 @@ async function executeTurn(pActObj, eActObj){
   STATE.actLog.E[eMain] = (STATE.actLog.E[eMain] || 0) + 1;
   /* 连招预告日志 */
   if (pActs.length > 1) lg('你的连招：' + pActs.map(a => skillNameOf('p', a.sys)).join(' → '), 'lg-skill');
+  if (pActs.length >= 4) achStat('combo4', 1);
   if (eActs.length > 1) lg('对手连招：' + eActs.map(a => skillNameOf('e', a.sys)).join(' → '), 'lg-dim');
   /* D7：先手方整套连招先结算；手动模式逐技能播放动画 */
   const order = b.first === 'E' ? [['e', eActObj], ['p', pActObj]] : [['p', pActObj], ['e', eActObj]];
@@ -3337,6 +3483,13 @@ async function executeTurn(pActObj, eActObj){
         if (side === 'p') b.predReward = false; else b.ePredReward = false;
         if (r.hit){
           playHitSfx(gForAnim, r.crit);
+          try {
+            FX.init();
+            const sC = FX.centerOf(side === 'p' ? document.getElementById('p-hp-fill') : document.getElementById('e-hp-fill'));
+            const dC = FX.centerOf(side === 'p' ? document.getElementById('e-hp-fill') : document.getElementById('p-hp-fill'));
+            if (foe.guarding) FX.guardRing(dC.x, dC.y, '#9FC6F2');
+            else FX.impact(sC, dC, gForAnim ? 'hsl(' + ((gemHash(gForAnim) % 180) * 2) + ' 85% 70%)' : '#FFE9A8', !!r.crit);
+          } catch (e) {}
           if (foe.guarding) sfx('guard');
           foe.hp = Math.max(0, foe.hp - r.dmg);
           if (side === 'p'){
@@ -3351,6 +3504,7 @@ async function executeTurn(pActObj, eActObj){
           lg((side === 'p' ? '你' : '对手') + ' · ' + gName + ' → 命中 ' + Math.round(r.dmg) + (r.crit ? ' 暴击!' : '') + '（' + r.key + ' 减免 ' + Math.round(r.red * 100) + '%）' + (r.combo ? ' 连击!' : ''), r.crit ? 'lg-dmg' : 'lg-skill');
         } else {
           sfx('dodge');
+          try { FX.init(); FX.dodgeGhost(FX.centerOf(side === 'p' ? document.getElementById('e-hp-fill') : document.getElementById('p-hp-fill')).x, FX.centerOf(side === 'p' ? document.getElementById('e-hp-fill') : document.getElementById('p-hp-fill')).y, '#C9D8EE'); } catch (e) {}
           floatText(side === 'p' ? 'right' : 'left', '闪避', 'info');
           lg((side === 'p' ? '你' : '对手') + ' · ' + gName + ' 被闪避', 'lg-dim');
         }
@@ -3414,6 +3568,20 @@ function finishBattle(){
   const b = STATE.battle;
   const win = b.winner === 'P';
   sfx(win ? 'win' : (b.winner === 'E' ? 'lose' : 'draw'));
+  /* v14：成就统计 */
+  try {
+    achStat('battles', 1);
+    if (win){ achStat('wins', 1); achStat('streak', 1); STATE.ach.stats.maxStreak = Math.max(STATE.ach.stats.maxStreak || 0, STATE.ach.stats.streak); }
+    else if (b.winner === 'E'){ STATE.ach.stats.streak = 0; }
+    if (win && b.stats && b.stats.stands > 0) achStat('lastStand', 1);
+    if (b.stats && b.stats.crits >= 3) achStat('crit3', 1);
+    if (STATE.pred.hit >= 3) achStat('pred3', 1);
+    if (win && b.room) achStat('roomWins', 1);
+    if (win && NET && NET.conn && NET.conn.open) achStat('netWins', 1);
+    let mx14 = 0; STATE.pool.forEach(g => { if ((g.lv || 1) > mx14) mx14 = g.lv || 1; });
+    STATE.ach.stats.maxLv = Math.max(STATE.ach.stats.maxLv || 0, mx14);
+    achCheck(); achSave();
+  } catch (e) {}
   /* v13：宠物事件联动 */
   try {
     window.dispatchEvent(new CustomEvent(win ? 'gdd-battle-win' : 'gdd-battle-lose'));
@@ -3476,7 +3644,7 @@ function finishBattle(){
     `<div class="brow"><span class="bl">${labels[i]}</span><div class="bt"><div class="bf" style="width:${(n/maxN*100).toFixed(0)}%"></div></div><span class="bv">${n}</span></div>`).join('');
   const inZone = sim.decided.filter(d => d >= 12 && d <= 24).length;
   const avgT = (sim.turns.reduce((a,b)=>a+b,0) / sim.turns.length).toFixed(1);
-  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· v13.9 已建模预测（双方）/ 连招 / 辅助行为 / 先手交替，接近真实战斗口径`;
+  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· v14.0 已建模预测（双方）/ 连招 / 辅助行为 / 先手交替 / 光粒子特效 / 联网对战，接近真实战斗口径`;
   $('r-log').innerHTML = STATE.logs.map(s => `<div>${s}</div>`).join('');
   STATE.battle = null;
 }
@@ -3715,6 +3883,13 @@ function init(){
     }
   });
   document.querySelectorAll('.spd').forEach(x => x.onclick = () => setSpeed(x.dataset.sp));
+  /* v14：成就系统初始化 + 联网（PeerJS）后台加载 */
+  try {
+    achLoad();
+    if (document.getElementById('view-ach')){ /* 无操作，成就按需渲染 */ }
+    achCheck();
+    NET.init(() => {});
+  } catch (e) {}
   renderBuild();
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
@@ -3751,13 +3926,15 @@ function showModal2(title, body, actions, opts){
 /* ---------- 视图导航 ---------- */
 function goView(v){
   sfx('ui');
-  ['menu','build','battle','result','social'].forEach(k => {
+  ['menu','build','battle','result','social','codex','ach'].forEach(k => {
     const el = $('view-' + k);
     if (el) el.style.display = (k === v ? 'block' : 'none');
   });
   document.body.classList.toggle('in-battle', v === 'battle');
   if (v === 'build') renderBuild();
   if (v === 'menu') petSay('欢迎回来，斗士！要打一局吗？');
+  if (v === 'codex') renderCodex();
+  if (v === 'ach') renderAch();
   document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === 'view-' + v));
 }
 function goSocial(tab){
@@ -3845,10 +4022,28 @@ function openRoom(mode){
     ROOM.code = 'GDD' + Math.random().toString(36).slice(2, 6).toUpperCase();
     $('room-title').textContent = '创建对战房间 · 本机为主机';
     body.innerHTML = `
-      <div>房间码（发给好友，在另一个标签页打开本文件后加入）：</div>
+      <div>房间码（同机/局域网：另一标签页输入此码加入）：</div>
       <div class="room-code" id="room-code">${ROOM.code}</div>
-      <div id="room-status-create">⏳ 等待对手加入…（同一浏览器新开标签页 → 主菜单「加入对战房间」输入房间码）</div>
+      <div id="net-line" class="net-line">🔗 联网（异地好友）初始化中…</div>
+      <div id="room-status-create">⏳ 等待对手加入…（同机新开标签页输入房间码；异地好友用下方联网邀请码）</div>
       <div class="rbtn"><button id="room-btn-start" style="display:none" class="gold">开始对局</button><button class="ghost" id="room-btn-cancel-create">取消</button></div>`;
+    /* v14：联网主机（PeerJS P2P，无服务器）——生成异地邀请码 */
+    try {
+      NET.init(() => {
+        const nl = $('net-line');
+        if (!nl) return;
+        if (NET.on){
+          const pid = NET.host();
+          if (pid){
+            nl.innerHTML = '🔗 联网邀请码（异地好友）：<b class="net-code" id="net-code">NET-' + pid + '</b> <button class="mini-btn" id="net-copy">复制</button><div class="net-hint">好友点「加入对战房间」输入此码即可异地直连（P2P 点对点，无需服务器）</div>';
+            const cp = $('net-copy');
+            if (cp) cp.onclick = () => { copyText('NET-' + pid); toast('联网邀请码已复制'); };
+          } else { nl.innerHTML = '⚠ 联网初始化失败，仅限同机/局域网房间'; }
+        } else {
+          nl.innerHTML = '⚠ 联网不可用（PeerJS 加载失败），仅限同机/局域网房间';
+        }
+      });
+    } catch (e) {}
     const cc = $('room-btn-cancel-create'); if (cc) cc.onclick = () => { closeRoom(true); };
     ROOM.peerAlloc = null; ROOM.peerSlots = null;
     bcPost({t:'host', code: ROOM.code, nick: ROOM.myNick, id: roomId(), at: Date.now()});
@@ -3862,6 +4057,16 @@ function openRoom(mode){
       <div class="rbtn"><button id="room-btn-join">加入房间</button><button class="ghost" id="room-btn-cancel-join">取消</button></div>`;
     $('room-btn-join').onclick = () => {
       const code = ($('room-code-in').value || '').trim().toUpperCase();
+      if (code.indexOf('NET-') === 0){
+        /* v14：联网加入（PeerJS 异地直连） */
+        NET.init(() => {
+          if (!NET.on){ toast('联网不可用（PeerJS 加载失败）'); return; }
+          if (!NET.join(code.slice(4))){ toast('联网连接失败，请检查邀请码'); return; }
+          const st = $('room-status-create') || $('room-status-join');
+          if (st) st.innerHTML = '🔗 正在连接联网主机…';
+        });
+        return;
+      }
       if (code.length < 4){ toast('请输入有效房间码'); return; }
       ROOM.code = code;
       $('room-status-join').textContent = '⏳ 正在连接创建者主机…';
@@ -4191,6 +4396,7 @@ function sendChat(){
     /* v13.8 修复：大厅广播真实发送并本地留痕（此前仅 toast，消息静默丢失） */
     chatAdd(myNick(), text, Date.now(), '大厅');
     bcPost({t:'rchat', code:'DM', to:'大厅', toId:null, nick: myNick(), id: roomId(), text, at: Date.now()});
+    achStat('chats', 1); achCheck(); achSave();
     toast('已发送（大厅广播）');
   } else {
     /* v13.8 修复：ONLINE 表 value 不含 id（key 才是 id），target.id 恒为 undefined 导致私聊退化为广播 */
@@ -4198,6 +4404,7 @@ function sendChat(){
     const target = targetId ? ONLINE[targetId] : null;
     if (!target){ toast('对方不在线，即时消息无法送达（可改用书信留言）'); return; }
     chatAdd(myNick(), text, Date.now(), to);
+    achStat('chats', 1); achCheck(); achSave();
     bcPost({t:'rchat', code:'DM', to, toId: targetId, nick: myNick(), id: roomId(), text, at: Date.now()});
     toast('已发送给 ' + to);
   }
@@ -4210,6 +4417,7 @@ function sendLetter(){
   const L = loadLetters();
   L.push({from: myNick(), to, text, time: nowStr(), read: false, local: true});
   saveLetters(L);
+  achStat('letters', 1); achCheck(); achSave();
   const targetId = Object.keys(ONLINE).find(id => ONLINE[id].nick === to && ONLINE[id].nick !== myNick());
   if (targetId){
     bcPost({t:'letter', toId: targetId, from: myNick(), text, at: Date.now()});
@@ -4224,6 +4432,7 @@ function receiveLetter(m){
   const L = loadLetters();
   L.push({from: m.from, to: myNick(), text: m.text, time: nowStr(), read: false, online: true});
   saveLetters(L);
+  achStat('letters', 1); achCheck(); achSave();
   sfx('msg');
   toast('收到书信：' + m.from);
   renderLetters();
@@ -4339,6 +4548,7 @@ function petInit(){
   host.addEventListener('dblclick', petFeed);
   host.addEventListener('click', (e) => { sfx('pet');
     if (e.target.closest('.pet-bubble')) return;
+    achStat('petPats', 1); achCheck(); achSave();
     petDo('happy', 1600);
     petSay('嘿嘿，好痒～');
   });
@@ -5080,7 +5290,7 @@ const I18N_DICT = {
   '加油': {en: 'Go!', ja: '頑張れ！'},
   'v13.3 更新：新增在线检查更新系统 —— 启动自动检测 + 主菜单「检查更新」按钮，支持一键热更新与安装包下载。': {en: 'v13.3 update: online update checker — auto-check at start + Main Menu "Check Updates" button, with one-click hot update and installer download.', ja: 'v13.3更新：オンライン更新チェッカー — 起動時自動確認 + メインメニュー「アップデート確認」、ワンクリック更新とインストーラーDL。'},
 
-  /* ---------- v13.9 构筑工具与结算 ---------- */
+  /* ---------- v14.0 构筑工具与结算 ---------- */
   '流派预设': {en: 'Archetype Preset', ja: '流派プリセット'},
   '导出构筑': {en: 'Export Build', ja: '構築エクスポート'},
   '导入构筑': {en: 'Import Build', ja: '構築インポート'},
@@ -5099,7 +5309,7 @@ const I18N_DICT = {
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.9 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.9 · 9×4×8 sockets · build upgrade (category nav / archetype presets / share code) · alt-first simulator · damage breakdown · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.9 · 9×4×8ソケット · 構築革新（カテゴリnav/流派プリセット/共有コード） · シミュ先行交代 · ダメージ構成 · 中/英/日 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v14.0 · 9大项×4组×8孔 · 构筑革新（大项导航/流派预设/分享码） · 模拟引擎先手交替 · 结算输出构成 · 中/英/日多语言 · 在线更新', en: 'Gem Build v14.0 · 9×4×8 sockets · build upgrade (category nav / archetype presets / share code) · alt-first simulator · damage breakdown · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v14.0 · 9×4×8ソケット · 構築革新（カテゴリnav/流派プリセット/共有コード） · シミュ先行交代 · ダメージ構成 · 中/英/日 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},
@@ -5112,6 +5322,8 @@ const I18N_TXT = {
   'm_join': {zh: '<b>加入对战房间</b><i>输入房间码 · 连接发起方主机</i>', en: '<b>Join Battle Room</b><i>Enter code · connect to host</i>', ja: '<b>対戦ルーム参加</b><i>コード入力 · ホストに接続</i>'},
   'm_friends': {zh: '<b>好友</b><i>添加好友 · 在线状态 · 邀请对战</i>', en: '<b>Friends</b><i>Add friends · online status · invite to battle</i>', ja: '<b>フレンド</b><i>追加 · オンライン表示 · 対戦招待</i>'},
   'm_chat': {zh: '<b>聊天与书信</b><i>即时聊天 · 书信留言（离线送达）</i>', en: '<b>Chat &amp; Letters</b><i>Instant chat · letters (offline delivery)</i>', ja: '<b>チャット＆手紙</b><i>即時チャット · 手紙（オフライン配達）</i>'},
+  'm_codex': {zh: '<b>宝石图鉴</b><i>收录全部宝石 · 收集进度 · 外观与说明</i>', en: '<b>Gem Codex</b><i>All gems · collection progress</i>', ja: '<b>ジェム図鑑</b><i>全ジェム · 収集率 · 外観</i>'},
+  'm_ach': {zh: '<b>成就</b><i>20 项挑战 · 连胜 / 暴击 / 预测 / 收藏</i>', en: '<b>Achievements</b><i>20 challenges · win / crit / predict</i>', ja: '<b>実績</b><i>20 挑戦 · 連勝 / 会心 / 予測</i>'},
   'm_help': {zh: '<b>帮助与规则</b><i>对战规则 · 数值说明 · 操作指引</i>', en: '<b>Help &amp; Rules</b><i>Battle rules · values · controls</i>', ja: '<b>ヘルプ＆ルール</b><i>対戦ルール · 数値 · 操作</i>'},
   'm_set': {zh: '<b>设置</b><i>昵称 · 音乐 · 音效 · 宠物</i>', en: '<b>Settings</b><i>Nickname · music · SFX · pet</i>', ja: '<b>設定</b><i>ニックネーム · 音楽 · 効果音 · ペット</i>'},
   'm_upd': {zh: '<b>检查更新</b><i>检测新版本 · 一键热更新 · 下载安装包</i>', en: '<b>Check Updates</b><i>New version · hot update · installer</i>', ja: '<b>アップデート確認</b><i>新バージョン · ワンクリック更新 · インストーラー</i>'},
@@ -5268,6 +5480,494 @@ I18N_WILD[i];
     location.reload();
   },
 };
+
+/* ============================================================
+ * v14.0 新模块：FX 光粒子特效 / NET 真联网(PeerJS) / 宝石图鉴 / 成就系统
+ * 挂载顺序：part3 → part4 → part5 → part6 → part7
+ * ============================================================ */
+
+/* ---------- FX 光粒子特效系统（Canvas 2D） ---------- */
+const FX = {
+  cv: null, ctx: null, parts: [], raf: 0, w: 0, h: 0, dpr: 1,
+  init(){
+    if (FX.cv) return FX.cv;
+    const cv = document.createElement('canvas');
+    cv.id = 'fx-canvas';
+    cv.className = 'fx-canvas';
+    document.body.appendChild(cv);
+    FX.cv = cv;
+    FX.ctx = cv.getContext('2d');
+    FX.resize();
+    window.addEventListener('resize', () => FX.resize());
+    return cv;
+  },
+  resize(){
+    if (!FX.cv) return;
+    FX.dpr = Math.min(2, window.devicePixelRatio || 1);
+    FX.w = window.innerWidth; FX.h = window.innerHeight;
+    FX.cv.width = Math.round(FX.w * FX.dpr);
+    FX.cv.height = Math.round(FX.h * FX.dpr);
+    FX.cv.style.width = FX.w + 'px';
+    FX.cv.style.height = FX.h + 'px';
+  },
+  /* 粒子类型：spark(亮点) / shard(碎片) / ring(扩散环) / streak(拖尾光点) / glow(光晕) */
+  add(p){
+    p.x = p.x || 0; p.y = p.y || 0;
+    p.vx = p.vx || 0; p.vy = p.vy || 0;
+    p.life = p.life == null ? 40 : p.life;
+    p.max = p.life; p.size = p.size || 4.2;
+    p.color = p.color || '#FFE9A8';
+    p.grav = p.grav || 0; p.drag = p.drag || 0.985;
+    p.glow = p.glow == null ? 10 : p.glow;
+    p.type = p.type || 'spark';
+    FX.parts.push(p);
+    if (FX.parts.length > 900) FX.parts.splice(0, FX.parts.length - 900);
+    FX.run();
+  },
+  run(){
+    if (FX.raf) return;
+    const loop = () => {
+      FX.raf = requestAnimationFrame(loop);
+      const ctx = FX.ctx;
+      ctx.setTransform(FX.dpr, 0, 0, FX.dpr, 0, 0);
+      ctx.clearRect(0, 0, FX.w, FX.h);
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = FX.parts.length - 1; i >= 0; i--){
+        const p = FX.parts[i];
+        p.life--;
+        if (p.life <= 0){ FX.parts.splice(i, 1); continue; }
+        p.vy += p.grav;
+        p.vx *= p.drag; p.vy *= p.drag;
+        p.x += p.vx; p.y += p.vy;
+        if (p.rot != null) p.rot += p.vr || 0;
+        const k = p.life / p.max;
+        const a = k * (p.fade == null ? 0.9 : p.fade);
+        ctx.globalAlpha = a;
+        if (p.type === 'ring'){
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(1, p.size * k);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * (1 - k * 0.85), 0, Math.PI * 2);
+          ctx.stroke();
+        } else if (p.type === 'streak'){
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(1, p.size * k);
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - p.vx * 4, p.y - p.vy * 4);
+          ctx.stroke();
+        } else if (p.type === 'shard'){
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot || 0);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+          ctx.restore();
+        } else {
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = p.glow;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.5, p.size * (0.4 + 0.6 * k)), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      }
+      ctx.globalAlpha = 1;
+      if (!FX.parts.length){ cancelAnimationFrame(FX.raf); FX.raf = 0; }
+    };
+    FX.raf = requestAnimationFrame(loop);
+  },
+  clear(){ FX.parts = []; if (FX.raf){ cancelAnimationFrame(FX.raf); FX.raf = 0; } const ctx = FX.ctx; if (ctx){ ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,FX.cv.width,FX.cv.height); } },
+  /* 由攻击方中心 → 防守方中心的命中爆裂 */
+  impact(from, to, color, big){
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const dist = Math.max(40, Math.sqrt(dx*dx + dy*dy));
+    const n = big ? 90 : 50;
+    const baseC = color || '#FFE9A8';
+    for (let i = 0; i < n; i++){
+      const ang = Math.random() * Math.PI * 2;
+      const sp = (big ? 8 : 5) + Math.random() * (big ? 10 : 6);
+      const sz = big ? 4.6 : 3.2;
+      FX.add({ type: Math.random() < 0.25 ? 'shard' : 'spark', x: to.x, y: to.y,
+        vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 1.5,
+        life: 48 + Math.random() * 22, size: sz, color: Math.random() < 0.35 ? '#FFFFFF' : baseC,
+        glow: big ? 16 : 9, grav: 0.12, drag: 0.96, rot: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.5 });
+    }
+    for (let i = 0; i < 2; i++){
+      FX.add({ type: 'ring', x: to.x, y: to.y, radius: 14 + i * 22, life: 42 - i * 6, size: 4 - i, color: big ? '#FFD98A' : baseC });
+    }
+    if (big){
+      FX.add({ type: 'ring', x: to.x, y: to.y, radius: 10, life: 54, size: 6, color: '#FFF3C4' });
+    }
+  },
+  /* 投射物（法术） */
+  bolt(from, to, color){
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const dist = Math.max(60, Math.sqrt(dx*dx + dy*dy));
+    const steps = 34;
+    for (let i = 0; i < steps; i++){
+      const t = i / steps;
+      const px = from.x + dx * t + (Math.random() - 0.5) * 14;
+      const py = from.y + dy * t + (Math.random() - 0.5) * 14;
+      FX.add({ type: 'spark', x: px, y: py, vx: (Math.random()-0.5)*1.2, vy: (Math.random()-0.5)*1.2,
+        life: 26 + i * 1.2, size: 2 + t * 2.6, color: color || '#9BD6FF', glow: 14 });
+    }
+    FX.add({ type: 'spark', x: to.x, y: to.y, vx: 0, vy: 0, life: 48, size: 9, color: '#FFFFFF', glow: 26 });
+  },
+  /* 近战弧光 */
+  slash(from, to, color){
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const dist = Math.max(60, Math.sqrt(dx*dx + dy*dy));
+    const ang = Math.atan2(dy, dx);
+    const steps = 22;
+    for (let i = 0; i < steps; i++){
+      const t = i / steps;
+      const px = from.x + dx * t;
+      const py = from.y + dy * t - Math.sin(t * Math.PI) * dist * 0.28;
+      FX.add({ type: 'streak', x: px, y: py,
+        vx: Math.cos(ang) * 6 * (1 - t) + (Math.random()-0.5)*2,
+        vy: Math.sin(ang) * 6 * (1 - t) - 1.2,
+        life: 29 + i, size: 2.4, color: color || '#FFE9A8', glow: 12 });
+    }
+    FX.add({ type: 'ring', x: to.x, y: to.y, radius: 8, life: 35, size: 3.4, color: '#FFF6D8' });
+  },
+  /* 宠物扑击 */
+  pounce(from, to, color){
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const steps = 18;
+    for (let i = 0; i < steps; i++){
+      const t = i / steps;
+      const px = from.x + dx * t;
+      const py = from.y + dy * t;
+      FX.add({ type: 'spark', x: px + (Math.random()-0.5)*10, y: py + (Math.random()-0.5)*10,
+        vx: (Math.random()-0.5)*1.4, vy: (Math.random()-0.5)*1.4,
+        life: 22 + i, size: 2.2, color: color || '#A9E5B5', glow: 10 });
+    }
+    FX.impact(from, to, color || '#A9E5B5', false);
+  },
+  /* 蓄力：能量汇聚 */
+  chargeUp(x, y, color){
+    for (let i = 0; i < 16; i++){
+      const ang = Math.random() * Math.PI * 2;
+      FX.add({ type: 'spark', x: x + Math.cos(ang) * 10, y: y + Math.sin(ang) * 10,
+        vx: -Math.cos(ang) * 1.4, vy: -Math.sin(ang) * 1.4,
+        life: 42 + Math.random() * 12, size: 2.2, color: color || '#9BD6FF', glow: 10 });
+    }
+    FX.add({ type: 'ring', x: x, y: y, radius: 6, life: 42, size: 3, color: '#BFE6FF' });
+  },
+  /* 专注恢复：治愈上升 */
+  healRise(x, y, color){
+    for (let i = 0; i < 22; i++){
+      FX.add({ type: 'spark', x: x + (Math.random()-0.5) * 36, y: y + (Math.random()-0.5) * 30,
+        vx: (Math.random()-0.5) * 0.8, vy: -1.6 - Math.random() * 1.2,
+        life: 54 + Math.random() * 16, size: 2.4, color: color || '#8FE3A6', glow: 12 });
+    }
+  },
+  /* 格挡：护盾涟漪 */
+  guardRing(x, y, color){
+    for (let i = 0; i < 3; i++){
+      FX.add({ type: 'ring', x: x, y: y, radius: 12 + i * 16, life: 48 - i * 5, size: 3.6 - i * 0.8, color: color || '#9FC6F2' });
+    }
+    FX.add({ type: 'spark', x: x, y: y, vx: 0, vy: 0, life: 38, size: 5, color: '#DCEBFF', glow: 18 });
+  },
+  /* 闪避：残影 */
+  dodgeGhost(x, y, color){
+    for (let i = 0; i < 12; i++){
+      FX.add({ type: 'spark', x: x + (Math.random()-0.5)*40, y: y + (Math.random()-0.5)*40,
+        vx: (Math.random()-0.5)*1.6, vy: (Math.random()-0.5)*1.6,
+        life: 29 + Math.random()*10, size: 2.6, color: color || '#C9D8EE', glow: 8, fade: 0.6 });
+    }
+  },
+  /* 屏幕坐标助手：元素中心 */
+  centerOf(el){
+    if (!el) return { x: FX.w / 2, y: FX.h / 2 };
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  },
+};
+
+/* ---------- NET 真联网对战（PeerJS P2P，无自建服务器） ---------- */
+const NET = {
+  on: false, peer: null, conn: null, peerId: '', ready: false,
+  init(cb){
+    if (NET.ready){ if (cb) cb(); return; }
+    if (window.Peer){ NET.on = true; NET.ready = true; if (cb) cb(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';
+    s.onload = () => { NET.on = !!window.Peer; NET.ready = true; if (cb) cb(); };
+    s.onerror = () => { NET.on = false; NET.ready = true; if (cb) cb(); };
+    document.head.appendChild(s);
+  },
+  /* 创建主机 Peer（异地好友通过 NET-<peerId> 加入） */
+  host(){
+    if (!NET.on) return null;
+    try{
+      if (NET.peer) NET.peer.destroy();
+      const pid = 'gdd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      const p = new Peer(pid);
+      NET.peer = p; NET.peerId = pid;
+      p.on('connection', conn => {
+        NET.conn = conn;
+        conn.on('data', d => netOnMsg(d));
+        conn.on('close', () => { NET.conn = null; netPeerGone(); });
+        conn.on('error', () => { NET.conn = null; });
+      });
+      p.on('error', err => {
+        if (err && err.type === 'unavailable-id'){ /* 重试一次 */ }
+        else if (err && err.type === 'peer-unavailable'){ toast('联网：对方离线或房间码无效'); }
+      });
+      return pid;
+    } catch(e){ return null; }
+  },
+  /* 加入远端主机 */
+  join(peerId){
+    if (!NET.on) return false;
+    try{
+      if (!NET.peer) NET.peer = new Peer();
+      const conn = NET.peer.connect(peerId, { reliable: true });
+      NET.conn = conn;
+      conn.on('open', () => {
+        sfx('roomJoin');
+        const st = $('room-status-create') || $('room-status-join');
+        if (st) st.innerHTML = '🔗 联网已连接，正在加入房间…';
+      });
+      conn.on('data', d => netOnMsg(d));
+      conn.on('close', () => { NET.conn = null; netPeerGone(); });
+      conn.on('error', () => { toast('联网连接失败，请检查邀请码'); });
+      return true;
+    } catch(e){ return false; }
+  },
+  send(msg){
+    if (NET.conn && NET.conn.open){
+      try { NET.conn.send(msg); } catch(e){}
+    }
+  },
+  close(){
+    if (NET.conn){ try { NET.conn.close(); } catch(e){} NET.conn = null; }
+    if (NET.peer){ try { NET.peer.destroy(); } catch(e){} NET.peer = null; }
+    NET.peerId = '';
+  },
+};
+function netOnMsg(m){
+  if (!m || !m.t) return;
+  roomOnMessage({ data: m });
+}
+function netPeerGone(){
+  toast('联网对手已断开连接');
+  if (ROOM.inBattle && STATE.battle && !STATE.battle.over){
+    STATE.battle.over = true;
+    STATE.battle.winner = 'P';
+    finishBattle();
+  } else {
+    ROOM.peerNick = null; ROOM.peerAlloc = null; ROOM.peerSlots = null;
+  }
+}
+/* bcPost 增强：本地 BroadcastChannel + 联网 PeerJS 双通道 */
+const _bcPostOrig = typeof bcPost === 'function' ? bcPost : null;
+function bcPostNet(msg){
+  if (_bcPostOrig) _bcPostOrig(msg);
+  NET.send(msg);
+}
+if (_bcPostOrig) bcPost = bcPostNet;
+
+/* ---------- 宝石图鉴 ---------- */
+const CODEX = {
+  entries: [],
+  build(){
+    if (CODEX.entries.length) return CODEX.entries;
+    const list = [];
+    /* 主动技能（近战/法术/召唤） */
+    ['melee', 'spell', 'summon'].forEach(k => {
+      const sk = SKILLS[k];
+      sk.names.forEach(nm => {
+        list.push({ name: nm, cat: sk.cat, kind: '主动技能', desc: sk.desc + '（等级 +' + sk.pts + ' 点）', sub: k, hues: [0, 40, 100, 160, 220, 280, 330] });
+      });
+    });
+    /* 被动技能 */
+    Object.keys(PASSIVE_NAMES).forEach(cat => {
+      PASSIVE_NAMES[cat].forEach(nm => {
+        list.push({ name: nm, cat: cat, kind: '被动技能', desc: '主动位被动技能：不提供攻击动作，仅强化对应大项（等级 +0.6 点）', sub: 'passive' });
+      });
+    });
+    /* 辅助宝石 */
+    Object.keys(SUPPORT_NAMES).forEach(cat => {
+      SUPPORT_NAMES[cat].forEach(nm => {
+        const beh = SUPPORT_BEHAVIOR[cat] ? SUPPORT_BEHAVIOR[cat].desc : '';
+        list.push({ name: nm, cat: cat, kind: '辅助宝石', desc: '辅助强化「' + cat + '」（等级 +0.12 点）' + (beh ? ' · 行为「' + beh + '」' : ''), sub: 'support' });
+      });
+    });
+    CODEX.entries = list;
+    return list;
+  },
+  /* 拥有情况：数量 + 最高品级 + 最高等级 */
+  ownedOf(name){
+    let n = 0, maxRar = -1, maxLv = 0;
+    STATE.pool.forEach(g => {
+      if (g.name === name){
+        n++;
+        const ri = RARITY_ORDER.indexOf(g.rarity);
+        if (ri > maxRar){ maxRar = ri; maxLv = g.lv || 1; }
+        if (maxRar === ri && (g.lv || 1) > maxLv) maxLv = g.lv || 1;
+      }
+    });
+    return { n: n, rar: maxRar >= 0 ? RARITY_ORDER[maxRar] : null, lv: maxLv };
+  },
+  seenCount(){ return CODEX.entries.filter(e => CODEX.ownedOf(e.name).n > 0).length; },
+  totalCount(){ return CODEX.entries.length; },
+};
+function renderCodex(){
+  const root = $('view-codex');
+  if (!root) return;
+  CODEX.build();
+  const seen = CODEX.seenCount(), total = CODEX.totalCount();
+  const catFilter = (STATE.codexCat || 'all');
+  const kindFilter = (STATE.codexKind || 'all');
+  const q = (STATE.codexQ || '').trim();
+  let html = `
+    <div class="codex-head">
+      <div class="codex-title">宝石图鉴 <span class="n">${seen} / ${total}</span></div>
+      <div class="codex-bar"><i style="width:${total ? Math.round(seen/total*100) : 0}%"></i></div>
+      <div class="codex-filters">
+        <select id="codex-cat" class="csel">
+          <option value="all">全部大项</option>
+          ${GEM_CATS.map(c => `<option value="${c}" ${c === catFilter ? 'selected' : ''}>${c}</option>`).join('')}
+        </select>
+        <select id="codex-kind" class="csel">
+          <option value="all">全部类型</option>
+          <option value="主动技能" ${kindFilter === '主动技能' ? 'selected' : ''}>主动技能</option>
+          <option value="被动技能" ${kindFilter === '被动技能' ? 'selected' : ''}>被动技能</option>
+          <option value="辅助宝石" ${kindFilter === '辅助宝石' ? 'selected' : ''}>辅助宝石</option>
+        </select>
+        <input id="codex-q" class="csel" placeholder="搜索宝石名称…" value="${q}">
+      </div>
+    </div>
+    <div class="codex-grid">`;
+  const rows = CODEX.entries.filter(e => {
+    if (catFilter !== 'all' && e.cat !== catFilter) return false;
+    if (kindFilter !== 'all' && e.kind !== kindFilter) return false;
+    if (q && e.name.indexOf(q) < 0) return false;
+    return true;
+  });
+  if (!rows.length) html += '<div class="codex-empty">没有符合条件的宝石</div>';
+  rows.forEach(e => {
+    const ow = CODEX.ownedOf(e.name);
+    html += `<div class="codex-card ${ow.n ? 'owned' : ''}" data-tip="${escapeHtml2(e.desc)}">
+      <div class="cx-gem">${gemIcon({ name: e.name, rarity: 'fine', kind: e.kind === '辅助宝石' ? 'support' : 'active', subkind: e.sub === 'support' ? 'support' : e.sub }, 56)}</div>
+      <div class="cx-name">${e.name}</div>
+      <div class="cx-kind ${e.kind === '辅助宝石' ? 'k-sup' : (e.kind === '被动技能' ? 'k-pas' : 'k-act')}">${e.kind}</div>
+      <div class="cx-cat">${e.cat}</div>
+      <div class="cx-owned">${ow.n ? '已拥有 ×' + ow.n + (ow.rar ? ' · ' + ow.rar : '') : '未获得'}</div>
+    </div>`;
+  });
+  html += '</div>';
+  root.innerHTML = html;
+  const cc = $('codex-cat'); if (cc) cc.onchange = () => { STATE.codexCat = cc.value; renderCodex(); };
+  const ck = $('codex-kind'); if (ck) ck.onchange = () => { STATE.codexKind = ck.value; renderCodex(); };
+  const cq = $('codex-q'); if (cq) cq.oninput = () => { STATE.codexQ = cq.value; renderCodex(); };
+}
+function escapeHtml2(s){
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ---------- 成就系统 ---------- */
+const ACH_STATS_KEY = 'gdd-v14-ach';
+const ACH_DEFS = [
+  { id: 'first_win',   name: '初战告捷',   desc: '赢得第一场对局', icon: '胜', test: s => s.wins >= 1 },
+  { id: 'win_3',       name: '三连胜',     desc: '累计 3 场胜利', icon: '连', test: s => s.wins >= 3 },
+  { id: 'win_10',      name: '十连胜',     desc: '累计 10 场胜利', icon: '冠', test: s => s.wins >= 10 },
+  { id: 'streak_5',    name: '势不可挡',   desc: '达成 5 连胜', icon: '火', test: s => (s.maxStreak || 0) >= 5 },
+  { id: 'last_stand',  name: '背水一战',   desc: '血量 ≤30% 时翻盘获胜', icon: '反', test: s => s.lastStand >= 1 },
+  { id: 'crit_3',      name: '暴击大师',   desc: '单局打出 3 次暴击', icon: '暴', test: s => s.crit3 >= 1 },
+  { id: 'pred_3',      name: '料事如神',   desc: '单局预测命中 3 次', icon: '测', test: s => s.pred3 >= 1 },
+  { id: 'combo_4',     name: '连招专家',   desc: '单局打出 4 连招', icon: '链', test: s => s.combo4 >= 1 },
+  { id: 'craft_10',    name: '合成达人',   desc: '累计合成 10 次', icon: '合', test: s => s.crafts >= 10 },
+  { id: 'gem_5',       name: '宝石大师',   desc: '获得 Lv5 及以上宝石', icon: '钻', test: s => s.maxLv >= 5 },
+  { id: 'codex_50',    name: '收藏家',     desc: '图鉴收集率达到 50%', icon: '图', test: s => CODEX.totalCount() && CODEX.seenCount() / CODEX.totalCount() >= 0.5 },
+  { id: 'codex_100',   name: '图鉴全满',   desc: '图鉴收集率达到 100%', icon: '全', test: s => CODEX.totalCount() && CODEX.seenCount() >= CODEX.totalCount() },
+  { id: 'arch',        name: '流派大师',   desc: '使用过一次流派预设', icon: '派', test: s => s.archUsed >= 1 },
+  { id: 'share',       name: '构筑分享家', desc: '导出一份构筑分享码', icon: '码', test: s => s.shareUsed >= 1 },
+  { id: 'room_win',    name: '房主之胜',   desc: '作为房主赢得一场房间对战', icon: '房', test: s => s.roomWins >= 1 },
+  { id: 'net_win',     name: '联机斗士',   desc: '通过联网（PeerJS）赢得一场对战', icon: '联', test: s => s.netWins >= 1 },
+  { id: 'chat_20',     name: '社交达人',   desc: '累计发送 20 条聊天消息', icon: '聊', test: s => s.chats >= 20 },
+  { id: 'letter_5',    name: '书信往来',   desc: '累计收发 5 封书信', icon: '信', test: s => s.letters >= 5 },
+  { id: 'pet_20',      name: '宠物伙伴',   desc: '与 AI 宠物互动 20 次', icon: '宠', test: s => s.petPats >= 20 },
+  { id: 'battle_50',   name: '久经沙场',   desc: '累计进行 50 场对局', icon: '战', test: s => s.battles >= 50 },
+];
+function achLoad(){
+  try {
+    const d = SEC.load(ACH_STATS_KEY, null);
+    if (d && d.v === 1){
+      STATE.ach = { unlocked: d.u || {}, stats: d.s || {} };
+      return;
+    }
+  } catch(e){}
+  STATE.ach = { unlocked: {}, stats: { wins:0, battles:0, streak:0, maxStreak:0, lastStand:0, crit3:0, pred3:0, combo4:0, crafts:0, maxLv:0, archUsed:0, shareUsed:0, roomWins:0, netWins:0, chats:0, letters:0, petPats:0 } };
+}
+function achSave(){
+  try { SEC.save(ACH_STATS_KEY, { v: 1, u: STATE.ach.unlocked, s: STATE.ach.stats }); } catch(e){}
+}
+function achStat(k, v){
+  const st = STATE.ach.stats;
+  if (typeof v === 'number') st[k] = (st[k] || 0) + v;
+  return st[k] || 0;
+}
+function achUnlock(id){
+  if (!STATE.ach || STATE.ach.unlocked[id]) return;
+  const d = ACH_DEFS.find(x => x.id === id);
+  if (!d) return;
+  STATE.ach.unlocked[id] = true;
+  achSave();
+  sfx('ach');
+  toast('🏆 成就解锁：' + d.name + ' — ' + d.desc);
+  petSay('成就「' + d.name + '」达成！太棒了！');
+  try { window.dispatchEvent(new CustomEvent('gdd-ach', { detail: d })); } catch(e){}
+}
+function achCheck(){
+  if (!STATE.ach) return;
+  CODEX.build();
+  ACH_DEFS.forEach(d => {
+    if (!STATE.ach.unlocked[d.id]){
+      try { if (d.test(STATE.ach.stats)) achUnlock(d.id); } catch(e){}
+    }
+  });
+}
+function renderAch(){
+  const root = $('view-ach');
+  if (!root) return;
+  CODEX.build();
+  const st = STATE.ach.stats;
+  const unlocked = Object.keys(STATE.ach.unlocked).length;
+  let html = `
+    <div class="ach-head">
+      <div class="ach-title">成就 <span class="n">${unlocked} / ${ACH_DEFS.length}</span></div>
+      <div class="codex-bar"><i style="width:${Math.round(unlocked / ACH_DEFS.length * 100)}%"></i></div>
+    </div>
+    <div class="ach-grid">`;
+  ACH_DEFS.forEach(d => {
+    const on = !!STATE.ach.unlocked[d.id];
+    let prog = 0, ptx = '';
+    if (d.id === 'codex_50' || d.id === 'codex_100'){ prog = CODEX.totalCount() ? CODEX.seenCount() / CODEX.totalCount() : 0; ptx = Math.round(prog * 100) + '%'; }
+    else if (d.id === 'gem_5'){ prog = Math.min(1, (st.maxLv || 0) / 5); ptx = (st.maxLv || 0) + '/5'; }
+    else if (d.id === 'battle_50'){ prog = Math.min(1, (st.battles || 0) / 50); ptx = (st.battles || 0) + '/50'; }
+    else if (d.id === 'chat_20'){ prog = Math.min(1, (st.chats || 0) / 20); ptx = (st.chats || 0) + '/20'; }
+    else if (d.id === 'letter_5'){ prog = Math.min(1, (st.letters || 0) / 5); ptx = (st.letters || 0) + '/5'; }
+    else if (d.id === 'pet_20'){ prog = Math.min(1, (st.petPats || 0) / 20); ptx = (st.petPats || 0) + '/20'; }
+    else if (d.id === 'craft_10'){ prog = Math.min(1, (st.crafts || 0) / 10); ptx = (st.crafts || 0) + '/10'; }
+    else { prog = on ? 1 : 0; ptx = on ? '已完成' : '未达成'; }
+    html += `<div class="ach-card ${on ? 'on' : ''}">
+      <div class="ach-ic">${d.icon}</div>
+      <div class="ach-body">
+        <div class="ach-name">${d.name}</div>
+        <div class="ach-desc">${d.desc}</div>
+        <div class="ach-prog"><i style="width:${Math.round(Math.min(1, prog) * 100)}%"></i></div>
+        <div class="ach-ptx">${ptx}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  root.innerHTML = html;
+}
 
 </script>
 </body>

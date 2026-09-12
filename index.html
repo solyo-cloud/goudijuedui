@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>构筑对决：数值之战 · 宝石构筑版 v13.7（柔和音乐 · 差异化技能动画与打击音）</title>
+<title>构筑对决：数值之战 · 宝石构筑版 v13.8（引擎强化 · 聊天修复 · 字体加大）</title>
 <style>
 /* ============================================================
  * v12 浅蓝明亮主题：铺满全屏布局（无右侧空白）+ 立体孔位 + 写实宝石
@@ -70,9 +70,9 @@ b{color:var(--deep)}
   border-bottom:2px solid var(--line2);
   color:var(--deep);
 }
-.topbar h1{font-size:23px;letter-spacing:1px}
-.topbar .sub{font-size:13px;font-weight:700;color:var(--dim);white-space:normal;line-height:1.4;max-width:min(920px,66vw)}
-.topbar .kpis{display:flex;gap:8px;font-size:13px;font-weight:700;color:var(--dim);flex-wrap:wrap;justify-content:flex-end}
+.topbar h1{font-size:25px;letter-spacing:1px}
+.topbar .sub{font-size:14px;font-weight:700;color:var(--dim);white-space:normal;line-height:1.4;max-width:min(920px,66vw)}
+.topbar .kpis{display:flex;gap:8px;font-size:14px;font-weight:700;color:var(--dim);flex-wrap:wrap;justify-content:flex-end}
 .topbar .kpis span{background:rgba(248,250,253,.72);padding:2px 9px;border-radius:10px;border:1px solid var(--line2)}
 /* ---------- 主布局：背包 + 9 大项弹性铺满（无右侧固定栏） ---------- */
 .layout{display:flex;gap:10px;padding:10px 26px 6px;height:calc(100vh - 118px - 84px);min-height:600px}
@@ -82,24 +82,24 @@ b{color:var(--deep)}
   background:var(--card);border:2px solid var(--line2);border-radius:14px;
   box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;
 }
-.side-head{padding:9px 10px;background:linear-gradient(90deg,var(--card2),var(--gold4));border-bottom:2px solid var(--line);font-weight:800;font-size:16px}
+.side-head{padding:9px 10px;background:linear-gradient(90deg,var(--card2),var(--gold4));border-bottom:2px solid var(--line);font-weight:800;font-size:17px}
 .side-head .n{color:var(--accent)}
 .side-actions{padding:6px 10px;border-bottom:2px solid var(--line)}
-.craft-line{font-size:13px;color:var(--dim);margin-bottom:6px}
+.craft-line{font-size:14px;color:var(--dim);margin-bottom:6px}
 .craft-line b{color:var(--accent)}
 #btn-craft{
-  display:block;width:100%;padding:8px;border-radius:10px;font-size:15px;font-weight:800;
+  display:block;width:100%;padding:9px;border-radius:10px;font-size:16px;font-weight:800;
   background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--deep);box-shadow:var(--shadow);
 }
 #btn-craft:disabled{background:#E3E9F0;color:var(--faint);cursor:not-allowed;box-shadow:none}
 .fbar{display:flex;gap:6px;align-items:center;padding:6px 10px;flex-wrap:wrap;border-bottom:2px solid var(--line)}
 .fbar select,.fbtn{
-  font-size:13px;font-weight:700;color:var(--deep);background:var(--card2);
+  font-size:14px;font-weight:700;color:var(--deep);background:var(--card2);
   border:1.5px solid var(--line2);border-radius:8px;padding:3px 7px;
 }
 .fbtn.on{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent)}
 .gem-panel{flex:1;overflow-y:auto;padding:6px 8px;min-height:0;display:flex;flex-direction:column;gap:6px}
-.pool-empty{font-size:14px;color:var(--faint);padding:14px 6px;text-align:center}
+.pool-empty{font-size:15px;color:var(--faint);padding:14px 6px;text-align:center}
 .gem{
   background:var(--card2);border:2px solid var(--line);border-radius:12px;
   padding:7px 8px;cursor:pointer;transition:transform .12s,box-shadow .12s;
@@ -110,10 +110,10 @@ b{color:var(--deep)}
 .gbody{display:flex;gap:8px;align-items:center}
 .gi{flex:0 0 46px;display:flex;justify-content:center}
 .gmeta{flex:1;min-width:0}
-.gn{font-size:14px;font-weight:800;color:var(--ink)}
+.gn{font-size:15px;font-weight:800;color:var(--ink)}
 .gn .gl{color:var(--accent)}
-.gn .gt{font-size:12px;color:var(--faint);font-weight:700;display:block}
-.gd{font-size:12px;color:var(--dim);margin-top:1px}
+.gn .gt{font-size:13px;color:var(--faint);font-weight:700;display:block}
+.gd{font-size:13px;color:var(--dim);margin-top:1px}
 .gem .used-tag{display:none}
 .gem.used .used-tag{display:inline-block;font-size:11px;background:var(--faint);color:#fff;border-radius:6px;padding:0 6px;margin-left:6px}
 .side-foot{padding:6px 10px;border-top:2px solid var(--line)}
@@ -129,9 +129,9 @@ b{color:var(--deep)}
   box-shadow:var(--shadow);padding:6px 6px 4px;display:flex;flex-direction:column;overflow:hidden;
 }
 .cat-head{display:flex;align-items:baseline;gap:6px;margin-bottom:5px;flex-wrap:wrap}
-.cat-head .cn{font-size:18px;font-weight:900;color:var(--deep)}
-.cat-head .cd{font-size:11px;color:var(--faint);font-weight:700}
-.cat-head .cp{font-size:13px;color:var(--accent);font-weight:900;margin-left:auto}
+.cat-head .cn{font-size:19px;font-weight:900;color:var(--deep)}
+.cat-head .cd{font-size:12px;color:var(--faint);font-weight:700}
+.cat-head .cp{font-size:14px;color:var(--accent);font-weight:900;margin-left:auto}
 .cat-groups{
   flex:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:5px;min-height:0;
   align-content:start;overflow-y:auto;padding-right:2px;
@@ -188,8 +188,8 @@ b{color:var(--deep)}
   border-color:#8A6D2F}
 .stargroup .hole.on svg{width:100%;height:100%}
 .chain .cinfo{flex:1;min-width:0;width:100%;line-height:1.3}
-.chain .clabel{font-size:12px;font-weight:900;color:var(--accent);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chain .csub{font-size:11px;color:var(--dim);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.chain .clabel{font-size:13px;font-weight:900;color:var(--accent);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chain .csub{font-size:12px;color:var(--dim);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
 /* ---------- 构筑总览：可弹出浮层（不占主区） ---------- */
 #btn-ov{
   padding:10px 16px;border-radius:12px;font-size:14px;font-weight:800;
@@ -232,22 +232,22 @@ b{color:var(--deep)}
   background:linear-gradient(90deg,var(--card2),var(--gold4));border-top:2px solid var(--gold3);
   display:flex;align-items:center;gap:12px;padding:0 26px 22px;
 }
-.footbar .preview{flex:1;font-size:13px;color:var(--dim);font-weight:700;line-height:1.5}
-.footbar .preview b{color:var(--accent);font-size:14px}
+.footbar .preview{flex:1;font-size:14px;color:var(--dim);font-weight:700;line-height:1.5}
+.footbar .preview b{color:var(--accent);font-size:15px}
 .diffs{display:flex;gap:8px}
 .diff{
-  background:var(--card);border:2px solid var(--line2);border-radius:12px;padding:5px 12px;
-  text-align:left;color:var(--deep);font-weight:800;font-size:13px;
+  background:var(--card);border:2px solid var(--line2);border-radius:12px;padding:6px 13px;
+  text-align:left;color:var(--deep);font-weight:800;font-size:14px;
 }
-.diff .dd{font-size:11px;color:var(--faint);font-weight:700;display:block}
+.diff .dd{font-size:12px;color:var(--faint);font-weight:700;display:block}
 .diff.active{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent);box-shadow:var(--shadow)}
 #btn-pvp{
-  padding:12px 20px;border-radius:14px;font-size:15px;font-weight:900;
+  padding:13px 22px;border-radius:14px;font-size:16px;font-weight:900;
   background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;
   box-shadow:0 4px 14px rgba(62,107,158,.35);letter-spacing:1px;white-space:nowrap;
 }
 #btn-start{
-  padding:12px 26px;border-radius:14px;font-size:17px;font-weight:900;
+  padding:13px 28px;border-radius:14px;font-size:18px;font-weight:900;
   background:linear-gradient(135deg,var(--gold2),var(--accent));color:#fff;
   box-shadow:0 4px 14px rgba(168,127,52,.35);letter-spacing:2px;
 }
@@ -260,9 +260,9 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .view{height:calc(100vh - 56px - 84px);min-height:600px;padding:10px 12px;display:none;width:100%}
 .view.on{display:block}
 .battle-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.battle-head .who{font-size:17px;font-weight:900;color:var(--deep)}
-.battle-head .tag{font-size:13px;color:var(--dim);font-weight:700}
-#turn-info{font-size:15px;font-weight:900;color:var(--accent)}
+.battle-head .who{font-size:18px;font-weight:900;color:var(--deep)}
+.battle-head .tag{font-size:14px;color:var(--dim);font-weight:700}
+#turn-info{font-size:16px;font-weight:900;color:var(--accent)}
 .arena{display:flex;gap:12px}
 .side-panel{
   flex:1;background:var(--card);border:2px solid var(--line2);border-radius:14px;
@@ -272,11 +272,8 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .hpfill{height:100%;background:linear-gradient(90deg,#E0A85E,#B87F34);transition:width .3s}
 .hpfill.low{background:linear-gradient(90deg,#D4836F,#B46355)}
 .enfill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .3s}
-.bar-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--deep)}
-.stats{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--dim);font-weight:700;margin-top:8px}
-.stats b{color:var(--deep)}
+.bar-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--deep)}
 .skill-title{font-size:13px;font-weight:900;color:var(--accent);margin:10px 0 4px}
-#p-skills,#e-skills{display:flex;gap:6px;flex-wrap:wrap;min-height:66px}
 .skill-card{
   background:var(--card2);border:1.5px solid var(--line2);border-radius:12px;padding:6px 8px;
   display:flex;align-items:center;gap:8px;cursor:pointer;min-width:160px;
@@ -285,32 +282,23 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .skill-card.active{border-color:var(--gold3);box-shadow:0 0 8px rgba(200,155,78,.45)}
 .skill-card.sel{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent);color:var(--deep)}
 .skill-card .sk{flex:0 0 36px;display:flex;justify-content:center}
-.skill-card .sm .n{font-size:14px;font-weight:900;color:var(--deep)}
-.skill-card .sm .d{font-size:11px;color:var(--dim);display:block}
-.skill-card .sc{font-size:12px;font-weight:900;color:var(--accent);margin-left:auto}
+.skill-card .sm .n{font-size:15px;font-weight:900;color:var(--deep)}
+.skill-card .sm .d{font-size:12px;color:var(--dim);display:block}
+.skill-card .sc{font-size:13px;font-weight:900;color:var(--accent);margin-left:auto}
 .skill-card.passive{opacity:.85}
 .ops{display:flex;gap:12px;margin-top:10px}
 .pred-box,.act-box{flex:1;background:var(--card);border:2px solid var(--line2);border-radius:14px;padding:9px 11px;box-shadow:var(--shadow)}
-.pred-box .pt,.act-box .at{font-size:13px;font-weight:900;color:var(--accent);margin-bottom:4px}
-#pred-state{font-size:13px;color:var(--dim);font-weight:700;margin-bottom:6px}
+.pred-box .pt,.act-box .at{font-size:14px;font-weight:900;color:var(--accent);margin-bottom:4px}
+#pred-state{font-size:14px;color:var(--dim);font-weight:700;margin-bottom:6px}
 #pred-actions{display:flex;flex-wrap:wrap;gap:6px}
-.pred-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 11px;border-radius:10px;background:var(--card2);border:1.5px solid var(--line2);font-weight:800;color:var(--deep);font-size:13px}
+.pred-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 12px;border-radius:10px;background:var(--card2);border:1.5px solid var(--line2);font-weight:800;color:var(--deep);font-size:14px}
 .pred-btn em{font-style:normal;font-size:10px;color:var(--faint)}
 .pred-btn.ready{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent)}
 #player-actions{display:flex;flex-wrap:wrap;gap:6px}
-.act{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:7px 11px;border-radius:10px;background:var(--card2);border:1.5px solid var(--line2);font-weight:800;color:var(--deep);font-size:13px}
-.act .an em{font-style:normal;font-size:11px;color:var(--accent);margin-left:6px}
-.act .ad{font-size:10px;color:var(--faint);font-weight:700}
-.act:disabled{opacity:.5;cursor:not-allowed}
 .speedbar{display:flex;gap:6px;margin-top:8px;align-items:center}
 .speedbar .lab{font-size:13px;font-weight:900;color:var(--deep)}
 .spd{padding:5px 11px;border-radius:8px;font-size:13px;font-weight:800;background:var(--card2);border:1.5px solid var(--line2);color:var(--deep)}
 .spd.on{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--accent)}
-#logbox{
-  margin-top:8px;background:rgba(248,250,253,.9);border:1.5px solid var(--line);border-radius:10px;
-  padding:7px 10px;height:218px;overflow-y:auto;font-size:13px;color:var(--dim);font-weight:700;
-  scroll-behavior:smooth;
-}
 #logbox .t{color:var(--accent);font-weight:900;margin-right:4px}
 #logbox .lg-skill{color:var(--deep);font-weight:900}
 #logbox .lg-dmg{color:#B46355;font-weight:900}
@@ -478,9 +466,10 @@ body.in-battle .view{height:calc(100vh - 56px)}
   border:1.5px solid var(--gold3);box-shadow:0 2px 8px rgba(200,155,78,.35);
 }
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin-top:8px;padding:8px;background:var(--card2);border:1.5px solid var(--line);border-radius:10px}
-.sline{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--dim)}
+.stats b{color:var(--deep)}
+.sline{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--dim)}
 .sline .sk2{flex:0 0 46px;color:var(--ink)}
-.sline b{flex:0 0 34px;text-align:right;color:var(--accent);font-size:13px}
+.sline b{flex:0 0 34px;text-align:right;color:var(--accent);font-size:14px}
 .sbar{flex:1;height:9px;border-radius:5px;background:#D9E4EF;overflow:hidden;min-width:0}
 .sbar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
 #p-skills,#e-skills{display:flex;gap:6px;flex-wrap:wrap;min-height:64px}
@@ -496,10 +485,10 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .act .an em{font-style:normal;font-size:11px;color:var(--accent);margin-left:6px}
 .act .ad{font-size:10px;color:var(--faint);font-weight:700}
 .act:disabled{opacity:.5;cursor:not-allowed}
-/* 战斗页日志（v13.5：扩大 + 滚动 + 逐操作记录） */
+/* 战斗页日志（v13.5：扩大 + 滚动 + 逐操作记录；v13.8：字号 13→14 便于阅读） */
 #logbox{
   margin-top:8px;background:rgba(248,250,253,.92);border:1.5px solid var(--line);border-radius:10px;
-  padding:7px 10px;height:218px;overflow-y:auto;font-size:13px;color:var(--dim);font-weight:700;
+  padding:7px 10px;height:218px;overflow-y:auto;font-size:14px;color:var(--dim);font-weight:700;
   scroll-behavior:smooth;
 }
 #logbox .t{color:var(--accent);font-weight:900;margin-right:4px}
@@ -540,7 +529,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
   background:var(--card);border:2px solid var(--line2);border-radius:14px;padding:8px 12px;box-shadow:var(--shadow);
 }
 .act-line{display:flex;align-items:center;justify-content:center;gap:18px;width:100%}
-#act-hint{font-size:14px;font-weight:800;color:var(--dim)}
+#act-hint{font-size:15px;font-weight:800;color:var(--dim)}
 #act-hint.ok{color:#3E8E4E}
 #act-hint.bad{color:#B46355}
 #act-btn{
@@ -640,10 +629,10 @@ body.in-battle .view{height:calc(100vh - 56px)}
 .menu-title span{display:block;font-size:16px;letter-spacing:10px;color:#5b3a2a;background:none;-webkit-text-fill-color:initial;margin-top:4px}
 .menu-sub{font-size:15px;color:#5b4a3a;margin:6px 0 18px}
 .menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.menu-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:22px 10px;border-radius:18px;border:2px solid rgba(180,120,60,.35);background:linear-gradient(160deg,#fffdf6,#fdf3e3);cursor:pointer;box-shadow:0 3px 10px rgba(150,90,30,.12);transition:transform .15s,box-shadow .15s;font-family:inherit}
+.menu-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px 10px;border-radius:18px;border:2px solid rgba(180,120,60,.35);background:linear-gradient(160deg,#fffdf6,#fdf3e3);cursor:pointer;box-shadow:0 3px 10px rgba(150,90,30,.12),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -8px 18px rgba(215,175,110,.18);transition:transform .15s,box-shadow .15s;font-family:inherit}
 .menu-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(150,90,30,.22);border-color:var(--gold2)}
-.menu-btn b{font-size:19px;color:#6b3a15}
-.menu-btn i{font-style:normal;font-size:12px;color:#8a6a50;line-height:1.45}
+.menu-btn b{font-size:20px;color:#6b3a15}
+.menu-btn i{font-style:normal;font-size:13px;color:#8a6a50;line-height:1.45}
 .menu-btn.gold{background:linear-gradient(160deg,#f8b03c,#e0852f);border-color:#a55b16}
 .menu-btn.gold b{color:#fff}
 .menu-btn.gold i{color:#fff3df}
@@ -741,15 +730,15 @@ body.in-battle .view{height:calc(100vh - 56px)}
 #toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:9990;background:rgba(60,40,20,.92);color:#fff;padding:12px 26px;border-radius:16px;font-size:15px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .3s;max-width:86vw;text-align:center}
 #toast.show{opacity:1}
 
-/* v13 补充：遮罩打开时宠物弱化，避免遮挡交互 */
-#modal.on ~ #pet, #room-modal.on ~ #pet{opacity:.25;pointer-events:none}
+/* v13 补充：遮罩/掷色子打开时宠物弱化，避免遮挡交互（v13.8 新增 roll-overlay） */
+#modal.on ~ #pet, #room-modal.on ~ #pet, #roll-overlay.on ~ #pet{opacity:.25;pointer-events:none}
 </style>
 </head>
 <body>
 <div class="topbar">
   <div>
     <h1>构筑对决：数值之战</h1>
-    <div class="sub" data-i18n="sub">宝石构筑版 v13.7 · 9大项×4组×8孔 · 柔和多乐器音乐 · 差异化技能动画/打击音 · 中/英/日多语言 · 在线更新</div>
+    <div class="sub" data-i18n="sub">宝石构筑版 v13.8 · 9大项×4组×8孔 · 引擎强化（预测/连招/行为建模 · 高手AI预测） · 聊天系统修复 · 字体加大 · 中/英/日多语言 · 在线更新</div>
   </div>
   <div class="kpis">
     <span data-i18n="kpi1">2500血 / 30回合</span><span data-i18n="kpi2">能量+3/回合(前8回合)</span><span data-i18n="kpi3">每5回合上限+2</span>
@@ -819,6 +808,7 @@ body.in-battle .view{height:calc(100vh - 56px)}
         </div>
         <div class="fbar" id="filters-kind">
           <button class="fbtn" data-k="active">主动技能</button>
+          <button class="fbtn" data-k="passive">被动技能</button>
           <button class="fbtn" data-k="support">辅助宝石</button>
           <button class="fbtn" data-k="used">仅看未使用</button>
         </div>
@@ -1461,9 +1451,8 @@ function findCraft(pool){
       const name = names[Math.floor(Math.random() * names.length)];
       const srcs = arr.filter(g => g.name === name);
       const maxLv = Math.max.apply(null, srcs.map(g => g.lv));
-      if (maxLv < 15 && (!best || best.pick === 5 || (best.used === undefined) || (arr[0].lv < best.lv))){
-        if (!best || (best.maxLv < maxLv)) best = {rar: k, name, srcs, maxLv};
-      }
+      /* 清理：原条件中 best.pick/best.used/best.lv 从未赋值（死条件），合并为等级优先 */
+      if (maxLv < 15 && (!best || best.maxLv < maxLv)) best = {rar: k, name, srcs, maxLv};
     }
   }
   return best;
@@ -1636,6 +1625,27 @@ function aiDecide(level, me, foe, rng){
   if (level === 'master') return masterDecide(me, foe, rng);
   return veteranDecide(me, foe, rng);
 }
+/* v13.8 模拟引擎增强：连招建模 —— 高手 AI 在能量充裕时追加一次攻击（与真实 aiActObj 连招行为对齐） */
+function aiCombo(level, me, foe, rng, main){
+  const acts = [main];
+  if (level === 'novice' || !(main in RULES.systemAttr)) return acts;
+  const spent = (main === 'focus') ? RULES.costFocus : RULES.costAtk;
+  const want = (level === 'master') ? 1 : (rng() < 0.5 ? 1 : 0);
+  if (want && (me.energy - spent) >= RULES.costAtk + RULES.costPredict){
+    acts.push(bestAttackSystem(me.eff, me.alloc, foe.eff));
+  }
+  return acts;
+}
+/* v13.8 模拟引擎增强：预测建模 —— 按对手血量/能量猜测其最可能动作（简化心理博弈） */
+function guessAction(foe){
+  if (foe.hp <= RULES.ai.focusHp * RULES.baseHp && foe.energy >= RULES.costFocus) return 'focus';
+  let best = '近战', bv = -1;
+  for (const s of ['近战','法术','宠物']){
+    const v = foe.alloc[RULES.systemAttr[s]] || 0;
+    if (v > bv){ bv = v; best = s; }
+  }
+  return best;
+}
 function rollAttack(attacker, system, foe, rng, critChance, dmgMult, bonus){
   bonus = bonus || {};
   /* D4 行为：轻灵（防御侧闪避 +5%） */
@@ -1668,57 +1678,78 @@ function rollAttack(attacker, system, foe, rng, critChance, dmgMult, bonus){
   let combo = false;
   if (bonus.combo && rng() < 0.25){
     combo = true;
-    let cd = dmg * 0.6;
-    if (bonus.pierce) cd *= 1;
+    let cd = dmg * 0.6;   /* 连击追加伤害基于已减免后的最终伤害，天然继承破甲/暴击收益 */
     dmg += cd;
   }
   return {dmg: Math.floor(dmg), hit:true, crit, red, key, combo};
 }
-function battle(aAlloc, bAlloc, aLevel, bLevel, seed, aCosts, bCosts){
-  /* v13.6 E5：模拟引擎成本口径与真实战斗对齐（攻击耗能 = 1 + ceil(辅助数 × 0.6)），
-     未建模部分（预测 / 连招 / 辅助行为）在结算页标注为简化估算 */
+function battle(aAlloc, bAlloc, aLevel, bLevel, seed, aCosts, bCosts, opts){
+  /* v13.6 E5：成本口径与真实战斗对齐（攻击耗能 = 1 + ceil(辅助数 × 0.6)）；
+     v13.8：新增预测 / 连招 / 辅助行为建模 —— opts.bonusA/bonusB 行为集合、opts.predA/predB 每回合预测概率，
+     结算页"60 场模拟"从简化估算升级为近似真实口径 */
+  opts = opts || {};
   aCosts = aCosts || {}; bCosts = bCosts || {};
   const rng = rngFactory(seed);
   const A = makeFighter(aAlloc), B = makeFighter(bAlloc);
   const hpA = [RULES.baseHp], hpB = [RULES.baseHp];
   const log = [];
-  const stats = {crits:0, guards:0, stands:0, focuses:0, aDmg:0, bDmg:0, aHeal:0, bHeal:0, aStand:0, bStand:0};
+  const stats = {crits:0, guards:0, stands:0, focuses:0, aDmg:0, bDmg:0, aHeal:0, bHeal:0, aStand:0, bStand:0,
+                 aPred:0, bPred:0, aPredHit:0, bPredHit:0, aCombos:0, bCombos:0};
   let winner = null, turns = RULES.maxTurns;
   for (let t = 1; t <= RULES.maxTurns; t++){
     A.energy = Math.min(energyMaxAt(t), A.energy + energyPerTurnAt(t));
     B.energy = Math.min(energyMaxAt(t), B.energy + energyPerTurnAt(t));
     /* D7：先手补偿 —— 模拟中 A 恒先结算，后手 B 每回合 +1 能量（至上限） */
     B.energy = Math.min(energyMaxAt(t), B.energy + RULES.firstCompBonus);
-    const aAct = aiDecide(aLevel, A, B, rng);
-    const bAct = aiDecide(bLevel, B, A, rng);
-    A.guarding = (aAct === 'guard'); B.guarding = (bAct === 'guard');
-    if (aAct === 'charge') A.energy = Math.min(energyMaxAt(t), A.energy + RULES.chargeGain);
-    if (bAct === 'charge') B.energy = Math.min(energyMaxAt(t), B.energy + RULES.chargeGain);
-    if (aAct === 'focus'){ A.energy -= RULES.costFocus; const h = focusHealValue(A.eff); A.hp = Math.min(RULES.baseHp, A.hp + h); stats.focuses++; stats.aHeal += h; }
-    if (bAct === 'focus'){ B.energy -= RULES.costFocus; const h = focusHealValue(B.eff); B.hp = Math.min(RULES.baseHp, B.hp + h); stats.focuses++; stats.bHeal += h; }
-    if (aAct in RULES.systemAttr){
-      A.energy -= (aCosts[aAct] || RULES.costAtk);
-      const r = rollAttack(A, aAct, B, rng);
-      if (r.hit){
-        B.hp = Math.max(0, B.hp - r.dmg);
-        stats.aDmg += r.dmg;
-        if (r.crit) stats.crits++;
-        if (inLastStand(B.hp)){ stats.stands++; stats.bStand++; B.lsTriggered = true; }
-        if (B.guarding) B.counter = true;
-        log.push(`T${t} A·${aAct} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : ''));
-      } else log.push(`T${t} A·${aAct} 被闪避`);
+    const aActs = aiCombo(aLevel, A, B, rng, aiDecide(aLevel, A, B, rng));
+    const bActs = aiCombo(bLevel, B, A, rng, aiDecide(bLevel, B, A, rng));
+    /* 预测判定：能量足够时按概率触发，命中（猜中对方首动作）→ 本回合己方首击伤害 ×1.3 */
+    let aPredHit = false, bPredHit = false;
+    if (opts.predA > 0 && A.energy >= RULES.costPredict + RULES.costAtk && rng() < opts.predA){
+      const g = guessAction(B); A.energy -= RULES.costPredict; stats.aPred++;
+      if (g === (bActs[0] || '')){ aPredHit = true; stats.aPredHit++; }
     }
-    if (bAct in RULES.systemAttr){
-      B.energy -= (bCosts[bAct] || RULES.costAtk);
-      const r = rollAttack(B, bAct, A, rng);
-      if (r.hit){
-        A.hp = Math.max(0, A.hp - r.dmg);
-        stats.bDmg += r.dmg;
-        if (r.crit) stats.crits++;
-        if (inLastStand(A.hp)){ stats.stands++; stats.aStand++; A.lsTriggered = true; }
-        if (A.guarding) A.counter = true;
-        log.push(`T${t} B·${bAct} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : ''));
-      } else log.push(`T${t} B·${bAct} 被闪避`);
+    if (opts.predB > 0 && B.energy >= RULES.costPredict + RULES.costAtk && rng() < opts.predB){
+      const g = guessAction(A); B.energy -= RULES.costPredict; stats.bPred++;
+      if (g === (aActs[0] || '')){ bPredHit = true; stats.bPredHit++; }
+    }
+    const aMain = aActs[0], bMain = bActs[0];
+    A.guarding = (aMain === 'guard'); B.guarding = (bMain === 'guard');
+    if (aMain === 'charge') A.energy = Math.min(energyMaxAt(t), A.energy + RULES.chargeGain);
+    if (bMain === 'charge') B.energy = Math.min(energyMaxAt(t), B.energy + RULES.chargeGain);
+    if (aMain === 'focus'){ A.energy -= RULES.costFocus; const h = focusHealValue(A.eff); A.hp = Math.min(RULES.baseHp, A.hp + h); stats.focuses++; stats.aHeal += h; }
+    if (bMain === 'focus'){ B.energy -= RULES.costFocus; const h = focusHealValue(B.eff); B.hp = Math.min(RULES.baseHp, B.hp + h); stats.focuses++; stats.bHeal += h; }
+    for (const act of aActs){
+      if (act in RULES.systemAttr){
+        A.energy -= (aCosts[act] || RULES.costAtk);
+        const r = rollAttack(A, act, B, rng, undefined, aPredHit ? RULES.predictReward : undefined, opts.bonusA);
+        if (aPredHit) aPredHit = false;   /* 预测奖励仅作用于本回合首击 */
+        if (r.hit){
+          B.hp = Math.max(0, B.hp - r.dmg);
+          stats.aDmg += r.dmg;
+          if (r.crit) stats.crits++;
+          if (r.combo) stats.aCombos++;
+          if (inLastStand(B.hp)){ stats.stands++; stats.bStand++; B.lsTriggered = true; }
+          if (B.guarding) B.counter = true;
+          log.push(`T${t} A·${act} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : '') + (r.combo ? ' 连击' : ''));
+        } else log.push(`T${t} A·${act} 被闪避`);
+      }
+    }
+    for (const act of bActs){
+      if (act in RULES.systemAttr){
+        B.energy -= (bCosts[act] || RULES.costAtk);
+        const r = rollAttack(B, act, A, rng, undefined, bPredHit ? RULES.predictReward : undefined, opts.bonusB);
+        if (bPredHit) bPredHit = false;
+        if (r.hit){
+          A.hp = Math.max(0, A.hp - r.dmg);
+          stats.bDmg += r.dmg;
+          if (r.crit) stats.crits++;
+          if (r.combo) stats.bCombos++;
+          if (inLastStand(A.hp)){ stats.stands++; stats.aStand++; A.lsTriggered = true; }
+          if (A.guarding) A.counter = true;
+          log.push(`T${t} B·${act} ${r.dmg} 命中` + (r.crit ? ' 暴击!' : '') + (r.combo ? ' 连击' : ''));
+        } else log.push(`T${t} B·${act} 被闪避`);
+      }
     }
     stats.guards += (A.guarding?1:0) + (B.guarding?1:0);
     if (A.hp <= 0 || B.hp <= 0){
@@ -1787,14 +1818,31 @@ function attackCostsFromSlots(slots){
   }
   return out;
 }
+/* v13.8：从玩家已装辅助宝石派生全局行为集合（跨三系去重计数，供模拟引擎注入） */
+function behaviorsFromSlots(slots){
+  const out = {};
+  for (let i = 0; i < GEM_CATS.length; i++)
+    for (const grp of (slots[i] || []))
+      for (const g of grp)
+        if (g && g.kind === 'support' && SUPPORT_BEHAVIOR[g.cat]){
+          const id = SUPPORT_BEHAVIOR[g.cat].id;
+          out[id] = (out[id] || 0) + 1;
+        }
+  return out;
+}
 function simulateBatch(slots, n){
   const out = {decided: [], winners:{A:0,B:0,draw:0}, turns:[]};
   const env = Object.values(ARCHETYPES);
   const aAlloc = allocFromSlots(slots);
   const aCosts = attackCostsFromSlots(slots);
+  const bonusA = behaviorsFromSlots(slots);
   for (let s = 0; s < n; s++){
     const bAlloc = env[s % env.length];
-    const res = battle(aAlloc, bAlloc, 'veteran', 'veteran', s, aCosts, aCosts);
+    const res = battle(aAlloc, bAlloc, 'veteran', 'veteran', s, aCosts, aCosts, {
+      bonusA,
+      predA: 0.30,   /* v13.8：模拟中玩家侧预测概率（主动博弈，高于 AI） */
+      predB: 0.15,   /* 环境 AI 侧预测概率 */
+    });
     res.effA = effective(aAlloc); res.effB = effective(bAlloc);
     res.allocA = aAlloc; res.allocB = bAlloc;
     out.decided.push(computeDecidedTurn(res));
@@ -2031,7 +2079,12 @@ function renderPool(){
   let list = STATE.pool.slice();
   if (STATE.fUnused) list = list.filter(g => !used.has(g.uid));
   if (STATE.fRarity.length) list = list.filter(g => STATE.fRarity.includes(g.rarity));
-  if (STATE.fKind.length) list = list.filter(g => STATE.fKind.includes(g.kind));
+  if (STATE.fKind.length) list = list.filter(g => {
+    /* v13.8 修正：主动技能 / 被动技能（主动位）/ 辅助宝石 三类独立筛选（此前被动技能混入主动筛选） */
+    if (g.kind === 'active' && g.subkind === 'passive') return STATE.fKind.includes('passive');
+    if (g.kind === 'active') return STATE.fKind.includes('active');
+    return STATE.fKind.includes('support');
+  });
   const rk = {normal:0, fine:1, rare:2, epic:3};
   const cmp = {
     'lv-desc': (a,b) => b.lv - a.lv || rk[b.rarity] - rk[a.rarity],
@@ -2524,25 +2577,32 @@ function actGo(){
     rollFirst(); doAction(pActObj, eActObj);
   }
 }
-/* AI 动作集（v13.5：能量预算内贪心多技能连招；防御动作保持单动作） */
+/* AI 动作集（v13.5：能量预算内贪心多技能连招；防御动作保持单动作；
+   v13.8：高手 AI 心理博弈 —— master 在能量充裕时以概率预测玩家动作，耗能 1，与玩家同规则） */
 function aiActObj(level, b){
   const me = b.e, foe = b.p;
   const main = aiDecide(level, me, foe, b.rng);
-  if (!(main in RULES.systemAttr)) return {k: main};
+  let pred = null;
+  if (level === 'master' && me.energy >= RULES.costPredict + RULES.costAtk && b.rng() < 0.45){
+    pred = guessAction(foe);
+  }
+  if (!(main in RULES.systemAttr)) return pred ? {k: main, pred} : {k: main};
   const alloc = b.eAlloc, eff = effective(alloc);
   const cands = ['近战','法术','宠物'].map(s => ({s, cost: aiAttackCost(b, s)}))
     .filter(x => b.eCost ? b.eCost[x.s] !== undefined : !!activeGemFor(STATE.slots, x.s));
-  if (!cands.length) return {k: main};
+  if (!cands.length) return pred ? {k: main, pred} : {k: main};
   const ranked = cands
     .map(x => ({s: x.s, cost: x.cost, d: expectedAttackDamage(x.s, eff, alloc, foe.eff)}))
     .sort((a, c) => c.d - a.d);
   const list = [];
-  let budget = me.energy;
+  let budget = me.energy - (pred ? RULES.costPredict : 0);
   for (const c of ranked){
     if (c.cost <= budget){ list.push({sys: c.s, cost: c.cost}); budget -= c.cost; }
   }
-  if (!list.length) return {k: 'charge'};
-  return {k: 'skills', list};
+  if (!list.length) return pred ? {k: 'charge', pred} : {k: 'charge'};
+  const out = {k: 'skills', list};
+  if (pred) out.pred = pred;
+  return out;
 }
 /* 房间对战：发起方主机为权威结算方（v13.6 E2 深化）。
    host 收到双方动作 → 本地完整结算 → 广播 res；
@@ -2653,7 +2713,7 @@ function rollAnimation(){
 }
 /* ---------- v13.3 更新系统（检查更新 / 热更新 / 安装包引导） ---------- */
 const UPD = {
-  ver: '13.7',
+  ver: '13.8',
   base: 'https://cdn.jsdelivr.net/gh/solyo-cloud/goudijuedui@main/',
   setup: 'https://github.com/solyo-cloud/goudijuedui/releases/latest/download/',
   checking: false
@@ -2980,6 +3040,13 @@ async function executeTurn(pActObj, eActObj){
     else { sfx('predictMiss'); lg('预测落空（对手 ' + (ACTION_META[eMain] ? ACTION_META[eMain].name : eMain) + '）', 'lg-dim'); }
   }
   b.predSel = null;
+  /* v13.8：对手（高手 AI）预测玩家动作 —— 与玩家预测同规则：耗能 1、命中则对手本回合首击 ×1.3 */
+  if (eActObj.pred){
+    st.preds++; st.ePred = (st.ePred || 0) + 1; STATE.pred.att++;
+    E.energy = Math.max(0, E.energy - RULES.costPredict);
+    if (eActObj.pred === pMain){ b.ePredReward = true; st.predHits++; st.ePredHit = (st.ePredHit || 0) + 1; STATE.pred.hit++; sfx('predictHit'); lg('对手预测命中你的动作！对手本回合伤害 ×1.3', 'lg-warn'); }
+    else { sfx('predictMiss'); lg('对手预测落空（你选择了 ' + (ACTION_META[pMain] ? ACTION_META[pMain].name : pMain) + '）', 'lg-dim'); }
+  }
   /* 本局动作统计（填充战斗界面 + 供玩家学习对手偏好） */
   STATE.actLog = STATE.actLog || {P:{}, E:{}};
   STATE.actLog.P[pMain] = (STATE.actLog.P[pMain] || 0) + 1;
@@ -3040,8 +3107,9 @@ async function executeTurn(pActObj, eActObj){
             };
           }
         }
-        const r = rollAttack(f, sys, foe, b.rng, side === 'p' ? b.pCrit : 0, side === 'p' && b.predReward ? RULES.predictReward : 1, bonus);
-        if (side === 'p') b.predReward = false;
+        const r = rollAttack(f, sys, foe, b.rng, side === 'p' ? b.pCrit : 0,
+          side === 'p' && b.predReward ? RULES.predictReward : (side === 'e' && b.ePredReward ? RULES.predictReward : 1), bonus);
+        if (side === 'p') b.predReward = false; else b.ePredReward = false;
         if (r.hit){
           playHitSfx(gForAnim, r.crit);
           if (foe.guarding) sfx('guard');
@@ -3067,6 +3135,7 @@ async function executeTurn(pActObj, eActObj){
   b.resolving = false;
   /* D2 修复：预测奖励统一回合末清零（即使本回合未攻击，也不残留到下一回合） */
   b.predReward = false;
+  b.ePredReward = false;
   if (P.hp <= 0 || E.hp <= 0){
     b.winner = (P.hp <= 0 && E.hp <= 0) ? 'draw' : (P.hp <= 0 ? 'E' : 'P');
     b.over = true;
@@ -3166,7 +3235,7 @@ function finishBattle(){
     `<div class="brow"><span class="bl">${labels[i]}</span><div class="bt"><div class="bf" style="width:${(n/maxN*100).toFixed(0)}%"></div></div><span class="bv">${n}</span></div>`).join('');
   const inZone = sim.decided.filter(d => d >= 12 && d <= 24).length;
   const avgT = (sim.turns.reduce((a,b)=>a+b,0) / sim.turns.length).toFixed(1);
-  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· 简化估算：已含辅助耗能系数，未含预测/连招/辅助行为`;
+  $('sim-note').textContent = `60 场模拟（你的构筑 vs 10 流派环境 · 老手 AI）：胜 ${sim.winners.A} / 负 ${sim.winners.B} / 平 ${sim.winners.draw}；平均 ${avgT} 回合；12–24 区间占比 ${Math.round(inZone/60*100)}%（验收线 ≥70%）· v13.8 已建模预测（双方）/ 连招 / 辅助行为，接近真实战斗口径`;
   $('r-log').innerHTML = STATE.logs.map(s => `<div>${s}</div>`).join('');
   STATE.battle = null;
 }
@@ -3663,6 +3732,15 @@ function roomOnMessage(ev){
     rcAdd(m.nick, m.text, m.at);
     return;
   }
+  /* v13.8 修复：大厅广播 / 私聊即时消息（此前 code:'DM' 因 ROOM.code 为空被静默丢弃） */
+  if (m.t === 'rchat' && m.code === 'DM' && m.id !== roomId()){
+    if (m.toId && m.toId !== roomId()) return;   /* 私聊仅投递目标标签页 */
+    sfx('msg');
+    chatAdd(m.nick, m.text, m.at, m.to || '大厅');
+    toast(m.to && m.to !== '大厅' ? (m.nick + ' 私聊你：' + m.text) : (m.nick + '：' + m.text));
+    petSay(m.nick + ' 发来消息');
+    return;
+  }
   if (ROOM.code && m.code === ROOM.code && m.t === 'bye' && m.id !== roomId()){
     if (ROOM.inBattle){
       toast('对手 ' + m.nick + ' 已离开对局');
@@ -3804,11 +3882,11 @@ function addFriend(nick){
   toast('已添加好友：' + nick);
 }
 function inviteFriend(nick){
-  const target = Object.keys(ONLINE).map(id => ONLINE[id]).find(o => o.nick === nick);
-  if (!target){ toast('对方不在线'); return; }
+  const targetId = Object.keys(ONLINE).find(id => ONLINE[id].nick === nick);
+  if (!targetId){ toast('对方不在线'); return; }
   const code = 'GDD' + Math.random().toString(36).slice(2, 6).toUpperCase();
   ROOM.role = 'host'; ROOM.code = code; ROOM.myNick = myNick(); ROOM.peerNick = nick; ROOM.peerAlloc = null; ROOM.inBattle = false;
-  bcPost({t:'invite', toId: target.id, nick: myNick(), code, at: Date.now()});
+  bcPost({t:'invite', toId: targetId, nick: myNick(), code, at: Date.now()});
   $('room-modal').classList.add('on');
   $('room-title').textContent = '对战邀请已发送';
   $('room-body').innerHTML = `<div>已邀请 <b>${escapeHtml(nick)}</b> 对战，房间码 <b>${code}</b>。</div><div id="room-status">⏳ 等待对方接受…</div><div class="rbtn"><button class="ghost" id="room-btn-cancel">取消</button></div>`;
@@ -3819,9 +3897,30 @@ function inviteFriend(nick){
 const LETTER_KEY = 'gdd-v13-letters';
 function loadLetters(){ return SEC.load(LETTER_KEY, []); }
 function saveLetters(l){ SEC.save(LETTER_KEY, l); }
+/* v13.8 修复：会话内聊天记录（renderChat 重绘来源，此前每次进入聊天页清空丢失） */
+const CHAT_LOG = [];
+function chatAdd(nick, text, at, to){
+  const d = at ? new Date(at) : new Date();
+  const tm = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  CHAT_LOG.push({nick, text, at, to});
+  const log = $('chat-log');
+  if (log){
+    const who = to && to !== '大厅' ? `${escapeHtml(nick)} → ${escapeHtml(to)}` : escapeHtml(nick);
+    log.insertAdjacentHTML('beforeend', `<div class="chat-line"><b>${who}</b> <span class="ct">${tm}</span>：${escapeHtml(text)}</div>`);
+    log.scrollTop = log.scrollHeight;
+  }
+}
 function renderChat(){
   const log = $('chat-log');
-  if (log) log.innerHTML = '<div class="chat-line sys">—— 即时聊天（在线玩家互通）· 书信离线留档在信箱 ——</div>';
+  if (!log) return;
+  log.innerHTML = '<div class="chat-line sys">—— 即时聊天（在线玩家互通）· 书信离线留档在信箱 ——</div>';
+  for (const c of CHAT_LOG){
+    const d = new Date(c.at || Date.now());
+    const tm = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const who = c.to && c.to !== '大厅' ? `${escapeHtml(c.nick)} → ${escapeHtml(c.to)}` : escapeHtml(c.nick);
+    log.insertAdjacentHTML('beforeend', `<div class="chat-line"><b>${who}</b> <span class="ct">${tm}</span>：${escapeHtml(c.text)}</div>`);
+  }
+  log.scrollTop = log.scrollHeight;
   renderLetters();
 }
 function renderLetters(){
@@ -3847,11 +3946,17 @@ function sendChat(){
   const text = ($('chat-text').value || '').trim();
   if (!text){ toast('消息不能为空'); return; }
   if (!to || to.toLowerCase() === '大厅' || to === myNick()){
+    /* v13.8 修复：大厅广播真实发送并本地留痕（此前仅 toast，消息静默丢失） */
+    chatAdd(myNick(), text, Date.now(), '大厅');
+    bcPost({t:'rchat', code:'DM', to:'大厅', toId:null, nick: myNick(), id: roomId(), text, at: Date.now()});
     toast('已发送（大厅广播）');
   } else {
-    const target = Object.keys(ONLINE).map(id => ONLINE[id]).find(o => o.nick === to && o.nick !== myNick());
+    /* v13.8 修复：ONLINE 表 value 不含 id（key 才是 id），target.id 恒为 undefined 导致私聊退化为广播 */
+    const targetId = Object.keys(ONLINE).find(id => ONLINE[id].nick === to && ONLINE[id].nick !== myNick());
+    const target = targetId ? ONLINE[targetId] : null;
     if (!target){ toast('对方不在线，即时消息无法送达（可改用书信留言）'); return; }
-    bcPost({t:'rchat', code: 'DM', nick: myNick(), id: roomId(), text, at: Date.now()});
+    chatAdd(myNick(), text, Date.now(), to);
+    bcPost({t:'rchat', code:'DM', to, toId: targetId, nick: myNick(), id: roomId(), text, at: Date.now()});
     toast('已发送给 ' + to);
   }
   $('chat-text').value = '';
@@ -3863,9 +3968,9 @@ function sendLetter(){
   const L = loadLetters();
   L.push({from: myNick(), to, text, time: nowStr(), read: false, local: true});
   saveLetters(L);
-  const target = Object.keys(ONLINE).map(id => ONLINE[id]).find(o => o.nick === to && o.nick !== myNick());
-  if (target){
-    bcPost({t:'letter', toId: target.id, from: myNick(), text, at: Date.now()});
+  const targetId = Object.keys(ONLINE).find(id => ONLINE[id].nick === to && ONLINE[id].nick !== myNick());
+  if (targetId){
+    bcPost({t:'letter', toId: targetId, from: myNick(), text, at: Date.now()});
     toast('书信已即时送达 ' + to);
   } else {
     toast('对方当前离线：书信已留档（联网投递需服务器，当前单文件环境仅本地留档）');
@@ -4607,6 +4712,8 @@ const I18N_DICT = {
   '回合；12': {en: 'turns; 12', ja: 'ターン；12'},
   '区间占比': {en: 'in-zone ratio', ja: '区間比率'},
   '验收线': {en: 'Acceptance', ja: '合格ライン'},
+  '已建模预测（双方）/ 连招 / 辅助行为': {en: 'now models prediction (both sides) / combos / support behaviors', ja: '予測（双方）/ 連撃 / 補助行動をモデリング済み'},
+  '接近真实战斗口径': {en: 'close to real combat', ja: '実戦に近い計算'},
   '过早（': {en: 'too early (', ja: '早すぎ（'},
   '垃圾时间风险）': {en: 'dead-time risk)', ja: '消化試合のリスク）'},
   '过晚（': {en: 'too late (', ja: '遅すぎ（'},
@@ -4733,7 +4840,7 @@ const I18N_DICT = {
 };
 /* ---------- 整句表：data-i18n / data-i18n-html 整节点替换（高质量长句） ---------- */
 const I18N_TXT = {
-  'sub': {zh: '宝石构筑版 v13.7 · 9大项×4组×8孔 · 柔和多乐器音乐 · 差异化技能动画/打击音 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.7 · 9×4×8 sockets · gentle multi-instrument BGM · distinct skill FX & hit SFX · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.7 · 9×4×8ソケット · やわらかな多楽器BGM · スキル毎の演出/打撃音 · 中/英/日 · オンライン更新'},
+  'sub': {zh: '宝石构筑版 v13.8 · 9大项×4组×8孔 · 引擎强化（预测/连招/行为建模 · 高手AI预测） · 聊天系统修复 · 字体加大 · 中/英/日多语言 · 在线更新', en: 'Gem Build v13.8 · 9×4×8 sockets · engine upgrade (predict/combo/behavior + master AI) · chat fixed · bigger fonts · ZH/EN/JA · online updates', ja: 'ジェムビルド版 v13.8 · 9×4×8ソケット · エンジン強化（予測/連撃/行動モデル · 熟練AI予測） · チャット修正 · フォント拡大 · 中/英/日 · オンライン更新'},
   'kpi1': {zh: '2500血 / 30回合', en: '2500 HP / 30 turns', ja: 'HP2500 / 30ターン'},
   'kpi2': {zh: '能量+3/回合(前8回合)', en: '+3 energy/turn (first 8)', ja: 'エネルギー+3/ターン（最初の8ターン）'},
   'kpi3': {zh: '每5回合上限+2', en: '+2 cap every 5 turns', ja: '5ターン毎に上限+2'},
@@ -4830,6 +4937,12 @@ const I18N = {
         var v = I18N.txt(k);
         if (v === null) continue;
         if (el.getAttribute('data-i18n-html')) el.innerHTML = v; else el.textContent = v;
+      }
+      /* v13.8：data-tip 悬浮提示属性翻译（此前动态中文 tip 在英/日模式下不翻译） */
+      var tipEls = r.querySelectorAll ? r.querySelectorAll('[data-tip]') : [];
+      for (var n2 = 0; n2 < tipEls.length; n2++){
+        var tp = tipEls[n2].getAttribute('data-tip');
+        if (tp){ var tv = I18N.tr(tp); if (tv !== tp) tipEls[n2].setAttribute('data-tip', tv); }
       }
       /* 文本节点子串翻译 */
       var walker = document.createTreeWalker(r, NodeFilter.SHOW_TEXT);
